@@ -1,0 +1,84 @@
+#battlefield-bg {
+	width: 1152px;
+	height: 768px;
+	background-image: url("img/grass.png");
+	background-repeat: repeat;
+	float: left;
+}
+
+#battlefield {
+	width: 1152px;
+	height: 768px;
+}
+
+#control-panel {
+	border: 1px solid green;
+	float: left;
+}
+
+.selected {
+	border-width: 10px;
+}
+
+.selecting {
+	background-color: gray;
+}
+
+.unit-manager {
+	
+}
+
+.unit {
+	background-color: black;
+	color: white;
+	cursor: move;
+	min-height: 40px;
+	padding: 5px;
+	position: relative;
+	word-wrap: break-word;
+	margin-bottom: 2em;
+	text-align: center;
+	box-shadow: 3px 3px 8px #222;
+}
+
+.player-1 {
+	border: 1px solid red;
+}
+
+.player-2 {
+	border: 1px solid blue;
+}
+
+.unit.player-2:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: -20px; /*should be set to -border-width x 2 */
+	left: 50%;
+	left: -moz-calc(50% - 10px);
+	left: -webkit-calc(50% - 10px);
+	left: -o-calc(50% - 10px);
+	left: calc(50% - 10px);
+	width: 0;
+	height: 0;
+	border-color: transparent transparent black transparent;
+	border-style: solid;
+	border-width: 10px;
+}
+
+.unit.player-1:after{
+	content: '';
+	display: block;
+	position: absolute;
+	top: 100%; /*should be set to 100% */
+	left: 50%;
+	left: -moz-calc(50% - 10px);
+	left: -webkit-calc(50% - 10px);
+	left: -o-calc(50% - 10px);
+	left: calc(50% - 10px);
+	width: 0;
+	height: 0;
+	border-color: red transparent transparent transparent;
+	border-style: solid;
+	border-width: 10px;
+}

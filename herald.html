@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+	<style type="text/css">@import "herald.css";</style>
+	<script src="herald.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<div id="battlefield-bg">
+		<div id="battlefield"></div>
+	</div>
+	<div id="control-panel">
+		<div id="unit-manager-player-1" class="unit-manager player-1" data-player="1">
+			<label for="player-1-unit-ranks">Ranks</label><input type="text" value="10" id="player-1-unit-ranks" />
+			<label for="player-1-unit-files">Files</label><input type="text" value="10" id="player-1-unit-files" />
+			<label for="player-1-unit-name">Unit Name</label><input type="text" value="Square" id="player-1-unit-name" />
+			<label for="player-1-unit-base-size">Base Size</label><select id="player-1-unit-base-size">
+				<option value="20x20">20mm x 20mm</option>
+				<option value="25x25">25mm x 25mm</option>
+				<option value="25x50">25mm x 50mm</option>
+				<option value="40x40">40mm x 40mm</option>
+				<option value="50x50">50mm x 50mm</option>
+				<option value="50x60">50mm x 60mm</option>
+				<option value="50x100">50mm x 100mm</option>
+				<option value="100x100">100mm x 100mm</option>
+				<option value="100x150">100mm x 150mm</option>
+			</select>
+			<button class="add-unit">Add Unit</button>
+		</div>
+		<div id="unit-manager-player-2" class="unit-manager player-2" data-player="2">
+			<label for="player-2-unit-ranks">Ranks</label><input type="text" value="4" id="player-2-unit-ranks" />
+			<label for="player-2-unit-files">Files</label><input type="text" value="8" id="player-2-unit-files" />
+			<label for="player-2-unit-name">Unit Name</label><input type="text" value="Rectangle" id="player-2-unit-name" />
+			<label for="player-2-unit-base-size">Base Size</label><select id="player-2-unit-base-size">
+				<option value="20x20">20mm x 20mm</option>
+				<option value="25x25">25mm x 25mm</option>
+				<option value="25x50">25mm x 50mm</option>
+				<option value="40x40">40mm x 40mm</option>
+				<option value="50x50">50mm x 50mm</option>
+				<option value="50x60">50mm x 60mm</option>
+				<option value="50x100">50mm x 100mm</option>
+				<option value="100x100">100mm x 100mm</option>
+				<option value="100x150">100mm x 150mm</option>
+			</select>
+			<button class="add-unit">Add Unit</button>
+		</div>
+		<div>
+			<textarea id="battlefield-out" rows="8" cols="40"></textarea>
+			<button id="dump-button">Dump output</button>
+			<button id="slurp-button">Slurp output</button>
+		</div>
+	</div>
+</body>
+</html>
