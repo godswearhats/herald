@@ -2,6 +2,7 @@ console.log("Loaded herald.js");
 var unitBeingRotated = false;
 var mouseStartAngle = false;
 var unitStartAngle = false;
+var battleUnits = { '#player-1': [], '#player-2': [] };
 
 $(function() {
 	$(document).on('mouseup', stopRotate);
@@ -12,18 +13,29 @@ $(function() {
 
 
 function addUnit(event) {
-	var player = event.target.parentElement.dataset.player;
-	var playerClass = "#player-" + player;
-	console.log("Adding unit for " + playerClass);
+	var playerNumber = event.target.parentElement.dataset.player;
+	var playerClass = "#player-" + playerNumber;
+	var unitID = "player-" + playerNumber + "-unit-" + battleUnits[playerClass].length;
+	console.log("Adding unit " + unitID + " for " + playerClass);
+	battleUnits[playerClass].push(unitID);
 	
 	// create unit
 	var unit = $( document.createElement('div') )
-		.data({ player: player, angle: 0})
+		.attr('id', unitID)
+		.data({ player: playerNumber, angle: 0})
 		.addClass('unit')
-		.addClass('player-' + player)
+		.addClass('player-' + playerNumber)
 		.text( $(playerClass + "-unit-name").val() )
 		.draggable( {cancel: '.handle'} )
-		.css('position', 'relative');
+		.css('position', 'absolute')
+		.hover( 
+			function() {
+				$(this).children('.control').show();
+			},
+			function() { 
+				$(this).children('.control').hide(); 
+			}
+		);
 	
 	// make it the right dimensions - TODO unhardcode 20x20mm bases
 	// and add it with handle to the battlefield
@@ -32,16 +44,62 @@ function addUnit(event) {
 		$(playerClass + "-unit-files").val(), baseDimensions[0], baseDimensions[1] );
 	$('#battlefield').append(unit);
 	addHandle(unit);
+	addDeleteButton(unit);
 }
 
-function dumpHTML(event) {
-	$('#battlefield-out').val( $('#battlefield-bg').html() );
+function removeFromBattle(unitID) {
+	var playerClass = "#" + unitID.match(/player-\d/)[0];
+	battleUnits[playerClass].splice( battleUnits[playerClass].indexOf(unitID) );
 }
 
-function slurpHTML(event) {
-	console.log("Slurping!");
-	$('#battlefield-bg').html( $('#battlefield-out').val() );
-	$('.unit').draggable();
+function addDeleteButton(unit) {
+	var $confirmDialog = $( document.createElement('div') )
+		.data( 'unit', unit.attr('id') )
+		.attr('title', "Delete this unit?")
+		.addClass('dialog')
+		.dialog({
+	            resizable: false,
+	            height: 'auto',
+	            modal: true,
+				autoOpen: false,
+	            buttons: {
+	                Delete: function() {
+	                    $( this ).dialog( "close" );
+						var unitID = $(this).data('unit');
+						console.log("Deleteing unit " +  unitID);
+						removeFromBattle(unitID);
+						$( "#" + $( this ).data('unit') ).remove();
+	                },
+	                Cancel: function() {
+	                    $( this ).dialog( "close" );
+	                }
+	            }
+		});
+	var deleteButton = $( document.createElement('div') )
+		.appendTo(unit)
+		.addClass('delete-button')
+		.addClass('control')
+		.css({
+			'position': 'absolute',
+		    'top': 5,
+		    'right': 5,
+		    'height': 10,
+		    'width': 10,
+			'color': 'black',
+			'font-size': 9,
+			'font': 'sans-serif',
+			'cursor': 'pointer',
+		    'background-color': '#CCC'
+		})
+		.hide()
+		.text('X')
+		.on('click', function() {
+			console.log("Attempting to open dialog");
+			$confirmDialog.dialog("open");
+			return false;
+		});
+
+	// return deleteButton;
 }
 
 function addHandle(unit) {
@@ -49,13 +107,15 @@ function addHandle(unit) {
 	return $( document.createElement('div') )
 		.appendTo(unit)
 		.addClass('handle')
+		.addClass('control')
 		.css({
-		    'position': 'absolute',
-		    'bottom': 5,
-		    'right': 5,
-		    'height': 10,
-		    'width': 10,
-		    'background-color': 'orange'
+			'position': 'absolute',
+			'bottom': 5,
+			'right': 5,
+			'height': 10,
+			'width': 10,
+			'cursor': 'pointer',
+			'background-color': 'orange'
 		})
 		.draggable({
 		    handle: '#handle',
@@ -63,6 +123,7 @@ function addHandle(unit) {
 		    helper: 'clone',
 			start: dragStart
 		})
+		.hide()
 		.on('mousedown', startRotate);
 }
 
@@ -142,7 +203,15 @@ function getUnitCenter(unit) {
 	 return Array( unitCentreX, unitCentreY );
 }
 
+function dumpHTML(event) {
+	$('#battlefield-out').val( $('#battlefield-bg').html() );
+}
 
+function slurpHTML(event) {
+	console.log("Slurping!");
+	$('#battlefield-bg').html( $('#battlefield-out').val() );
+	$('.unit').draggable();
+}
 
 // sets the correct height and width for a unit base on the number of ranks and files and their base size
 function setUnitHeight(unit, ranks, files, baseHeight, baseWidth) {
