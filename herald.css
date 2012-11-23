@@ -14,18 +14,31 @@
 #control-panel {
 	border: 1px solid green;
 	float: left;
+	font-size: 12px;
+	margin-left: 10px;
 }
 
-.selected {
-	border-width: 10px;
+input {
+	margin-left: 15px;
+}
+select {
+	margin-left: 15px;
+}
+label {
+	display: block;
+	width: 70px;
+	float: left;
+	font-size: 12px;
+	clear: both;
+}
+.add-unit {
+	display: block;
+	clear: both;
+	margin-left: 85px;
 }
 
-.selecting {
-	background-color: gray;
-}
-
-.unit-manager {
-	
+.ui-dialog {
+	font-size: 12px;
 }
 
 .unit {
@@ -39,6 +52,12 @@
 	margin-bottom: 2em;
 	text-align: center;
 	box-shadow: 3px 3px 8px #222;
+	z-index: 20;
+}
+
+.scenery {
+	background-repeat: no-repeat;
+	background-size: 100%;
 }
 
 .player-1 {
@@ -61,7 +80,7 @@
 	left: calc(50% - 10px);
 	width: 0;
 	height: 0;
-	border-color: transparent transparent black transparent;
+	border-color: transparent transparent blue transparent;
 	border-style: solid;
 	border-width: 10px;
 }

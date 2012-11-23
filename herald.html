@@ -12,11 +12,17 @@
 		<div id="battlefield"></div>
 	</div>
 	<div id="control-panel">
+		<ul>
+			<li><a href="#scenery-manager">Scenery</a></li>
+			<li><a href="#unit-manager-player-1">Player 1</a></li>
+			<li><a href="#unit-manager-player-2">Player 2</a></li>
+			<li><a href="#game">Game</a></li>
+		</ul>
 		<div id="unit-manager-player-1" class="unit-manager player-1" data-player="1">
-			<label for="player-1-unit-ranks">Ranks</label><input type="text" value="10" id="player-1-unit-ranks" />
-			<label for="player-1-unit-files">Files</label><input type="text" value="10" id="player-1-unit-files" />
-			<label for="player-1-unit-name">Unit Name</label><input type="text" value="Square" id="player-1-unit-name" />
-			<label for="player-1-unit-base-size">Base Size</label><select id="player-1-unit-base-size">
+			<div><label for="player-1-unit-ranks">Ranks</label><input type="text" id="player-1-unit-ranks" size="2" /></div>
+			<div><label for="player-1-unit-files">Files</label><input type="text" id="player-1-unit-files" size="2" /></div>
+			<div><label for="player-1-unit-name">Unit Name</label><input type="text" id="player-1-unit-name"/></div>
+			<div><label for="player-1-unit-base-size">Base Size</label><select id="player-1-unit-base-size">
 				<option value="20x20">20mm x 20mm</option>
 				<option value="25x25">25mm x 25mm</option>
 				<option value="25x50">25mm x 50mm</option>
@@ -26,14 +32,14 @@
 				<option value="50x100">50mm x 100mm</option>
 				<option value="100x100">100mm x 100mm</option>
 				<option value="100x150">100mm x 150mm</option>
-			</select>
-			<button class="add-unit">Add Unit</button>
+			</select></div>
+			<div><button class="add-unit">Add Unit</button></div>
 		</div>
 		<div id="unit-manager-player-2" class="unit-manager player-2" data-player="2">
-			<label for="player-2-unit-ranks">Ranks</label><input type="text" value="4" id="player-2-unit-ranks" />
-			<label for="player-2-unit-files">Files</label><input type="text" value="8" id="player-2-unit-files" />
-			<label for="player-2-unit-name">Unit Name</label><input type="text" value="Rectangle" id="player-2-unit-name" />
-			<label for="player-2-unit-base-size">Base Size</label><select id="player-2-unit-base-size">
+			<div><label for="player-2-unit-ranks">Ranks</label><input type="text" value="4" id="player-2-unit-ranks" size="2" /></div>
+			<div><label for="player-2-unit-files">Files</label><input type="text" value="8" id="player-2-unit-files" size="2" /></div>
+			<div><label for="player-2-unit-name">Unit Name</label><input type="text" value="Rectangle" id="player-2-unit-name" /></div>
+			<div><label for="player-2-unit-base-size">Base Size</label><select id="player-2-unit-base-size">
 				<option value="20x20">20mm x 20mm</option>
 				<option value="25x25">25mm x 25mm</option>
 				<option value="25x50">25mm x 50mm</option>
@@ -43,13 +49,15 @@
 				<option value="50x100">50mm x 100mm</option>
 				<option value="100x100">100mm x 100mm</option>
 				<option value="100x150">100mm x 150mm</option>
-			</select>
-			<button class="add-unit">Add Unit</button>
+			</select></div>
+			<div><button class="add-unit">Add Unit</button></div>
 		</div>
-		<div>
-			<textarea id="battlefield-out" rows="8" cols="40"></textarea>
-			<button id="dump-button">Dump output</button>
-			<button id="slurp-button">Slurp output</button>
+		<div id="scenery-manager"></div>
+		<div id="game">
+			<div><button id="start-game">Start Game (locks scenery)</button></div>
+			<div><textarea id="battlefield-out"></textarea></div>
+			<div><button id="dump-button">Dump output</button></div>
+			<div><button id="slurp-button">Slurp output</button></div>
 		</div>
 	</div>
 </body>
