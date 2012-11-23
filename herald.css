@@ -47,7 +47,7 @@ label {
 	cursor: move;
 	min-height: 40px;
 	padding: 5px;
-	position: relative;
+	position: absolute;
 	word-wrap: break-word;
 	margin-bottom: 2em;
 	text-align: center;
@@ -58,14 +58,18 @@ label {
 .scenery {
 	background-repeat: no-repeat;
 	background-size: 100%;
+	position: absolute;
 }
 
-.player-1 {
+.unit.player-1 {
 	border: 1px solid red;
+	left: 550px;
 }
 
-.player-2 {
+.unit.player-2 {
 	border: 1px solid blue;
+	top: 600px;
+	left: 550px;
 }
 
 .unit.player-2:after {

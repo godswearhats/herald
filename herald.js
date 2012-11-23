@@ -45,7 +45,7 @@ function toggleGameState(event) {
 
 function initializeSceneryManager() {
 	var sm = $('#scenery-manager');
-	var scenery = ['hill', 'corner_hill', 'tree', 'tower', 'wall'];
+	var scenery = ['tower', 'wall', 'tree', 'corner_hill', 'hill'];
 	for (var i = 0; i < scenery.length; i++) {
 		var image_src = 'img/' + scenery[i] + '.png';
 		$( document.createElement('img') )
@@ -71,7 +71,6 @@ function addScenery(event) {
 		.data('angle', 0)
 		.draggable( {cancel: '.handle'} )
 		.css({
-			'position': 'absolute',
 			'height': event.data.height + "px",
 			'width': event.data.width + "px",
 			'z-index': 10,
@@ -113,7 +112,6 @@ function addUnit(event) {
 		.addClass('player-' + playerNumber)
 		.text( $(playerClass + "-unit-name").val() )
 		.draggable( {cancel: '.handle'} )
-		.css('position', 'absolute')
 		.hover( 
 			function() {
 				$(this).children('.control').show();
