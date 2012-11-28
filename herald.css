@@ -48,24 +48,32 @@ label {
 
 .handle {
 	position: absolute;
-	bottom: 5px;
-	left: 5px;
 	height: 10px;
 	width: 10px;
 	cursor: pointer;
 	background-image: url(img/rotate.png);
 	background-size: 100%;
+	left: 2px;
+	bottom: 2px;
+}
+
+.handle.player-2 {
+	bottom: 20px;
 }
 
 .delete-button {
 	position: absolute;
-    top: 19px;
-    right: 5px;
+    top: 2px;
+    right: 2px;
     height: 10px;
     width: 10px;
 	cursor: pointer;
 	background-image: url(img/delete.png);
 	background-size: 100%
+}
+
+.delete-button.player-1 {
+	top: 20px;
 }
 
 .unit {
@@ -79,9 +87,22 @@ label {
 	min-width: 50px;
 }
 
+.unit.player-1:hover {
+	background-color: rgba(128, 0, 0, 0.1);
+}
+
+.unit.player-2:hover {
+	background-color: rgba(0, 0, 128, 0.1);
+}
+
 .unit-models {
 	margin: 0 auto;
 	box-shadow: 3px 3px 8px #222;
+	z-index: 30;
+}
+
+.unit-title {
+	z-index: 25;
 }
 
 .scenery {

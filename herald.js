@@ -6,15 +6,16 @@ var gameStarted = false;
 
 (function($){
 	$.fn.playable = function() {
+		// FIXME - dealing with scenery on hover
 		return this.each(function() {
-			var element = $(this);
-			
-			element.draggable( {cancel: '.handle'} )
+			$(this).draggable( {cancel: '.handle'} )
 			.hover( 
 				function() {
+					if ( $(this).hasClass('scenery') && gameStarted ) { return; }
 					$(this).children('.control').show();
 				},
-				function() { 
+				function() {
+					if ( $(this).hasClass('scenery') && gameStarted ) { return; }
 					$(this).children('.control').hide(); 
 				}
 			)
@@ -25,7 +26,8 @@ var gameStarted = false;
 	
 	$.fn.rotatable = function() {
 		return this.each(function() {
-			$( document.createElement('div') )
+			$(this).data('angle', 0);
+			var handle = $( document.createElement('div') )
 				.addClass('handle')
 				.addClass('control')
 				.draggable({
@@ -35,8 +37,9 @@ var gameStarted = false;
 				})
 				.hide()
 				.on('mousedown', startRotate)
-				.appendTo($(this));
-			});
+				.appendTo( $(this) );
+			addPlayerClass($(this), handle);		
+		});
 	};
 	
 	$.fn.deletable = function() {
@@ -53,13 +56,13 @@ var gameStarted = false;
 					autoOpen: false,
 		            buttons: {
 		                Delete: function() {
-		                    $( this ).dialog( "close" );
+		                    $(this).dialog( "close" );
 							var unitID = $(this).data('unit');
 							removeFromBattle(unitID);
-							$( "#" + $( this ).data('unit') ).remove();
+							$( "#" + $(this).data('unit') ).remove();
 		                },
 		                Cancel: function() {
-		                    $( this ).dialog( "close" );
+		                    $(this).dialog( "close" );
 		                }
 		            }
 			});
@@ -71,7 +74,8 @@ var gameStarted = false;
 			.on('click', function() {
 				$confirmDialog.dialog("open");
 				return false;
-			});
+			});	
+		addPlayerClass(unit, deleteButton);
 	}
 })(jQuery);
 
@@ -97,6 +101,13 @@ $(function() {
 	$( "#slurp-button" ).on("click", slurpHTML);
 	$( "#start-game").on("click", toggleGameState);
 });
+
+function addPlayerClass(unit, element) {
+	var player = unit.data('player');
+	if (player) {
+		element.addClass('player-' + player);
+	}
+}
 
 function toggleGameState(event) {
 	if (gameStarted) {
@@ -148,8 +159,6 @@ function addScenery(event) {
 	var scenery = $( document.createElement('div') )
 		.addClass('scenery')
 		.attr('id', sceneryID)
-		.data('angle', 0)
-		.draggable( {cancel: '.handle'} )
 		.css({
 			'height': event.data.height + "px",
 			'width': event.data.width + "px",
@@ -174,12 +183,13 @@ function addUnit(event) {
 	// create unit
 	var unit = $( document.createElement('div') )
 		.attr('id', unitID)
-		.data({ player: playerNumber, angle: 0})
+		.data('player', playerNumber)
 		.addClass('unit')
 		.addClass('player-' + playerNumber);
 		
 	var title = $( document.createElement('div') )
 		.css('clear', 'both')
+		.addClass('unit-title')
 		.text( $(playerClass + "-unit-name").val() );
 		
 	if (parseInt(playerNumber) == 1) { title.appendTo(unit); }
