@@ -75,13 +75,13 @@ label {
 	position: absolute;
 	word-wrap: break-word;
 	text-align: center;
-	box-shadow: 3px 3px 8px #222;
 	z-index: 20;
 	min-width: 50px;
 }
 
 .unit-models {
 	margin: 0 auto;
+	box-shadow: 3px 3px 8px #222;
 }
 
 .scenery {
@@ -90,18 +90,18 @@ label {
 	position: absolute;
 }
 
-.unit.player-1 {
+.unit-models.player-1 {
 	border: 1px solid red;
-	left: 550px;
+/*	left: 550px;*/
 }
 
-.unit.player-2 {
+.unit-models.player-2 {
 	border: 1px solid blue;
-	top: 600px;
-	left: 550px;
+/*	top: 600px;
+	left: 550px;*/
 }
 
-.unit.player-2:after {
+.unit-models.player-2:after {
 	content: '';
 	display: block;
 	position: absolute;
@@ -118,7 +118,7 @@ label {
 	border-width: 10px;
 }
 
-.unit.player-1:after{
+.unit-models.player-1:after{
 	content: '';
 	display: block;
 	position: absolute;

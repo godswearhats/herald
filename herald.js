@@ -178,10 +178,11 @@ function addUnit(event) {
 		.addClass('unit')
 		.addClass('player-' + playerNumber);
 		
-	$( document.createElement('div') )
+	var title = $( document.createElement('div') )
 		.css('clear', 'both')
-		.text( $(playerClass + "-unit-name").val() )
-		.appendTo(unit);
+		.text( $(playerClass + "-unit-name").val() );
+		
+	if (parseInt(playerNumber) == 1) { title.appendTo(unit); }
 			
 	// make it the right dimensions
 	// and add it with handle to the battlefield
@@ -189,6 +190,9 @@ function addUnit(event) {
 	var looseFormation = $(playerClass + '-unit-loose-formation').is(':checked');
 	setUnitHeight( unit, parseInt( $(playerClass + "-unit-ranks").val() ), 
 		parseInt( $(playerClass + "-unit-files").val() ), baseDimensions[0], baseDimensions[1], looseFormation );
+		
+	if (parseInt(playerNumber) == 2) { title.appendTo(unit); }
+	
 	$('#battlefield').append(unit);
 	
 	unit.playable();
@@ -313,7 +317,16 @@ function setUnitHeight(unit, ranks, files, baseWidth, baseHeight, looseFormation
 	if (looseFormation) {
 		unitWidth += (files - 1) * inchesToPx(0.5);
 	}
-	unitModels.css('width', unitWidth + "px").appendTo(unit);
+	
+	var unitHeight = mmToPx(baseHeight) * ranks;
+	if (looseFormation) {
+		unitHeight += (ranks - 1) * inchesToPx(0.5);
+	}
+	
+	unitModels.css({
+		'width': unitWidth + "px",
+		'height': unitHeight + "px"
+	}).appendTo(unit);
 }
 
 // Convert functions
