@@ -1,9 +1,79 @@
-console.log("Loaded herald.js");
 var unitBeingRotated = false;
 var mouseStartAngle = false;
 var unitStartAngle = false;
 var battleUnits = { '#player-1': [], '#player-2': [], '#scenery': [] };
 var gameStarted = false;
+
+(function($){
+	$.fn.playable = function() {
+		return this.each(function() {
+			var element = $(this);
+			
+			element.draggable( {cancel: '.handle'} )
+			.hover( 
+				function() {
+					$(this).children('.control').show();
+				},
+				function() { 
+					$(this).children('.control').hide(); 
+				}
+			)
+			.rotatable()
+			.deletable();
+		});
+	};
+	
+	$.fn.rotatable = function() {
+		return this.each(function() {
+			$( document.createElement('div') )
+				.addClass('handle')
+				.addClass('control')
+				.draggable({
+				    opacity: 0.01, 
+				    helper: 'clone',
+					start: dragStart
+				})
+				.hide()
+				.on('mousedown', startRotate)
+				.appendTo($(this));
+			});
+	};
+	
+	$.fn.deletable = function() {
+		var unit = $(this);
+		var $confirmDialog = $( document.createElement('div') )
+			.data( 'unit', unit.attr('id') )
+			.attr('title', "Delete this?")
+			.addClass('dialog')
+			.dialog({
+		            resizable: false,
+		            height: '40px',
+					width: '160px',
+		            modal: true,
+					autoOpen: false,
+		            buttons: {
+		                Delete: function() {
+		                    $( this ).dialog( "close" );
+							var unitID = $(this).data('unit');
+							removeFromBattle(unitID);
+							$( "#" + $( this ).data('unit') ).remove();
+		                },
+		                Cancel: function() {
+		                    $( this ).dialog( "close" );
+		                }
+		            }
+			});
+		var deleteButton = $( document.createElement('div') )
+			.appendTo(unit)
+			.addClass('delete-button')
+			.addClass('control')
+			.hide()
+			.on('click', function() {
+				$confirmDialog.dialog("open");
+				return false;
+			});
+	}
+})(jQuery);
 
 $(function() {
 	$(document).on('mouseup', stopRotate);
@@ -22,6 +92,7 @@ $(function() {
 			}
 		}
 	});
+	$( "#add-remote-scenery" ).on("click", loadRemoteScenery);
 	$( "#dump-button" ).on("click", dumpHTML);
 	$( "#slurp-button" ).on("click", slurpHTML);
 	$( "#start-game").on("click", toggleGameState);
@@ -44,22 +115,31 @@ function toggleGameState(event) {
 }
 
 function initializeSceneryManager() {
-	var sm = $('#scenery-manager');
 	var scenery = ['tower', 'wall', 'tree', 'corner_hill', 'hill'];
 	for (var i = 0; i < scenery.length; i++) {
 		var image_src = 'img/' + scenery[i] + '.png';
-		$( document.createElement('img') )
-		    .attr({
-				src: image_src,
-				alt: scenery[i].replace("_", " ")
-			})
-		    .load(function() {
-				$( document.createElement('button') )
-					.appendTo(sm)
-					.on('click', { src: this.src, height: this.height, width: this.width }, addScenery)
-					.text( this.alt );
-		    });
+		createSceneryButton( image_src, scenery[i].replace("_", "") );
 	}
+}
+
+function loadRemoteScenery(event) {
+	var url = $('#scenery-url').val();
+	var label = $('#scenery-label').val();
+	createSceneryButton(url, label);
+}
+
+function createSceneryButton(url, label) {
+	$( document.createElement('img') )
+	    .attr({
+			src: url,
+			alt: label
+		})
+	    .load(function() {
+			$( document.createElement('button') )
+				.appendTo( $('#scenery-manager') )
+				.on('click', { src: this.src, height: this.height, width: this.width }, addScenery)
+				.text( this.alt );
+	    });
 }
 
 function addScenery(event) {
@@ -80,22 +160,9 @@ function addScenery(event) {
 		.resizable({
 			autoHide: true,
 			aspectRatio: true
-		})
-		.hover( 
-			function() {
-				if (!gameStarted) {
-					$(this).children('.control').show();
-				}
-			},
-			function() { 
-				if (!gameStarted) {
-					$(this).children('.control').hide(); 
-				}
-			}
-		);
+		});
 	$('#battlefield').append(scenery);
-	addHandle(scenery);
-	addDeleteButton(scenery);
+	scenery.playable();
 }
 
 function addUnit(event) {
@@ -109,106 +176,27 @@ function addUnit(event) {
 		.attr('id', unitID)
 		.data({ player: playerNumber, angle: 0})
 		.addClass('unit')
-		.addClass('player-' + playerNumber)
+		.addClass('player-' + playerNumber);
+		
+	$( document.createElement('div') )
+		.css('clear', 'both')
 		.text( $(playerClass + "-unit-name").val() )
-		.draggable( {cancel: '.handle'} )
-		.hover( 
-			function() {
-				$(this).children('.control').show();
-			},
-			function() { 
-				$(this).children('.control').hide(); 
-			}
-		);
-	
-	// make it the right dimensions - TODO unhardcode 20x20mm bases
+		.appendTo(unit);
+			
+	// make it the right dimensions
 	// and add it with handle to the battlefield
 	var baseDimensions = $(playerClass + "-unit-base-size").val().split("x");
-	setUnitHeight( unit, $(playerClass + "-unit-ranks").val(), 
-		$(playerClass + "-unit-files").val(), baseDimensions[0], baseDimensions[1] );
+	var looseFormation = $(playerClass + '-unit-loose-formation').is(':checked');
+	setUnitHeight( unit, parseInt( $(playerClass + "-unit-ranks").val() ), 
+		parseInt( $(playerClass + "-unit-files").val() ), baseDimensions[0], baseDimensions[1], looseFormation );
 	$('#battlefield').append(unit);
-	addHandle(unit);
-	addDeleteButton(unit);
+	
+	unit.playable();
 }
 
 function removeFromBattle(unitID) {
-	console.log("attempting to remove " + unitID);
-	var unitClass = "#" + unitID.match(/player-\d|scenery/)[0];
-	battleUnits[unitClass].splice( battleUnits[unitClass].indexOf(unitID) );
-}
-
-function addDeleteButton(unit) {
-	var $confirmDialog = $( document.createElement('div') )
-		.data( 'unit', unit.attr('id') )
-		.attr('title', "Delete this?")
-		.addClass('dialog')
-		.dialog({
-	            resizable: false,
-	            height: '40px',
-				width: '160px',
-	            modal: true,
-				autoOpen: false,
-	            buttons: {
-	                Delete: function() {
-	                    $( this ).dialog( "close" );
-						var unitID = $(this).data('unit');
-						console.log("Deleteing unit " +  unitID);
-						removeFromBattle(unitID);
-						$( "#" + $( this ).data('unit') ).remove();
-	                },
-	                Cancel: function() {
-	                    $( this ).dialog( "close" );
-	                }
-	            }
-		});
-	var deleteButton = $( document.createElement('div') )
-		.appendTo(unit)
-		.addClass('delete-button')
-		.addClass('control')
-		.css({
-			'position': 'absolute',
-		    'top': 5,
-		    'right': 5,
-		    'height': 10,
-		    'width': 10,
-			'cursor': 'pointer',
-			'background-image': 'url(img/delete.png)',
-			'background-size': '100%'
-		})
-		.hide()
-		.on('click', function() {
-			console.log("Attempting to open dialog");
-			$confirmDialog.dialog("open");
-			return false;
-		});
-
-	// return deleteButton;
-}
-
-function addHandle(unit) {
-	// Create handle dynamically
-	return $( document.createElement('div') )
-		.appendTo(unit)
-		.addClass('handle')
-		.addClass('control')
-		.css({
-			'position': 'absolute',
-			'bottom': 5,
-			'left': 5,
-			'height': 10,
-			'width': 10,
-			'cursor': 'pointer',
-			'background-image': 'url(img/rotate.png)',
-			'background-size': '100%'
-		})
-		.draggable({
-		    handle: '#handle',
-		    opacity: 0.01, 
-		    helper: 'clone',
-			start: dragStart
-		})
-		.hide()
-		.on('mousedown', startRotate);
+  var unitClass = "#" + unitID.match(/player-\d|scenery/)[0];
+  battleUnits[unitClass].splice( battleUnits[unitClass].indexOf(unitID) );
 }
 
 function rotateUnit(event) {
@@ -294,12 +282,38 @@ function slurpHTML(event) {
 }
 
 // sets the correct height and width for a unit base on the number of ranks and files and their base size
-function setUnitHeight(unit, ranks, files, baseHeight, baseWidth) {
-	height = mmToPx(parseInt(ranks) * baseHeight);
-	width = mmToPx(parseInt(files) * baseWidth);
-	unit.height(height);
-	unit.width(width);
-	console.log("Setting dimensions to " + height + "x" + width);
+function setUnitHeight(unit, ranks, files, baseWidth, baseHeight, looseFormation) {
+	var unitModels = $( document.createElement('div') )
+		.addClass('unit-models')
+		.addClass( 'player-' + unit.data('player') );
+	for (var i = 0; i < ranks; i++) {
+		var row = $( document.createElement('div') ).css('clear', 'both');
+		for (var j = 0; j < files; j++) {
+			var col = $( document.createElement('div') )
+			.css( {
+				'height': mmToPx(baseHeight) - 2 + "px",
+				'width': mmToPx(baseWidth) - 2 + "px",
+				'border': '1px solid #333',
+				'float': 'left',
+				'background-color': 'black'
+			});
+			if (looseFormation) {
+				if (j != 0) { // left most column
+					col.css('margin-left', inchesToPx(0.5) + "px");
+				}
+				if (i < ranks - 1) { // bottom most row
+					col.css('margin-bottom', inchesToPx(0.5) + "px");
+				}
+			}
+			col.appendTo(row);
+		}
+		row.appendTo(unitModels);
+	}
+	var unitWidth = mmToPx(baseWidth) * files;
+	if (looseFormation) {
+		unitWidth += (files - 1) * inchesToPx(0.5);
+	}
+	unitModels.css('width', unitWidth + "px").appendTo(unit);
 }
 
 // Convert functions
@@ -325,3 +339,5 @@ function colorForPlayer(player) {
 	}
 	return 'blue';
 }
+
+console.log("Loaded herald.js");

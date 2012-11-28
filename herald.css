@@ -1,14 +1,19 @@
 #battlefield-bg {
-	width: 1152px;
-	height: 768px;
-	background-image: url("img/grass.png");
-	background-repeat: repeat;
+/*	width: 1152px;
+	height: 768px;*/
+	width: 576px;
+	height: 384px;
+/*	background-image: url("img/grass.png");
+	background-repeat: repeat;*/
+	border: 1px dashed black;
 	float: left;
 }
 
 #battlefield {
-	width: 1152px;
-	height: 768px;
+/*	width: 1152px;
+	height: 768px;*/
+	width: 576px;
+	height: 384px;
 }
 
 #control-panel {
@@ -31,7 +36,7 @@ label {
 	font-size: 12px;
 	clear: both;
 }
-.add-unit {
+.add-unit,.add-scenery {
 	display: block;
 	clear: both;
 	margin-left: 85px;
@@ -41,18 +46,42 @@ label {
 	font-size: 12px;
 }
 
+.handle {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+	height: 10px;
+	width: 10px;
+	cursor: pointer;
+	background-image: url(img/rotate.png);
+	background-size: 100%;
+}
+
+.delete-button {
+	position: absolute;
+    top: 19px;
+    right: 5px;
+    height: 10px;
+    width: 10px;
+	cursor: pointer;
+	background-image: url(img/delete.png);
+	background-size: 100%
+}
+
 .unit {
-	background-color: black;
-	color: white;
+	background-color: transparent;
+	color: black;
 	cursor: move;
-	min-height: 40px;
-	padding: 5px;
 	position: absolute;
 	word-wrap: break-word;
-	margin-bottom: 2em;
 	text-align: center;
 	box-shadow: 3px 3px 8px #222;
 	z-index: 20;
+	min-width: 50px;
+}
+
+.unit-models {
+	margin: 0 auto;
 }
 
 .scenery {

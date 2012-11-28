@@ -6,6 +6,10 @@
 	<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
 	<style type="text/css">@import "herald.css";</style>
 	<script src="herald.js" type="text/javascript" charset="utf-8"></script>
+	<!-- 
+	<script src="herald.min.js" type="text/javascript" charset="utf-8"></script>
+	-->
+  <title>Herald Online Battle Reporter for Miniatures Wargames - Alpha</title>
 </head>
 <body>
 	<div id="battlefield-bg">
@@ -33,12 +37,13 @@
 				<option value="100x100">100mm x 100mm</option>
 				<option value="100x150">100mm x 150mm</option>
 			</select></div>
+			<div><label for="player-1-unit-loose-formation">Loose Formation?</label><input type="checkbox" id="player-1-unit-loose-formation" /></div>
 			<div><button class="add-unit">Add Unit</button></div>
 		</div>
 		<div id="unit-manager-player-2" class="unit-manager player-2" data-player="2">
-			<div><label for="player-2-unit-ranks">Ranks</label><input type="text" value="4" id="player-2-unit-ranks" size="2" /></div>
-			<div><label for="player-2-unit-files">Files</label><input type="text" value="8" id="player-2-unit-files" size="2" /></div>
-			<div><label for="player-2-unit-name">Unit Name</label><input type="text" value="Rectangle" id="player-2-unit-name" /></div>
+			<div><label for="player-2-unit-ranks">Ranks</label><input type="text" id="player-2-unit-ranks" size="2" /></div>
+			<div><label for="player-2-unit-files">Files</label><input type="text" id="player-2-unit-files" size="2" /></div>
+			<div><label for="player-2-unit-name">Unit Name</label><input type="text" id="player-2-unit-name" /></div>
 			<div><label for="player-2-unit-base-size">Base Size</label><select id="player-2-unit-base-size">
 				<option value="20x20">20mm x 20mm</option>
 				<option value="25x25">25mm x 25mm</option>
@@ -50,9 +55,17 @@
 				<option value="100x100">100mm x 100mm</option>
 				<option value="100x150">100mm x 150mm</option>
 			</select></div>
+			<div><label for="player-2-unit-loose-formation">Loose Formation?</label><input type="checkbox" id="player-2-unit-loose-formation" /></div>
 			<div><button class="add-unit">Add Unit</button></div>
 		</div>
-		<div id="scenery-manager"></div>
+		<div id="scenery-manager">
+			<div>
+				<div><label for="scenery-url">URL</label><input type="text" id="scenery-url" /></div>
+				<div><label for="scenery-label">Label</label><input type="text" id="scenery-label" /></div>
+				<div><button class="add-scenery" id="add-remote-scenery">Add Custom Scenery</button></div>
+			</div>
+			<hr />
+		</div>
 		<div id="game">
 			<div><button id="start-game">Start Game (locks scenery)</button></div>
 			<!-- <div><textarea id="battlefield-out"></textarea></div>
