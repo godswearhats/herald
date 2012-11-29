@@ -1,3 +1,7 @@
+body {
+	font-family: Helvetica, Arial, "MS Trebuchet", sans-serif;
+}
+
 #battlefield-bg {
 	width: 1152px;
 	height: 768px;
@@ -17,6 +21,13 @@
 	float: left;
 	font-size: 12px;
 	margin-left: 10px;
+}
+
+.footer {
+	float: left;
+	font-size: 10px;
+	clear: both;
+	margin-top: 10px;
 }
 
 input {
