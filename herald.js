@@ -300,37 +300,38 @@ function setUnitHeight(unit, ranks, files, baseWidth, baseHeight, looseFormation
 	var unitModels = $( document.createElement('div') )
 		.addClass('unit-models')
 		.addClass( 'player-' + unit.data('player') );
+	var gap = Math.round( inchesToPx(0.5) );
 	for (var i = 0; i < ranks; i++) {
 		var row = $( document.createElement('div') ).css('clear', 'both');
 		for (var j = 0; j < files; j++) {
 			var col = $( document.createElement('div') )
 			.css( {
-				'height': mmToPx(baseHeight) - 2 + "px",
-				'width': mmToPx(baseWidth) - 2 + "px",
+				'height': Math.round( mmToPx(baseHeight) ) - 2 + "px",
+				'width': Math.round( mmToPx(baseWidth) ) - 2 + "px",
 				'border': '1px solid #333',
 				'float': 'left',
 				'background-color': 'black'
 			});
 			if (looseFormation) {
 				if (j != 0) { // left most column
-					col.css('margin-left', inchesToPx(0.5) + "px");
+					col.css('margin-left', gap + "px");
 				}
 				if (i < ranks - 1) { // bottom most row
-					col.css('margin-bottom', inchesToPx(0.5) + "px");
+					col.css('margin-bottom', gap + "px");
 				}
 			}
 			col.appendTo(row);
 		}
 		row.appendTo(unitModels);
 	}
-	var unitWidth = mmToPx(baseWidth) * files;
+	var unitWidth = Math.round( mmToPx(baseWidth) ) * files;
 	if (looseFormation) {
-		unitWidth += (files - 1) * inchesToPx(0.5);
+		unitWidth += (files - 1) * gap;
 	}
 	
-	var unitHeight = mmToPx(baseHeight) * ranks;
+	var unitHeight = Math.round( mmToPx(baseHeight) ) * ranks;
 	if (looseFormation) {
-		unitHeight += (ranks - 1) * inchesToPx(0.5);
+		unitHeight += (ranks - 1) * gap;
 	}
 	
 	unitModels.css({

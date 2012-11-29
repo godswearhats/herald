@@ -1,19 +1,15 @@
 #battlefield-bg {
-/*	width: 1152px;
-	height: 768px;*/
-	width: 576px;
-	height: 384px;
-/*	background-image: url("img/grass.png");
-	background-repeat: repeat;*/
+	width: 1152px;
+	height: 768px;
+	background-image: url("img/grass.png");
+	background-repeat: repeat;
 	border: 1px dashed black;
 	float: left;
 }
 
 #battlefield {
-/*	width: 1152px;
-	height: 768px;*/
-	width: 576px;
-	height: 384px;
+	width: 1152px;
+	height: 768px;
 }
 
 #control-panel {
@@ -113,13 +109,13 @@ label {
 
 .unit-models.player-1 {
 	border: 1px solid red;
-/*	left: 550px;*/
+	left: 550px;
 }
 
 .unit-models.player-2 {
 	border: 1px solid blue;
-/*	top: 600px;
-	left: 550px;*/
+	top: 600px;
+	left: 550px;
 }
 
 .unit-models.player-2:after {
