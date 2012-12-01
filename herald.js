@@ -141,7 +141,7 @@ function loadRemoteScenery(event) {
 	createSceneryButton(url, label);
 }
 
-function createSceneryButton(url, label, aspectRatio, controlPanel) {
+function createSceneryButton(url, label, isScenery, controlPanel) {
 	$( document.createElement('img') )
 	    .attr({
 			src: url,
@@ -150,7 +150,7 @@ function createSceneryButton(url, label, aspectRatio, controlPanel) {
 	    .load(function() {
 			$( document.createElement('button') )
 				.appendTo( controlPanel )
-				.on('click', { src: this.src, height: this.height, width: this.width, aspectRatio: aspectRatio}, addScenery)
+				.on('click', { src: this.src, height: this.height, width: this.width, isScenery: isScenery}, addScenery)
 				.text( this.alt );
 	    });
 }
@@ -170,16 +170,19 @@ function addScenery(event) {
 		})
 		.resizable({
 			autoHide: true,
-			aspectRatio: event.data.aspectRatio,
-			resize: function(event, ui) {
-				ui.element.children('.scenery-size').show().text( toNearestTenth(pxToInches(ui.size.height)) + "in.");
-			}
+			aspectRatio: event.data.isScenery
 		});
-	var scenerySize = $( document.createElement('div') )
-		.text( toNearestTenth(pxToInches(event.data.height)) + "in." )
-		.addClass('scenery-size')
-		.addClass('control')
-		.appendTo( scenery );
+		if (!event.data.isScenery) {
+			scenery.on('resize', function(event, ui) {
+				ui.element.children('.scenery-size').show().text( toNearestTenth(pxToInches(ui.size.height)) + "in.");
+			});
+			var scenerySize = $( document.createElement('div') )
+				.text( toNearestTenth(pxToInches(event.data.height)) + "in." )
+				.addClass('scenery-size')
+				.addClass('control')
+				.hide()
+				.appendTo( scenery );
+		}
 	$('#battlefield').append(scenery);
 	scenery.playable();
 }
