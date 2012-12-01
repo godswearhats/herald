@@ -114,8 +114,18 @@ label {
 
 .scenery {
 	background-repeat: no-repeat;
-	background-size: 100%;
+	background-size: 100% 100%;
 	position: absolute;
+}
+
+.scenery-size {
+	position: absolute;
+	bottom: 20px;
+	right: -20px;
+	color: black;
+	background-color: #F1F1D4;
+	box-shadow: 3px 3px 8px #222;
+	padding: 2px;
 }
 
 .unit-models.player-1 {

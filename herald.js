@@ -129,8 +129,10 @@ function initializeSceneryManager() {
 	var scenery = ['tower', 'wall', 'tree', 'corner_hill', 'hill'];
 	for (var i = 0; i < scenery.length; i++) {
 		var image_src = 'img/' + scenery[i] + '.png';
-		createSceneryButton( image_src, scenery[i].replace("_", "") );
+		createSceneryButton( image_src, scenery[i].replace("_", " "), true, $('#scenery-manager') );
 	}
+	createSceneryButton( 'img/red_arrow.png', "Player 1 Arrow", false, $('#scenery-manager') );
+	createSceneryButton( 'img/blue_arrow.png', "Player 2 Arrow", false, $('#scenery-manager') );
 }
 
 function loadRemoteScenery(event) {
@@ -139,7 +141,7 @@ function loadRemoteScenery(event) {
 	createSceneryButton(url, label);
 }
 
-function createSceneryButton(url, label) {
+function createSceneryButton(url, label, aspectRatio, controlPanel) {
 	$( document.createElement('img') )
 	    .attr({
 			src: url,
@@ -147,8 +149,8 @@ function createSceneryButton(url, label) {
 		})
 	    .load(function() {
 			$( document.createElement('button') )
-				.appendTo( $('#scenery-manager') )
-				.on('click', { src: this.src, height: this.height, width: this.width }, addScenery)
+				.appendTo( controlPanel )
+				.on('click', { src: this.src, height: this.height, width: this.width, aspectRatio: aspectRatio}, addScenery)
 				.text( this.alt );
 	    });
 }
@@ -168,8 +170,16 @@ function addScenery(event) {
 		})
 		.resizable({
 			autoHide: true,
-			aspectRatio: true
+			aspectRatio: event.data.aspectRatio,
+			resize: function(event, ui) {
+				ui.element.children('.scenery-size').show().text( toNearestTenth(pxToInches(ui.size.height)) + "in.");
+			}
 		});
+	var scenerySize = $( document.createElement('div') )
+		.text( toNearestTenth(pxToInches(event.data.height)) + "in." )
+		.addClass('scenery-size')
+		.addClass('control')
+		.appendTo( scenery );
 	$('#battlefield').append(scenery);
 	scenery.playable();
 }
@@ -357,11 +367,13 @@ function inchesToPx(inches) {
 	return 16 * inches;
 }
 
+function toNearestTenth(num) {
+	return ( Math.round(num * 10) ) / 10;
+}
+
 function colorForPlayer(player) {
 	if (player == 1) {
 		return 'red';
 	}
 	return 'blue';
 }
-
-console.log("Loaded herald.js");
