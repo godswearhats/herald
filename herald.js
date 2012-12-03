@@ -131,8 +131,8 @@ function initializeSceneryManager() {
 		var image_src = 'img/' + scenery[i] + '.png';
 		createSceneryButton( image_src, scenery[i].replace("_", " "), true, $('#scenery-manager') );
 	}
-	createSceneryButton( 'img/red_arrow.png', "Player 1 Arrow", false, $('#scenery-manager') );
-	createSceneryButton( 'img/blue_arrow.png', "Player 2 Arrow", false, $('#scenery-manager') );
+	createSceneryButton( 'img/red_arrow.png', "Player 1 Arrow", false, $('#game') );
+	createSceneryButton( 'img/blue_arrow.png', "Player 2 Arrow", false, $('#game') );
 }
 
 function loadRemoteScenery(event) {
