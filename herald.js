@@ -99,7 +99,7 @@ $(function() {
 	$( "#add-remote-scenery" ).on("click", loadRemoteScenery);
 	$( "#dump-button" ).on("click", dumpHTML);
 	$( "#slurp-button" ).on("click", slurpHTML);
-	$( "#start-game").on("click", toggleGameState);
+	$( "#start-report").on("click", toggleReportState);
 });
 
 function addPlayerClass(unit, element) {
@@ -109,10 +109,10 @@ function addPlayerClass(unit, element) {
 	}
 }
 
-function toggleGameState(event) {
+function toggleReportState(event) {
 	if (reportStarted) {
 		reportStarted = false;
-		$("#start-game").text("Start Report (locks scenery)");
+		$("#start-report").text("Start Report (locks scenery)");
 		$('.scenery').draggable( {cancel :'.handle'} ).resizable({
 			autoHide: true,
 			aspectRatio: true
@@ -120,7 +120,7 @@ function toggleGameState(event) {
 	}
 	else {
 		reportStarted = true;
-		$("#start-game").text("Stop Report (unlocks scenery)");
+		$("#start-report").text("Stop Report (unlocks scenery)");
 		$('.scenery').draggable( "destroy" ).resizable( "destroy" );
 	}
 }
@@ -131,9 +131,9 @@ function initializeSceneryManager() {
 		var image_src = 'img/' + scenery[i] + '.png';
 		createSceneryButton( image_src, scenery[i].replace("_", " "), true, '#scenery-manager' );
 	}
-	createSceneryButton( 'img/red_arrow.png', "Player 1", false, '#game' );
-	createSceneryButton( 'img/blue_arrow.png', "Player 2", false, '#game' );
-	// createSceneryButton( 'img/skull.png', "Kill Marker", true, '#game' ); // FIXME Make this not be z-index 10
+	createSceneryButton( 'img/red_arrow.png', "Player 1", false, '#report' );
+	createSceneryButton( 'img/blue_arrow.png', "Player 2", false, '#report' );
+	// createSceneryButton( 'img/skull.png', "Kill Marker", true, '#report' ); // FIXME Make this not be z-index 10
 }
 
 function loadRemoteScenery(event) {
