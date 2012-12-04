@@ -2,7 +2,7 @@ var unitBeingRotated = false;
 var mouseStartAngle = false;
 var unitStartAngle = false;
 var battleUnits = { '#player-1': [], '#player-2': [], '#scenery': [] };
-var gameStarted = false;
+var reportStarted = false;
 
 (function($){
 	$.fn.playable = function() {
@@ -11,11 +11,11 @@ var gameStarted = false;
 			$(this).draggable( {cancel: '.handle'} )
 			.hover( 
 				function() {
-					if ( $(this).hasClass('scenery') && gameStarted ) { return; }
+					if ( $(this).hasClass('scenery') && reportStarted ) { return; }
 					$(this).children('.control').show();
 				},
 				function() {
-					if ( $(this).hasClass('scenery') && gameStarted ) { return; }
+					if ( $(this).hasClass('scenery') && reportStarted ) { return; }
 					$(this).children('.control').hide(); 
 				}
 			)
@@ -110,17 +110,17 @@ function addPlayerClass(unit, element) {
 }
 
 function toggleGameState(event) {
-	if (gameStarted) {
-		gameStarted = false;
-		$("#start-game").text("Start Game (locks scenery)");
+	if (reportStarted) {
+		reportStarted = false;
+		$("#start-game").text("Start Report (locks scenery)");
 		$('.scenery').draggable( {cancel :'.handle'} ).resizable({
 			autoHide: true,
 			aspectRatio: true
 		});
 	}
 	else {
-		gameStarted = true;
-		$("#start-game").text("Stop Game (unlocks scenery)");
+		reportStarted = true;
+		$("#start-game").text("Stop Report (unlocks scenery)");
 		$('.scenery').draggable( "destroy" ).resizable( "destroy" );
 	}
 }
@@ -129,73 +129,110 @@ function initializeSceneryManager() {
 	var scenery = ['tower', 'wall', 'tree', 'corner_hill', 'hill'];
 	for (var i = 0; i < scenery.length; i++) {
 		var image_src = 'img/' + scenery[i] + '.png';
-		createSceneryButton( image_src, scenery[i].replace("_", " "), true, $('#scenery-manager') );
+		createSceneryButton( image_src, scenery[i].replace("_", " "), true, '#scenery-manager' );
 	}
-	createSceneryButton( 'img/red_arrow.png', "Player 1 Arrow", false, $('#game') );
-	createSceneryButton( 'img/blue_arrow.png', "Player 2 Arrow", false, $('#game') );
+	createSceneryButton( 'img/red_arrow.png', "Player 1", false, '#game' );
+	createSceneryButton( 'img/blue_arrow.png', "Player 2", false, '#game' );
+	// createSceneryButton( 'img/skull.png', "Kill Marker", true, '#game' ); // FIXME Make this not be z-index 10
 }
 
 function loadRemoteScenery(event) {
 	var url = $('#scenery-url').val();
 	var label = $('#scenery-label').val();
-	createSceneryButton(url, label);
+	createSceneryButton( url, label, true, '#scenery-manager' );
 }
 
-function createSceneryButton(url, label, isScenery, controlPanel) {
+function createSceneryButton(url, label, isScenery, controlPanelID) {
 	$( document.createElement('img') )
 	    .attr({
 			src: url,
 			alt: label
 		})
+		.data({
+			isScenery: isScenery,
+			controlPanelID: controlPanelID
+		})
 	    .load(function() {
 			$( document.createElement('button') )
-				.appendTo( controlPanel )
+				.appendTo( $(controlPanelID) )
 				.on('click', { src: this.src, height: this.height, width: this.width, isScenery: isScenery}, addScenery)
 				.text( this.alt );
 	    });
 }
 
 function addScenery(event) {
-	var sceneryID = "scenery-" + battleUnits['#scenery'].length;
+	var sceneryID = "scenery-unit-" + battleUnits['#scenery'].length;
+	var data = {
+		height: event.data.height,
+		width: event.data.width,
+		src: event.data.src,
+		isScenery: event.data.isScenery
+	}
+	createScenery(sceneryID, data);
+}
+
+function createScenery(sceneryID, data) {
 	battleUnits['#scenery'].push(sceneryID);
 	var scenery = $( document.createElement('div') )
 		.addClass('scenery')
 		.attr('id', sceneryID)
+		.data( data )
 		.css({
-			'height': event.data.height + "px",
-			'width': event.data.width + "px",
+			'height': data.height + "px",
+			'width': data.width + "px",
 			'z-index': 10,
-			'background-image': 'url(' + event.data.src + ')',
+			'background-image': 'url(' + data.src + ')',
 			'background-repeat': 'none'
 		})
 		.resizable({
 			autoHide: true,
-			aspectRatio: event.data.isScenery
+			aspectRatio: data.isScenery
 		});
-		if (!event.data.isScenery) {
-			scenery.on('resize', function(event, ui) {
-				ui.element.children('.scenery-size').show().text( toNearestTenth(pxToInches(ui.size.height)) + "in.");
-			});
-			var scenerySize = $( document.createElement('div') )
-				.text( toNearestTenth(pxToInches(event.data.height)) + "in." )
-				.addClass('scenery-size')
-				.addClass('control')
-				.hide()
-				.appendTo( scenery );
+		if (!data.isScenery) {
+			addMeasurementHooks(scenery, data.height);
 		}
 	$('#battlefield').append(scenery);
 	scenery.playable();
+	return scenery;
+}
+
+function addMeasurementHooks(scenery, height) {
+	scenery.on('resize', function(event, ui) {
+		ui.element.children('.scenery-size').show().text( toNearestTenth(pxToInches(ui.size.height)) + "in.");
+	});
+	var scenerySize = $( document.createElement('div') )
+		.text( toNearestTenth(pxToInches( height )) + "in." )
+		.addClass('scenery-size')
+		.addClass('control')
+		.hide()
+		.appendTo( scenery );
+	return scenery;
 }
 
 function addUnit(event) {
-	var playerNumber = event.target.parentElement.parentElement.dataset.player;
+	var playerNumber = parseInt( event.target.parentElement.parentElement.dataset.player );
 	var playerClass = "#player-" + playerNumber;
 	var unitID = "player-" + playerNumber + "-unit-" + battleUnits[playerClass].length;
-	battleUnits[playerClass].push(unitID);
+	var data = {};
 	
-	// create unit
+	var baseDimensions = $(playerClass + "-unit-base-size").val().split("x");
+	data.baseWidth = baseDimensions[0];
+	data.baseHeight = baseDimensions[1];
+	
+	data.looseFormation = $(playerClass + '-unit-loose-formation').is(':checked');
+	data.ranks = parseInt( $(playerClass + "-unit-ranks").val() );
+	data.files = parseInt( $(playerClass + "-unit-files").val() );
+	data.title = $(playerClass + "-unit-name").val();
+	
+	createUnit(playerNumber, unitID, data);
+}
+
+function createUnit(playerNumber, unitID, data) {
+	battleUnits['#player-' + playerNumber].push(unitID);
+	
 	var unit = $( document.createElement('div') )
 		.attr('id', unitID)
+		.data(data)
 		.data('player', playerNumber)
 		.addClass('unit')
 		.addClass('player-' + playerNumber);
@@ -203,22 +240,15 @@ function addUnit(event) {
 	var title = $( document.createElement('div') )
 		.css('clear', 'both')
 		.addClass('unit-title')
-		.text( $(playerClass + "-unit-name").val() );
+		.text( data.title );
 		
-	if (parseInt(playerNumber) == 1) { title.appendTo(unit); }
-			
-	// make it the right dimensions
-	// and add it with handle to the battlefield
-	var baseDimensions = $(playerClass + "-unit-base-size").val().split("x");
-	var looseFormation = $(playerClass + '-unit-loose-formation').is(':checked');
-	setUnitHeight( unit, parseInt( $(playerClass + "-unit-ranks").val() ), 
-		parseInt( $(playerClass + "-unit-files").val() ), baseDimensions[0], baseDimensions[1], looseFormation );
-		
+	if (playerNumber == 1) { title.appendTo(unit); }
+	setUnitHeight( unit, data.ranks, data.files, data.baseWidth, data.baseHeight, data.looseFormation );		
 	if (parseInt(playerNumber) == 2) { title.appendTo(unit); }
 	
 	$('#battlefield').append(unit);
-	
 	unit.playable();
+	return unit;
 }
 
 function removeFromBattle(unitID) {
@@ -227,7 +257,6 @@ function removeFromBattle(unitID) {
 }
 
 function rotateUnit(event) {
-	// if (!event.shiftKey) return;
 	if (!unitBeingRotated) return;
 	
 	var center = getUnitCenter( unitBeingRotated );
@@ -237,15 +266,16 @@ function rotateUnit(event) {
 
 	// Calculate the new rotation angle for the image
 	var rotateAngle = mouseAngle - mouseStartAngle + unitStartAngle;
-
-	// Rotate the image to the new angle, and store the new angle
-	unitBeingRotated.css('transform','rotate(' + rotateAngle + 'rad)');
-	unitBeingRotated.css('-moz-transform','rotate(' + rotateAngle + 'rad)');
-	unitBeingRotated.css('-webkit-transform','rotate(' + rotateAngle + 'rad)');
-	unitBeingRotated.css('-o-transform','rotate(' + rotateAngle + 'rad)');
-	unitBeingRotated.data('angle', rotateAngle );
+	setRotationAngle(unitBeingRotated, rotateAngle)
 	
 	return false;
+}
+
+function setRotationAngle(unitBeingRotated, rotateAngle) {
+	performRotation(unitBeingRotated, rotateAngle);
+	unitBeingRotated.data('angle', rotateAngle );
+	
+	return unitBeingRotated;
 }
 
 function startRotate(event) {
@@ -276,36 +306,90 @@ function dragStart( event, ui ) {
 
 // taken from http://www.elated.com/articles/smooth-rotatable-images-css3-jquery/
 function getUnitCenter(unit) {
-	 // Rotate the image to 0 radians
-	 unit.css('transform','rotate(0rad)');
-	 unit.css('-moz-transform','rotate(0rad)');
-	 unit.css('-webkit-transform','rotate(0rad)');
-	 unit.css('-o-transform','rotate(0rad)');
+	var unitOffset = getUnitOffset(unit);
+	var unitCentreX = unitOffset.left + unit.width() / 2;
+	var unitCentreY = unitOffset.top + unit.height() / 2;
+	return Array( unitCentreX, unitCentreY );
+}
 
-	 // Measure the unit centre
-	 var unitOffset = unit.offset();
-	 var unitCentreX = unitOffset.left + unit.width() / 2;
-	 var unitCentreY = unitOffset.top + unit.height() / 2;
+function getUnitOffset(unit) {
+	performRotation(unit, 0);
+	var offset = unit.offset();
+	performRotation(unit, unit.data('angle') )
+	return offset;
+}
 
-	 // Rotate the unit back to its previous angle
-	 var angle = unit.data('angle');
-	 unit.css('transform','rotate(' + angle + 'rad)');
-	 unit.css('-moz-transform','rotate(' + angle + 'rad)');
-	 unit.css('-webkit-transform','rotate(' + angle + 'rad)');
-	 unit.css('-o-transform','rotate(' + angle + 'rad)');
-
-	 // Return the calculated centre coordinates
-	 return Array( unitCentreX, unitCentreY );
+function performRotation(unit, angle) {
+	unit.css('transform','rotate(' + angle + 'rad)');
+	unit.css('-moz-transform','rotate(' + angle + 'rad)');
+	unit.css('-webkit-transform','rotate(' + angle + 'rad)');
+	unit.css('-o-transform','rotate(' + angle + 'rad)');
 }
 
 function dumpHTML(event) {
-	$('#battlefield-out').val( $('#battlefield-bg').html() );
+	var units = {};
+	var labels = ['#player-1', '#player-2', '#scenery'];
+	for (var i = 0; i < labels.length; i++) {
+		label = labels[i];
+		units[label] = [];
+		for (var j = 0; j < battleUnits[label].length; j++) {
+			var unit = $(label + "-unit-" + j);
+			units[label].push( getDataFromElement(unit) );
+		}
+	}
+	$('#battlefield-out').val( btoa(JSON.stringify(units)) );
+}
+
+function getDataFromElement(unit) {
+	var offset = getUnitOffset(unit);
+	var data = {
+		angle: unit.data('angle'),
+		baseHeight: unit.data('baseHeight'),
+		baseWidth: unit.data('baseWidth'),
+		files: unit.data('files'),
+		id: unit.attr('id'),
+		left: offset.left,
+		looseFormation: unit.data('looseFormation'),
+		player: unit.data('player'),
+		ranks: unit.data('ranks'),
+		title: unit.data('title'),
+		top: offset.top
+	}
+	if ( unit.hasClass('scenery') ) {
+		data.src = unit.data('src');
+		// data.label = unit.data('label');
+		data.height = parseInt( unit.css('height') );
+		data.width = parseInt( unit.css('width') );
+		data.isScenery = unit.data('isScenery');
+		// data.controlPanelID = unit.data('controlPanelID');
+	}
+	return data;
 }
 
 function slurpHTML(event) {
-	console.log("Slurping!");
-	$('#battlefield-bg').html( $('#battlefield-out').val() );
-	$('.unit').draggable();
+	battleUnits = { '#player-1': [], '#player-2': [], '#scenery': [] };
+	$('#battlefield').html('');
+	var input = jQuery.parseJSON( atob($('#battlefield-out').val()) );
+	var labels = ['#player-1', '#player-2', '#scenery'];
+	for (var i = 0; i < labels.length; i++) {
+		label = labels[i];
+		for (var j = 0; j < input[label].length; j++) {
+			var unitData = input[label][j];
+			
+			var unit;
+			if (label == '#scenery') {
+				unit = createScenery(unitData.id, unitData);
+			}
+			else {
+				unit = createUnit(unitData.player, unitData.id, unitData);
+			}
+			unit.offset({
+				top: unitData.top,
+				left: unitData.left
+			});
+			setRotationAngle(unit, unitData.angle);
+		}
+	}
 }
 
 // sets the correct height and width for a unit base on the number of ranks and files and their base size
@@ -380,3 +464,5 @@ function colorForPlayer(player) {
 	}
 	return 'blue';
 }
+
+jQuery.base64=(function($){var _PADCHAR="=",_ALPHA="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",_VERSION="1.0";function _getbyte64(s,i){var idx=_ALPHA.indexOf(s.charAt(i));if(idx===-1){throw"Cannot decode base64"}return idx}function _decode(s){var pads=0,i,b10,imax=s.length,x=[];s=String(s);if(imax===0){return s}if(imax%4!==0){throw"Cannot decode base64"}if(s.charAt(imax-1)===_PADCHAR){pads=1;if(s.charAt(imax-2)===_PADCHAR){pads=2}imax-=4}for(i=0;i<imax;i+=4){b10=(_getbyte64(s,i)<<18)|(_getbyte64(s,i+1)<<12)|(_getbyte64(s,i+2)<<6)|_getbyte64(s,i+3);x.push(String.fromCharCode(b10>>16,(b10>>8)&255,b10&255))}switch(pads){case 1:b10=(_getbyte64(s,i)<<18)|(_getbyte64(s,i+1)<<12)|(_getbyte64(s,i+2)<<6);x.push(String.fromCharCode(b10>>16,(b10>>8)&255));break;case 2:b10=(_getbyte64(s,i)<<18)|(_getbyte64(s,i+1)<<12);x.push(String.fromCharCode(b10>>16));break}return x.join("")}function _getbyte(s,i){var x=s.charCodeAt(i);if(x>255){throw"INVALID_CHARACTER_ERR: DOM Exception 5"}return x}function _encode(s){if(arguments.length!==1){throw"SyntaxError: exactly one argument required"}s=String(s);var i,b10,x=[],imax=s.length-s.length%3;if(s.length===0){return s}for(i=0;i<imax;i+=3){b10=(_getbyte(s,i)<<16)|(_getbyte(s,i+1)<<8)|_getbyte(s,i+2);x.push(_ALPHA.charAt(b10>>18));x.push(_ALPHA.charAt((b10>>12)&63));x.push(_ALPHA.charAt((b10>>6)&63));x.push(_ALPHA.charAt(b10&63))}switch(s.length-imax){case 1:b10=_getbyte(s,i)<<16;x.push(_ALPHA.charAt(b10>>18)+_ALPHA.charAt((b10>>12)&63)+_PADCHAR+_PADCHAR);break;case 2:b10=(_getbyte(s,i)<<16)|(_getbyte(s,i+1)<<8);x.push(_ALPHA.charAt(b10>>18)+_ALPHA.charAt((b10>>12)&63)+_ALPHA.charAt((b10>>6)&63)+_PADCHAR);break}return x.join("")}return{decode:_decode,encode:_encode,VERSION:_VERSION}}(jQuery));

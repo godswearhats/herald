@@ -21,6 +21,7 @@ body {
 	float: left;
 	font-size: 12px;
 	margin-left: 10px;
+	max-width: 300px;
 }
 
 .footer {
@@ -42,6 +43,10 @@ label {
 	float: left;
 	font-size: 12px;
 	clear: both;
+}
+textarea {
+	width: 100%;
+	height: 100px;
 }
 .add-unit,.add-scenery {
 	display: block;
