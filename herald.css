@@ -21,7 +21,7 @@ body {
 	float: left;
 	font-size: 12px;
 	margin-left: 10px;
-	max-width: 300px;
+	max-width: 320px;
 }
 
 .footer {
@@ -48,10 +48,13 @@ textarea {
 	width: 100%;
 	height: 100px;
 }
-.add-unit,.add-scenery {
+.add-unit, .add-scenery {
 	display: block;
 	clear: both;
 	margin-left: 85px;
+}
+.update-unit, .add-unit {
+	float: left;
 }
 
 .ui-dialog {

@@ -1,7 +1,6 @@
 var unitBeingRotated = false;
 var mouseStartAngle = false;
 var unitStartAngle = false;
-var battleUnits = { '#player-1': [], '#player-2': [], '#scenery': [] };
 var reportStarted = false;
 
 (function($){
@@ -58,7 +57,6 @@ var reportStarted = false;
 		                Delete: function() {
 		                    $(this).dialog( "close" );
 							var unitID = $(this).data('unit');
-							removeFromBattle(unitID);
 							$( "#" + $(this).data('unit') ).remove();
 		                },
 		                Cancel: function() {
@@ -82,6 +80,7 @@ var reportStarted = false;
 $(function() {
 	$(document).on('mouseup', stopRotate);
 	$( ".add-unit" ).on("click", addUnit);
+	$( ".update-unit" ).on("click", updateUnit);
 	initializeSceneryManager();
 	$( '#control-panel' ).tabs({
 		activate: function(event, ui) {
@@ -161,8 +160,9 @@ function createSceneryButton(url, label, isScenery, controlPanelID) {
 }
 
 function addScenery(event) {
-	var sceneryID = "scenery-unit-" + battleUnits['#scenery'].length;
+	var sceneryID = "scenery-unit-" + getNextID('.scenery');
 	var data = {
+		artifactType: 'scenery',
 		height: event.data.height,
 		width: event.data.width,
 		src: event.data.src,
@@ -172,9 +172,9 @@ function addScenery(event) {
 }
 
 function createScenery(sceneryID, data) {
-	battleUnits['#scenery'].push(sceneryID);
 	var scenery = $( document.createElement('div') )
 		.addClass('scenery')
+		.addClass('artifact')
 		.attr('id', sceneryID)
 		.data( data )
 		.css({
@@ -211,30 +211,42 @@ function addMeasurementHooks(scenery, height) {
 
 function addUnit(event) {
 	var playerNumber = parseInt( event.target.parentElement.parentElement.dataset.player );
-	var playerClass = "#player-" + playerNumber;
-	var unitID = "player-" + playerNumber + "-unit-" + battleUnits[playerClass].length;
-	var data = {};
+	var unitID = "player-" + playerNumber + "-unit-" + getNextID('.player-' + playerNumber);
+	var data = initializeUnitData(playerNumber, { artifactType: 'unit' });
 	
-	var baseDimensions = $(playerClass + "-unit-base-size").val().split("x");
+	createUnit(playerNumber, unitID, data);
+	resetUnitManagerInfo( playerNumber );
+}
+
+function initializeUnitData(playerNumber, data) {
+	var prefix = '#player-' + playerNumber + '-unit-';
+	var baseDimensions = $(prefix + "base-size").val().split("x");
 	data.baseWidth = baseDimensions[0];
 	data.baseHeight = baseDimensions[1];
 	
-	data.looseFormation = $(playerClass + '-unit-loose-formation').is(':checked');
-	data.ranks = parseInt( $(playerClass + "-unit-ranks").val() );
-	data.files = parseInt( $(playerClass + "-unit-files").val() );
-	data.title = $(playerClass + "-unit-name").val();
-	
-	createUnit(playerNumber, unitID, data);
+	data.looseFormation = $(prefix + 'loose-formation').is(':checked');
+	data.ranks = parseInt( $(prefix + "ranks").val() );
+	data.files = parseInt( $(prefix + "files").val() );
+	data.title = $(prefix + "title").val();
+	return data;
 }
 
-function createUnit(playerNumber, unitID, data) {
-	battleUnits['#player-' + playerNumber].push(unitID);
-	
+function getNextID(artifact) {
+	var number = 0;
+	$(artifact).each(function(index) {
+		var id = parseInt( $(this).attr('id').split('-').pop() );
+		if (id > number) { number = id }
+	});
+	return number;
+}
+
+function createUnit(playerNumber, unitID, data) {	
 	var unit = $( document.createElement('div') )
 		.attr('id', unitID)
 		.data(data)
 		.data('player', playerNumber)
 		.addClass('unit')
+		.addClass('artifact')
 		.addClass('player-' + playerNumber);
 		
 	var title = $( document.createElement('div') )
@@ -242,18 +254,70 @@ function createUnit(playerNumber, unitID, data) {
 		.addClass('unit-title')
 		.text( data.title );
 		
-	if (playerNumber == 1) { title.appendTo(unit); }
-	setUnitHeight( unit, data.ranks, data.files, data.baseWidth, data.baseHeight, data.looseFormation );		
+	if (parseInt(playerNumber) == 1) { title.appendTo(unit); }
+	addModelsToUnit( unit, data.ranks, data.files, data.baseWidth, data.baseHeight, data.looseFormation );		
 	if (parseInt(playerNumber) == 2) { title.appendTo(unit); }
 	
 	$('#battlefield').append(unit);
 	unit.playable();
+	unit.on('click', { unitID: unitID }, highlightUnit);
 	return unit;
 }
 
-function removeFromBattle(unitID) {
-  var unitClass = "#" + unitID.match(/player-\d|scenery/)[0];
-  battleUnits[unitClass].splice( battleUnits[unitClass].indexOf(unitID) );
+function updateUnit(event) {
+	var oldUnit = $( '#' + $(event.target).data('unit') );
+	var data = oldUnit.data();
+	var id = oldUnit.attr('id');
+	oldUnit.remove();
+	var newUnit = createUnit( data.player, id, initializeUnitData(data.player, data) );
+	updateArtifactPosition( newUnit, data );
+	resetUnitManagerInfo(data.player);
+}
+
+function resetUnitManagerInfo(player) {
+	setUnitManagerInfo( player, defaultUnitData() ); // clear out the unit data
+	$('#unit-manager-player-' + player + ' .update-unit').prop('disabled', true);
+}
+
+function highlightUnit(event) {
+	var unit = $("#" + event.data.unitID);
+	var models = unit.children('.unit-models');
+	deselectAllUnits(event);
+	
+	models.css({ 'box-shadow': "8px 8px 20px #000" });
+	displayUnitInfo(unit);
+}
+
+function displayUnitInfo(unit) {
+	var player = parseInt( unit.data('player') );
+	$('#control-panel').tabs('select', player); // Depends on player 1 being second tab and player 2 being third tab on zero-index array
+	setUnitManagerInfo( player, unit.data() );
+	$('#unit-manager-player-' + player + ' .update-unit').prop('disabled', false).data( 'unit', unit.attr('id') );
+}
+
+function setUnitManagerInfo(player, data) {
+	var prefix = '#player-' + player + '-unit-';
+	
+	$(prefix + 'ranks').val( data.ranks );
+	$(prefix + 'files').val( data.files );
+	$(prefix + 'title').val( data.title );
+	$(prefix + 'base-size option[value="' + data.baseHeight + 'x' + data.baseWidth + '"]').prop('selected', true);
+	$(prefix + 'loose-formation').prop('checked', data.looseFormation );
+}
+
+function defaultUnitData() {
+	return {
+		ranks: '',
+		files: '',
+		title: '',
+		baseHeight: 20,
+		baseWidth: 20,
+		looseFormation: false
+	}
+}
+
+function deselectAllUnits(event) {
+	$('.unit-models').css({ 'box-shadow': "3px 3px 8px #222" });
 }
 
 function rotateUnit(event) {
@@ -304,7 +368,6 @@ function dragStart( event, ui ) {
 	if ( unitBeingRotated ) return false;
 }
 
-// taken from http://www.elated.com/articles/smooth-rotatable-images-css3-jquery/
 function getUnitCenter(unit) {
 	var unitOffset = getUnitOffset(unit);
 	var unitCentreX = unitOffset.left + unit.width() / 2;
@@ -327,17 +390,11 @@ function performRotation(unit, angle) {
 }
 
 function dumpHTML(event) {
-	var units = {};
-	var labels = ['#player-1', '#player-2', '#scenery'];
-	for (var i = 0; i < labels.length; i++) {
-		label = labels[i];
-		units[label] = [];
-		for (var j = 0; j < battleUnits[label].length; j++) {
-			var unit = $(label + "-unit-" + j);
-			units[label].push( getDataFromElement(unit) );
-		}
-	}
-	$('#battlefield-out').val( btoa(JSON.stringify(units)) );
+	var artifacts = [];
+	$('.artifact').each(function(index) {
+		artifacts.push( getDataFromElement($(this)) );
+	});
+	$('#battlefield-out').val( btoa(JSON.stringify(artifacts)) );
 }
 
 function getDataFromElement(unit) {
@@ -353,7 +410,8 @@ function getDataFromElement(unit) {
 		player: unit.data('player'),
 		ranks: unit.data('ranks'),
 		title: unit.data('title'),
-		top: offset.top
+		top: offset.top,
+		artifactType: unit.data('artifactType')
 	}
 	if ( unit.hasClass('scenery') ) {
 		data.src = unit.data('src');
@@ -366,34 +424,33 @@ function getDataFromElement(unit) {
 	return data;
 }
 
+// FIXME - handle empty report gracefully
 function slurpHTML(event) {
-	battleUnits = { '#player-1': [], '#player-2': [], '#scenery': [] };
 	$('#battlefield').html('');
 	var input = jQuery.parseJSON( atob($('#battlefield-out').val()) );
-	var labels = ['#player-1', '#player-2', '#scenery'];
-	for (var i = 0; i < labels.length; i++) {
-		label = labels[i];
-		for (var j = 0; j < input[label].length; j++) {
-			var unitData = input[label][j];
-			
-			var unit;
-			if (label == '#scenery') {
-				unit = createScenery(unitData.id, unitData);
-			}
-			else {
-				unit = createUnit(unitData.player, unitData.id, unitData);
-			}
-			unit.offset({
-				top: unitData.top,
-				left: unitData.left
-			});
-			setRotationAngle(unit, unitData.angle);
+	for (var j = 0; j < input.length; j++) {
+		var artifactData = input[j];
+		
+		var artifact;
+		if (artifactData.artifactType == 'scenery') {
+			artifact = createScenery(artifactData.id, artifactData);
 		}
+		else {
+			artifact = createUnit(artifactData.player, artifactData.id, artifactData);
+		}
+		updateArtifactPosition(artifact, artifactData);
 	}
 }
 
-// sets the correct height and width for a unit base on the number of ranks and files and their base size
-function setUnitHeight(unit, ranks, files, baseWidth, baseHeight, looseFormation) {
+function updateArtifactPosition(artifact, artifactData) {
+	artifact.offset({
+		top: artifactData.top,
+		left: artifactData.left
+	});
+	setRotationAngle(artifact, artifactData.angle);
+}
+
+function addModelsToUnit(unit, ranks, files, baseWidth, baseHeight, looseFormation) {
 	var unitModels = $( document.createElement('div') )
 		.addClass('unit-models')
 		.addClass( 'player-' + unit.data('player') );
@@ -437,7 +494,6 @@ function setUnitHeight(unit, ranks, files, baseWidth, baseHeight, looseFormation
 	}).appendTo(unit);
 }
 
-// Convert functions
 function pxToMm(px) {
 	return pxToInches(px) * 25.4;
 }
@@ -459,10 +515,9 @@ function toNearestTenth(num) {
 }
 
 function colorForPlayer(player) {
+	player = parseInt( player );
 	if (player == 1) {
 		return 'red';
 	}
 	return 'blue';
 }
-
-jQuery.base64=(function($){var _PADCHAR="=",_ALPHA="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",_VERSION="1.0";function _getbyte64(s,i){var idx=_ALPHA.indexOf(s.charAt(i));if(idx===-1){throw"Cannot decode base64"}return idx}function _decode(s){var pads=0,i,b10,imax=s.length,x=[];s=String(s);if(imax===0){return s}if(imax%4!==0){throw"Cannot decode base64"}if(s.charAt(imax-1)===_PADCHAR){pads=1;if(s.charAt(imax-2)===_PADCHAR){pads=2}imax-=4}for(i=0;i<imax;i+=4){b10=(_getbyte64(s,i)<<18)|(_getbyte64(s,i+1)<<12)|(_getbyte64(s,i+2)<<6)|_getbyte64(s,i+3);x.push(String.fromCharCode(b10>>16,(b10>>8)&255,b10&255))}switch(pads){case 1:b10=(_getbyte64(s,i)<<18)|(_getbyte64(s,i+1)<<12)|(_getbyte64(s,i+2)<<6);x.push(String.fromCharCode(b10>>16,(b10>>8)&255));break;case 2:b10=(_getbyte64(s,i)<<18)|(_getbyte64(s,i+1)<<12);x.push(String.fromCharCode(b10>>16));break}return x.join("")}function _getbyte(s,i){var x=s.charCodeAt(i);if(x>255){throw"INVALID_CHARACTER_ERR: DOM Exception 5"}return x}function _encode(s){if(arguments.length!==1){throw"SyntaxError: exactly one argument required"}s=String(s);var i,b10,x=[],imax=s.length-s.length%3;if(s.length===0){return s}for(i=0;i<imax;i+=3){b10=(_getbyte(s,i)<<16)|(_getbyte(s,i+1)<<8)|_getbyte(s,i+2);x.push(_ALPHA.charAt(b10>>18));x.push(_ALPHA.charAt((b10>>12)&63));x.push(_ALPHA.charAt((b10>>6)&63));x.push(_ALPHA.charAt(b10&63))}switch(s.length-imax){case 1:b10=_getbyte(s,i)<<16;x.push(_ALPHA.charAt(b10>>18)+_ALPHA.charAt((b10>>12)&63)+_PADCHAR+_PADCHAR);break;case 2:b10=(_getbyte(s,i)<<16)|(_getbyte(s,i+1)<<8);x.push(_ALPHA.charAt(b10>>18)+_ALPHA.charAt((b10>>12)&63)+_ALPHA.charAt((b10>>6)&63)+_PADCHAR);break}return x.join("")}return{decode:_decode,encode:_encode,VERSION:_VERSION}}(jQuery));

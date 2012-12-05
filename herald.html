@@ -36,7 +36,7 @@
 		<div id="unit-manager-player-1" class="unit-manager player-1" data-player="1">
 			<div><label for="player-1-unit-ranks">Ranks</label><input type="text" id="player-1-unit-ranks" size="2" /></div>
 			<div><label for="player-1-unit-files">Files</label><input type="text" id="player-1-unit-files" size="2" /></div>
-			<div><label for="player-1-unit-name">Unit Name</label><input type="text" id="player-1-unit-name"/></div>
+			<div><label for="player-1-unit-title">Unit Title</label><input type="text" id="player-1-unit-title"/></div>
 			<div><label for="player-1-unit-base-size">Base Size</label><select id="player-1-unit-base-size">
 				<option value="20x20">20mm x 20mm</option>
 				<option value="25x25">25mm x 25mm</option>
@@ -49,12 +49,15 @@
 				<option value="100x150">100mm x 150mm</option>
 			</select></div>
 			<div><label for="player-1-unit-loose-formation">Loose Formation?</label><input type="checkbox" id="player-1-unit-loose-formation" /></div>
-			<div><button class="add-unit">Add Unit</button></div>
+			<div>
+				<button class="add-unit">Add Unit</button>
+				<button disabled class="update-unit">Update Unit</button>
+			</div>
 		</div>
 		<div id="unit-manager-player-2" class="unit-manager player-2" data-player="2">
 			<div><label for="player-2-unit-ranks">Ranks</label><input type="text" id="player-2-unit-ranks" size="2" /></div>
 			<div><label for="player-2-unit-files">Files</label><input type="text" id="player-2-unit-files" size="2" /></div>
-			<div><label for="player-2-unit-name">Unit Name</label><input type="text" id="player-2-unit-name" /></div>
+			<div><label for="player-2-unit-title">Unit Title</label><input type="text" id="player-2-unit-title" /></div>
 			<div><label for="player-2-unit-base-size">Base Size</label><select id="player-2-unit-base-size">
 				<option value="20x20">20mm x 20mm</option>
 				<option value="25x25">25mm x 25mm</option>
@@ -67,7 +70,10 @@
 				<option value="100x150">100mm x 150mm</option>
 			</select></div>
 			<div><label for="player-2-unit-loose-formation">Loose Formation?</label><input type="checkbox" id="player-2-unit-loose-formation" /></div>
-			<div><button class="add-unit">Add Unit</button></div>
+			<div>
+				<button class="add-unit">Add Unit</button>
+				<button disabled class="update-unit">Update Unit</button>
+			</div>
 		</div>
 		<div id="scenery-manager">
 			<div>
