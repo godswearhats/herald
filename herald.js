@@ -78,27 +78,42 @@ var reportStarted = false;
 })(jQuery);
 
 $(function() {
-	$(document).on('mouseup', stopRotate);
-	$( ".add-unit" ).on("click", addUnit);
-	$( ".update-unit" ).on("click", updateUnit);
+	bindFunctionsToButtons();
 	initializeSceneryManager();
-	$( '#control-panel' ).tabs({
-		activate: function(event, ui) {
+	$( '#control-panel' ).tabs({ activate: activateTabs });
+	
+	function activateTabs(event, ui) {
+		$('.unit').draggable( "disable" );
+		var player = ui.newPanel.data('player');
+		if (player) {
 			$('.unit').draggable( "disable" );
-			var player = ui.newPanel.data('player');
-			if (player) {
-				$('.unit').draggable( "disable" );
-				$('.unit.player-' + player).draggable( "enable" );
-			}
-			else {
-				$('.unit').draggable( "enable" );
-			}
+			$('.unit.player-' + player).draggable( "enable" );
 		}
-	});
-	$( "#add-remote-scenery" ).on("click", loadRemoteScenery);
-	$( "#dump-button" ).on("click", dumpHTML);
-	$( "#slurp-button" ).on("click", slurpHTML);
-	$( "#start-report").on("click", toggleReportState);
+		else {
+			$('.unit').draggable( "enable" );
+		}
+	}
+	
+	function bindFunctionsToButtons() {
+		$(document).on('mouseup', stopRotate);
+		$( ".add-unit" ).on("click", addUnit);
+		$( ".update-unit" ).on("click", updateUnit);
+		$( "#add-remote-scenery" ).on("click", loadRemoteScenery);
+		$( "#dump-button" ).on("click", dumpHTML);
+		$( "#slurp-button" ).on("click", slurpHTML);
+		$( "#start-report").on("click", toggleReportState);
+	}
+	
+	function initializeSceneryManager() {
+		var scenery = ['tower', 'wall', 'tree', 'corner_hill', 'hill'];
+		for (var i = 0; i < scenery.length; i++) {
+			var image_src = 'img/' + scenery[i] + '.png';
+			createSceneryButton( image_src, scenery[i].replace("_", " "), true, '#scenery-manager' );
+		}
+		createSceneryButton( 'img/red_arrow.png', "Player 1", false, '#report' );
+		createSceneryButton( 'img/blue_arrow.png', "Player 2", false, '#report' );
+		// createSceneryButton( 'img/skull.png', "Kill Marker", true, '#report' ); // FIXME Make this not be z-index 10
+	}
 });
 
 function addPlayerClass(unit, element) {
@@ -122,17 +137,6 @@ function toggleReportState(event) {
 		$("#start-report").text("Stop Report (unlocks scenery)");
 		$('.scenery').draggable( "destroy" ).resizable( "destroy" );
 	}
-}
-
-function initializeSceneryManager() {
-	var scenery = ['tower', 'wall', 'tree', 'corner_hill', 'hill'];
-	for (var i = 0; i < scenery.length; i++) {
-		var image_src = 'img/' + scenery[i] + '.png';
-		createSceneryButton( image_src, scenery[i].replace("_", " "), true, '#scenery-manager' );
-	}
-	createSceneryButton( 'img/red_arrow.png', "Player 1", false, '#report' );
-	createSceneryButton( 'img/blue_arrow.png', "Player 2", false, '#report' );
-	// createSceneryButton( 'img/skull.png', "Kill Marker", true, '#report' ); // FIXME Make this not be z-index 10
 }
 
 function loadRemoteScenery(event) {
@@ -234,7 +238,7 @@ function initializeUnitData(playerNumber, data) {
 function getNextID(artifact) {
 	var number = 0;
 	$(artifact).each(function(index) {
-		var id = parseInt( $(this).attr('id').split('-').pop() );
+		var id = parseInt( $(artifact).attr('id').split('-').pop() );
 		if (id > number) { number = id }
 	});
 	return number;
