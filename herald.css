@@ -43,11 +43,21 @@ label {
 	float: left;
 	font-size: 12px;
 	clear: both;
+	line-height: 24px;
+	text-align: right;
 }
 textarea {
 	width: 100%;
 	height: 100px;
 }
+span {
+	font-size: 9px;
+}
+
+.left {
+	float: left;
+}
+
 .add-unit, .add-scenery {
 	display: block;
 	clear: both;

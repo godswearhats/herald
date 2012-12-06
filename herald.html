@@ -34,8 +34,14 @@
 			<li><a href="#report">Report</a></li>
 		</ul>
 		<div id="unit-manager-player-1" class="unit-manager player-1" data-player="1">
-			<div><label for="player-1-unit-ranks">Ranks</label><input type="text" id="player-1-unit-ranks" size="2" /></div>
-			<div><label for="player-1-unit-files">Files</label><input type="text" id="player-1-unit-files" size="2" /></div>
+			<div class="left">
+				<div><label for="player-1-unit-files">Files</label><input type="text" class="rank-and-file" id="player-1-unit-files" size="2" /></div>
+				<div><label for="player-1-unit-ranks">Ranks</label><input type="text" class="rank-and-file" id="player-1-unit-ranks" size="2" /></div>
+			</div>
+			<div class="left">
+				<div class="model-number"><label for="player-1-unit-models"># Models</label><input type="text" class="model-count" id="player-1-unit-models" size="3" /><span id="player-1-unit-model-count"></span></div>
+				<div class="model-number"><label class="dead-count" for="player-1-unit-models-dead"># Dead</label><input type="text" disabled class="dead-count" id="player-1-unit-models-dead" size="3" /></div>
+			</div>
 			<div><label for="player-1-unit-title">Unit Title</label><input type="text" id="player-1-unit-title"/></div>
 			<div><label for="player-1-unit-base-size">Base Size</label><select id="player-1-unit-base-size">
 				<option value="20x20">20mm x 20mm</option>
@@ -47,17 +53,22 @@
 				<option value="50x100">50mm x 100mm</option>
 				<option value="100x100">100mm x 100mm</option>
 				<option value="100x150">100mm x 150mm</option>
-			</select></div>
-			<div><label for="player-1-unit-loose-formation">Loose Formation?</label><input type="checkbox" id="player-1-unit-loose-formation" /></div>
+			</select><input type="checkbox" id="player-1-unit-loose-formation" /><span>Loose?</span></div>
 			<div>
 				<button class="add-unit">Add Unit</button>
 				<button disabled class="update-unit">Update Unit</button>
 			</div>
 		</div>
 		<div id="unit-manager-player-2" class="unit-manager player-2" data-player="2">
-			<div><label for="player-2-unit-ranks">Ranks</label><input type="text" id="player-2-unit-ranks" size="2" /></div>
-			<div><label for="player-2-unit-files">Files</label><input type="text" id="player-2-unit-files" size="2" /></div>
-			<div><label for="player-2-unit-title">Unit Title</label><input type="text" id="player-2-unit-title" /></div>
+			<div class="left">
+				<div><label for="player-2-unit-files">Files</label><input type="text" class="rank-and-file" id="player-2-unit-files" size="2" /></div>
+				<div><label for="player-2-unit-ranks">Ranks</label><input type="text" class="rank-and-file" id="player-2-unit-ranks" size="2" /></div>
+			</div>
+			<div class="left">
+				<div class="model-number"><label for="player-2-unit-models"># Models</label><input type="text" class="model-count" id="player-2-unit-models" size="3" /><span id="player-2-unit-model-count"></span></div>
+				<div class="model-number"><label class="dead-count" for="player-2-unit-models-dead"># Dead</label><input type="text" disabled class="dead-count" id="player-2-unit-models-dead" size="3" /></div>
+			</div>
+			<div><label for="player-2-unit-title">Unit Title</label><input type="text" id="player-2-unit-title"/></div>
 			<div><label for="player-2-unit-base-size">Base Size</label><select id="player-2-unit-base-size">
 				<option value="20x20">20mm x 20mm</option>
 				<option value="25x25">25mm x 25mm</option>
@@ -68,8 +79,7 @@
 				<option value="50x100">50mm x 100mm</option>
 				<option value="100x100">100mm x 100mm</option>
 				<option value="100x150">100mm x 150mm</option>
-			</select></div>
-			<div><label for="player-2-unit-loose-formation">Loose Formation?</label><input type="checkbox" id="player-2-unit-loose-formation" /></div>
+			</select><input type="checkbox" id="player-2-unit-loose-formation" /><span>Loose?</span></div>
 			<div>
 				<button class="add-unit">Add Unit</button>
 				<button disabled class="update-unit">Update Unit</button>
@@ -86,7 +96,7 @@
 		<div id="report">
 			<div><button id="start-report">Start Report (locks scenery)</button></div>
 			<hr />
-			<div>Your exported battle report will show up in this text area. Copy and paste it into a text editor (like Textedit or Notepad) and save it. You can also copy and paste a previously saved battle report into this text area and click load.</div>
+			<span>Your exported battle report will show up in this text area. Copy and paste it into a text editor (like Textedit or Notepad) and save it. You can also copy and paste a previously saved battle report into this text area and click load.</span>
 			<div><textarea id="battlefield-out"></textarea></div>
 			<div><button id="dump-button">Export Report</button><button id="slurp-button">Load Report</button></div>
 			<hr />

@@ -1,7 +1,8 @@
-var unitBeingRotated = false;
+var artifactBeingRotated = false;
 var mouseStartAngle = false;
-var unitStartAngle = false;
+var artifactStartAngle = false;
 var reportStarted = false;
+var LOOSE_FORMATION_GAP = Math.round( inchesToPx(0.5) );
 
 (function($){
 	$.fn.playable = function() {
@@ -102,6 +103,8 @@ $(function() {
 		$( "#dump-button" ).on("click", dumpHTML);
 		$( "#slurp-button" ).on("click", slurpHTML);
 		$( "#start-report").on("click", toggleReportState);
+		$( ".rank-and-file").on("change", { callback: updateModelCount }, modelCountHandler);
+		$( ".model-count").on("change", { callback: validateModelCount }, modelCountHandler);
 	}
 	
 	function initializeSceneryManager() {
@@ -116,13 +119,7 @@ $(function() {
 	}
 });
 
-function addPlayerClass(unit, element) {
-	var player = unit.data('player');
-	if (player) {
-		element.addClass('player-' + player);
-	}
-}
-
+/* ---- SCENERY  ---- */
 function toggleReportState(event) {
 	if (reportStarted) {
 		reportStarted = false;
@@ -131,11 +128,15 @@ function toggleReportState(event) {
 			autoHide: true,
 			aspectRatio: true
 		});
+		$('.add-unit').prop('disabled', false);
+		$('.dead-count').prop('disabled', true);
 	}
 	else {
 		reportStarted = true;
 		$("#start-report").text("Stop Report (unlocks scenery)");
 		$('.scenery').draggable( "destroy" ).resizable( "destroy" );
+		$('.add-unit').prop('disabled', true);
+		$('.dead-count').prop('disabled', false);
 	}
 }
 
@@ -213,6 +214,7 @@ function addMeasurementHooks(scenery, height) {
 	return scenery;
 }
 
+/* ---- UNITS ---- */
 function addUnit(event) {
 	var playerNumber = parseInt( event.target.parentElement.parentElement.dataset.player );
 	var unitID = "player-" + playerNumber + "-unit-" + getNextID('.player-' + playerNumber);
@@ -231,6 +233,9 @@ function initializeUnitData(playerNumber, data) {
 	data.looseFormation = $(prefix + 'loose-formation').is(':checked');
 	data.ranks = parseInt( $(prefix + "ranks").val() );
 	data.files = parseInt( $(prefix + "files").val() );
+	data.models = parseInt( $(prefix + "models").val() );
+	data.modelsDead = parseInt( $(prefix + "models-dead").val() );
+	if (data.models == 0) { data.models = data.files * data.ranks }
 	data.title = $(prefix + "title").val();
 	return data;
 }
@@ -241,7 +246,7 @@ function getNextID(artifact) {
 		var id = parseInt( $(artifact).attr('id').split('-').pop() );
 		if (id > number) { number = id }
 	});
-	return number;
+	return number + 1;
 }
 
 function createUnit(playerNumber, unitID, data) {	
@@ -259,7 +264,7 @@ function createUnit(playerNumber, unitID, data) {
 		.text( data.title );
 		
 	if (parseInt(playerNumber) == 1) { title.appendTo(unit); }
-	addModelsToUnit( unit, data.ranks, data.files, data.baseWidth, data.baseHeight, data.looseFormation );		
+	addModelsToUnit( unit, data );		
 	if (parseInt(playerNumber) == 2) { title.appendTo(unit); }
 	
 	$('#battlefield').append(unit);
@@ -268,14 +273,66 @@ function createUnit(playerNumber, unitID, data) {
 	return unit;
 }
 
+function addModelsToUnit(unit, data) {
+	var unitModels = $( document.createElement('div') )
+		.addClass('unit-models')
+		.addClass( 'player-' + unit.data('player') );
+	var modelCount = 0;
+	var deadCount = data.models - data.modelsDead;
+	for (var i = 0; i < data.ranks; i++) {
+		var row = $( document.createElement('div') ).css('clear', 'both');
+		for (var j = 0; j < data.files; j++) {
+			if (modelCount == data.models) {
+				break;
+			}
+			var col = $( document.createElement('div') )
+			.css( {
+				'height': Math.round( mmToPx(data.baseHeight) ) - 2 + "px",
+				'width': Math.round( mmToPx(data.baseWidth) ) - 2 + "px",
+				'border': '1px solid #333',
+				'float': 'left',
+				'background-color': (modelCount >= deadCount) ? 'gray' : 'black'
+			});
+			if (data.looseFormation) {
+				if (j != 0) { // left most column
+					col.css('margin-left', LOOSE_FORMATION_GAP + "px");
+				}
+				if (i < data.ranks - 1) { // bottom most row
+					col.css('margin-bottom', LOOSE_FORMATION_GAP + "px");
+				}
+			}
+			col.appendTo(row);
+			modelCount++;
+		}
+		row.appendTo(unitModels);
+	}
+	
+	unitModels.css({
+		'width': calculateUnitDimension(data.baseWidth, data.files, data.looseFormation) + "px",
+		'height': calculateUnitDimension(data.baseHeight, data.ranks, data.looseFormation) + "px"
+	}).appendTo(unit);
+}
+
+function calculateUnitDimension(baseSize, count, looseFormation) {
+	var dimension = Math.round( mmToPx(baseSize) ) * count;
+	if (looseFormation) {
+		dimension += (count - 1) * LOOSE_FORMATION_GAP;
+	}
+	return dimension;
+}
+
 function updateUnit(event) {
 	var oldUnit = $( '#' + $(event.target).data('unit') );
 	var data = oldUnit.data();
+	if (data.top === undefined) {
+		data.top = oldUnit.offset().top;
+		data.left = oldUnit.offset().left;
+	}
 	var id = oldUnit.attr('id');
 	oldUnit.remove();
 	var newUnit = createUnit( data.player, id, initializeUnitData(data.player, data) );
 	updateArtifactPosition( newUnit, data );
-	resetUnitManagerInfo(data.player);
+	// resetUnitManagerInfo(data.player);
 }
 
 function resetUnitManagerInfo(player) {
@@ -304,6 +361,8 @@ function setUnitManagerInfo(player, data) {
 	
 	$(prefix + 'ranks').val( data.ranks );
 	$(prefix + 'files').val( data.files );
+	$(prefix + 'models').val( data.models );
+	$(prefix + 'models-dead').val( data.modelsDead );
 	$(prefix + 'title').val( data.title );
 	$(prefix + 'base-size option[value="' + data.baseHeight + 'x' + data.baseWidth + '"]').prop('selected', true);
 	$(prefix + 'loose-formation').prop('checked', data.looseFormation );
@@ -313,6 +372,8 @@ function defaultUnitData() {
 	return {
 		ranks: '',
 		files: '',
+		models: '',
+		modelsDead: '',
 		title: '',
 		baseHeight: 20,
 		baseWidth: 20,
@@ -324,75 +385,107 @@ function deselectAllUnits(event) {
 	$('.unit-models').css({ 'box-shadow': "3px 3px 8px #222" });
 }
 
-function rotateUnit(event) {
-	if (!unitBeingRotated) return;
+function addPlayerClass(unit, element) {
+	var player = unit.data('player');
+	if (player) {
+		element.addClass('player-' + player);
+	}
+}
+
+function modelCountHandler(event) {
+	var prefix = '#' + event.target.id.match(/player-\d+-unit-/).pop();
+	var ranks = parseInt( $(prefix + "ranks").val() ) || 1;
+	var files = parseInt( $(prefix + "files").val() ) || 1;
+	var min = ((ranks - 1) * files) + 1;
+	var max = ranks * files;
+	event.data.callback(prefix, min, max);
+}
+
+function updateModelCount(prefix, min, max) {
+	$(prefix + 'model-count').text( min + '-' + max );
+	$(prefix + 'models').val( max );
+}
+
+function validateModelCount(prefix, min, max) {
+	var value = $(prefix + 'models').val();
+	if (value < min) { 
+		value = min;
+	}
+	else if (value > max) {
+		value = max;
+	}
+	$(prefix + 'models').val( value )
+}
+
+/* ---- ROTATABLE ---- */
+function rotateArtifact(event) {
+	if (!artifactBeingRotated) return;
 	
-	var center = getUnitCenter( unitBeingRotated );
+	var center = getArtifactCenter( artifactBeingRotated );
 	var xFromCenter = event.pageX - center[0];
 	var yFromCenter = event.pageY - center[1];
 	var mouseAngle = Math.atan2( yFromCenter, xFromCenter );
 
-	// Calculate the new rotation angle for the image
-	var rotateAngle = mouseAngle - mouseStartAngle + unitStartAngle;
-	setRotationAngle(unitBeingRotated, rotateAngle)
+	var rotateAngle = mouseAngle - mouseStartAngle + artifactStartAngle;
+	setRotationAngle(artifactBeingRotated, rotateAngle)
 	
 	return false;
 }
 
-function setRotationAngle(unitBeingRotated, rotateAngle) {
-	performRotation(unitBeingRotated, rotateAngle);
-	unitBeingRotated.data('angle', rotateAngle );
+function setRotationAngle(artifactBeingRotated, rotateAngle) {
+	performRotation(artifactBeingRotated, rotateAngle);
+	artifactBeingRotated.data('angle', rotateAngle );
 	
-	return unitBeingRotated;
+	return artifactBeingRotated;
 }
 
 function startRotate(event) {
-	// if (!event.shiftKey) return;
-	unitBeingRotated = $(this).parent();
+	artifactBeingRotated = $(this).parent();
 	
-	var center = getUnitCenter( unitBeingRotated );
+	var center = getArtifactCenter( artifactBeingRotated );
 	var startXFromCenter = event.pageX - center[0];
 	var startYFromCenter = event.pageY - center[1];
 	mouseStartAngle = Math.atan2(startYFromCenter, startXFromCenter);
-	unitStartAngle = unitBeingRotated.data('angle');
+	artifactStartAngle = artifactBeingRotated.data('angle');
 	
-	$(document).on( 'mousemove', rotateUnit );
+	$(document).on( 'mousemove', rotateArtifact );
   
 	return false;
 }
 
 function stopRotate( event ) {
-	if ( !unitBeingRotated ) return;
+	if ( !artifactBeingRotated ) return;
 	$(document).unbind( 'mousemove' );
-	setTimeout( function() { unitBeingRotated = false; }, 10 );
+	setTimeout( function() { artifactBeingRotated = false; }, 10 );
 	return false;
 }
 
 function dragStart( event, ui ) {
-	if ( unitBeingRotated ) return false;
+	if ( artifactBeingRotated ) return false;
 }
 
-function getUnitCenter(unit) {
-	var unitOffset = getUnitOffset(unit);
-	var unitCentreX = unitOffset.left + unit.width() / 2;
-	var unitCentreY = unitOffset.top + unit.height() / 2;
-	return Array( unitCentreX, unitCentreY );
+function getArtifactCenter(artifact) {
+	var artifactOffset = getArtifactOffset(artifact);
+	var artifactCentreX = artifactOffset.left + artifact.width() / 2;
+	var artifactCentreY = artifactOffset.top + artifact.height() / 2;
+	return Array( artifactCentreX, artifactCentreY );
 }
 
-function getUnitOffset(unit) {
-	performRotation(unit, 0);
-	var offset = unit.offset();
-	performRotation(unit, unit.data('angle') )
+function getArtifactOffset(artifact) {
+	performRotation(artifact, 0);
+	var offset = artifact.offset();
+	performRotation(artifact, artifact.data('angle') )
 	return offset;
 }
 
-function performRotation(unit, angle) {
-	unit.css('transform','rotate(' + angle + 'rad)');
-	unit.css('-moz-transform','rotate(' + angle + 'rad)');
-	unit.css('-webkit-transform','rotate(' + angle + 'rad)');
-	unit.css('-o-transform','rotate(' + angle + 'rad)');
+function performRotation(artifact, angle) {
+	artifact.css('transform','rotate(' + angle + 'rad)');
+	artifact.css('-moz-transform','rotate(' + angle + 'rad)');
+	artifact.css('-webkit-transform','rotate(' + angle + 'rad)');
+	artifact.css('-o-transform','rotate(' + angle + 'rad)');
 }
 
+/* ---- LOAD AND SAVE ---- */
 function dumpHTML(event) {
 	var artifacts = [];
 	$('.artifact').each(function(index) {
@@ -402,7 +495,7 @@ function dumpHTML(event) {
 }
 
 function getDataFromElement(unit) {
-	var offset = getUnitOffset(unit);
+	var offset = getArtifactOffset(unit);
 	var data = {
 		angle: unit.data('angle'),
 		baseHeight: unit.data('baseHeight'),
@@ -411,6 +504,8 @@ function getDataFromElement(unit) {
 		id: unit.attr('id'),
 		left: offset.left,
 		looseFormation: unit.data('looseFormation'),
+		models: unit.data('models'),
+		modelsDead: unit.data('modelsDead'),
 		player: unit.data('player'),
 		ranks: unit.data('ranks'),
 		title: unit.data('title'),
@@ -428,7 +523,6 @@ function getDataFromElement(unit) {
 	return data;
 }
 
-// FIXME - handle empty report gracefully
 function slurpHTML(event) {
 	$('#battlefield').html('');
 	var input = jQuery.parseJSON( atob($('#battlefield-out').val()) );
@@ -454,50 +548,7 @@ function updateArtifactPosition(artifact, artifactData) {
 	setRotationAngle(artifact, artifactData.angle);
 }
 
-function addModelsToUnit(unit, ranks, files, baseWidth, baseHeight, looseFormation) {
-	var unitModels = $( document.createElement('div') )
-		.addClass('unit-models')
-		.addClass( 'player-' + unit.data('player') );
-	var gap = Math.round( inchesToPx(0.5) );
-	for (var i = 0; i < ranks; i++) {
-		var row = $( document.createElement('div') ).css('clear', 'both');
-		for (var j = 0; j < files; j++) {
-			var col = $( document.createElement('div') )
-			.css( {
-				'height': Math.round( mmToPx(baseHeight) ) - 2 + "px",
-				'width': Math.round( mmToPx(baseWidth) ) - 2 + "px",
-				'border': '1px solid #333',
-				'float': 'left',
-				'background-color': 'black'
-			});
-			if (looseFormation) {
-				if (j != 0) { // left most column
-					col.css('margin-left', gap + "px");
-				}
-				if (i < ranks - 1) { // bottom most row
-					col.css('margin-bottom', gap + "px");
-				}
-			}
-			col.appendTo(row);
-		}
-		row.appendTo(unitModels);
-	}
-	var unitWidth = Math.round( mmToPx(baseWidth) ) * files;
-	if (looseFormation) {
-		unitWidth += (files - 1) * gap;
-	}
-	
-	var unitHeight = Math.round( mmToPx(baseHeight) ) * ranks;
-	if (looseFormation) {
-		unitHeight += (ranks - 1) * gap;
-	}
-	
-	unitModels.css({
-		'width': unitWidth + "px",
-		'height': unitHeight + "px"
-	}).appendTo(unit);
-}
-
+/* ---- HELPERS ---- */
 function pxToMm(px) {
 	return pxToInches(px) * 25.4;
 }
