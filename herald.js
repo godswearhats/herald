@@ -80,6 +80,7 @@ var LOOSE_FORMATION_GAP = Math.round( inchesToPx(0.5) );
 
 $(function() {
 	bindFunctionsToButtons();
+	initializePlayerTabs();
 	initializeSceneryManager();
 	$( '#control-panel' ).tabs({ activate: activateTabs });
 	
@@ -116,6 +117,11 @@ $(function() {
 		createSceneryButton( 'img/red_arrow.png', "Player 1", false, '#report' );
 		createSceneryButton( 'img/blue_arrow.png', "Player 2", false, '#report' );
 		// createSceneryButton( 'img/skull.png', "Kill Marker", true, '#report' ); // FIXME Make this not be z-index 10
+	}
+	
+	function initializePlayerTabs() {
+		resetUnitManagerInfo(1);
+		resetUnitManagerInfo(2);
 	}
 });
 
@@ -242,9 +248,11 @@ function initializeUnitData(playerNumber, data) {
 
 function getNextID(artifact) {
 	var number = 0;
-	$(artifact).each(function(index) {
-		var id = parseInt( $(artifact).attr('id').split('-').pop() );
-		if (id > number) { number = id }
+	$(".artifact" + artifact).each(function(index) {
+		var id = parseInt( $(this).attr('id').split('-').pop() );
+		if (id > number) { 
+			number = id;
+		}
 	});
 	return number + 1;
 }
@@ -264,7 +272,7 @@ function createUnit(playerNumber, unitID, data) {
 		.text( data.title );
 		
 	if (parseInt(playerNumber) == 1) { title.appendTo(unit); }
-	addModelsToUnit( unit, data );		
+	addModelsToUnit( playerNumber, unit, data );		
 	if (parseInt(playerNumber) == 2) { title.appendTo(unit); }
 	
 	$('#battlefield').append(unit);
@@ -273,45 +281,73 @@ function createUnit(playerNumber, unitID, data) {
 	return unit;
 }
 
-function addModelsToUnit(unit, data) {
+function addModelsToUnit(playerNumber, unit, data) {
 	var unitModels = $( document.createElement('div') )
 		.addClass('unit-models')
 		.addClass( 'player-' + unit.data('player') );
-	var modelCount = 0;
-	var deadCount = data.models - data.modelsDead;
-	for (var i = 0; i < data.ranks; i++) {
+		
+	var rows = createUnitArray(playerNumber, unit, data);
+	var margin = playerUnitsFaceSouth(playerNumber) ? 'margin-top' : 'margin-bottom';
+	$.each(rows, function(rowIndex, cols) {
 		var row = $( document.createElement('div') ).css('clear', 'both');
-		for (var j = 0; j < data.files; j++) {
-			if (modelCount == data.models) {
-				break;
-			}
-			var col = $( document.createElement('div') )
-			.css( {
-				'height': Math.round( mmToPx(data.baseHeight) ) - 2 + "px",
-				'width': Math.round( mmToPx(data.baseWidth) ) - 2 + "px",
-				'border': '1px solid #333',
-				'float': 'left',
-				'background-color': (modelCount >= deadCount) ? 'gray' : 'black'
-			});
+		$.each(cols, function(colIndex, model) {
 			if (data.looseFormation) {
-				if (j != 0) { // left most column
-					col.css('margin-left', LOOSE_FORMATION_GAP + "px");
+				if (colIndex != 0) { // left most column
+					model.css('margin-left', LOOSE_FORMATION_GAP + "px");
 				}
-				if (i < data.ranks - 1) { // bottom most row
-					col.css('margin-bottom', LOOSE_FORMATION_GAP + "px");
+				if ( !isLastRankForPlayer(playerNumber, rowIndex, data.ranks) ) {
+					model.css(margin, LOOSE_FORMATION_GAP + "px");
 				}
 			}
-			col.appendTo(row);
-			modelCount++;
-		}
+			model.appendTo(row);
+		});
 		row.appendTo(unitModels);
-	}
-	
+	});
+
 	unitModels.css({
 		'width': calculateUnitDimension(data.baseWidth, data.files, data.looseFormation) + "px",
 		'height': calculateUnitDimension(data.baseHeight, data.ranks, data.looseFormation) + "px"
 	}).appendTo(unit);
 }
+
+function createUnitArray(playerNumber, unit, data) {
+	var modelCount = 0;
+	var deadCount = data.models - data.modelsDead;
+	var rows = [];
+	for (var i = 0; i < data.ranks; i++) {		
+		rows[i] = [];
+		for (var j = 0; j < data.files; j++) {
+			if (modelCount == data.models) {
+				break;
+			}
+			var col = createNewModel(data.baseWidth, data.baseHeight, (modelCount >= deadCount));
+			rows[i].push(col);
+			modelCount++;
+		}
+	}
+	if ( playerUnitsFaceSouth(playerNumber) ) { rows.unshift( rows.pop() ); } // put last row first
+	return rows;
+}
+
+function createNewModel(baseWidth, baseHeight, dead) {
+	return $( document.createElement('div') )
+		.css( {
+			'height': Math.round( mmToPx(baseHeight) ) - 2 + "px",
+			'width': Math.round( mmToPx(baseWidth) ) - 2 + "px",
+			'border': '1px solid #333',
+			'float': 'left',
+			'background-color': dead ? 'gray' : 'black'
+		});
+}
+
+function isLastRankForPlayer(player, currentRank, ranksInUnit) {
+	if (playerUnitsFaceSouth(player) ) {
+		return (currentRank == 0);
+	} 
+	return (currentRank + 1 == ranksInUnit);
+}
+
+function playerUnitsFaceSouth(player) {	return (parseInt(player) == 1); }
 
 function calculateUnitDimension(baseSize, count, looseFormation) {
 	var dimension = Math.round( mmToPx(baseSize) ) * count;
@@ -332,7 +368,6 @@ function updateUnit(event) {
 	oldUnit.remove();
 	var newUnit = createUnit( data.player, id, initializeUnitData(data.player, data) );
 	updateArtifactPosition( newUnit, data );
-	// resetUnitManagerInfo(data.player);
 }
 
 function resetUnitManagerInfo(player) {
@@ -373,7 +408,7 @@ function defaultUnitData() {
 		ranks: '',
 		files: '',
 		models: '',
-		modelsDead: '',
+		modelsDead: 0,
 		title: '',
 		baseHeight: 20,
 		baseWidth: 20,
@@ -491,7 +526,7 @@ function dumpHTML(event) {
 	$('.artifact').each(function(index) {
 		artifacts.push( getDataFromElement($(this)) );
 	});
-	$('#battlefield-out').val( btoa(JSON.stringify(artifacts)) );
+	$('#battlefield-out').val( JSON.stringify(artifacts) );
 }
 
 function getDataFromElement(unit) {
@@ -514,27 +549,30 @@ function getDataFromElement(unit) {
 	}
 	if ( unit.hasClass('scenery') ) {
 		data.src = unit.data('src');
-		// data.label = unit.data('label');
 		data.height = parseInt( unit.css('height') );
 		data.width = parseInt( unit.css('width') );
 		data.isScenery = unit.data('isScenery');
-		// data.controlPanelID = unit.data('controlPanelID');
 	}
 	return data;
 }
 
 function slurpHTML(event) {
-	$('#battlefield').html('');
-	var input = jQuery.parseJSON( atob($('#battlefield-out').val()) );
+	if ( $('#merge').prop('checked') == false) {
+		$('#battlefield').html('');
+	}
+	var input = jQuery.parseJSON( $('#battlefield-out').val() );
 	for (var j = 0; j < input.length; j++) {
 		var artifactData = input[j];
 		
 		var artifact;
+		// artifacts need fresh IDs on load, so that we can merge
 		if (artifactData.artifactType == 'scenery') {
-			artifact = createScenery(artifactData.id, artifactData);
+			var sceneryID = "scenery-unit-" + getNextID('.scenery');
+			artifact = createScenery(sceneryID, artifactData);
 		}
 		else {
-			artifact = createUnit(artifactData.player, artifactData.id, artifactData);
+			var unitID = "player-" + artifactData.player + "-unit-" + getNextID('.player-' + artifactData.player);
+			artifact = createUnit(artifactData.player, unitID, artifactData);
 		}
 		updateArtifactPosition(artifact, artifactData);
 	}
