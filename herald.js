@@ -42,6 +42,28 @@ var LOOSE_FORMATION_GAP = Math.round( inchesToPx(0.5) );
 		});
 	};
 	
+	$.fn.helpful = function() {
+		var parent = $(this).parent();
+		var help = $(this).dialog({
+			autoOpen: false,
+			modal: true,
+            buttons: {
+                Ok: function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+		});
+		var link = $( document.createElement('span') )
+		.addClass('ui-icon ui-icon-help help-link')
+		.html('&nbsp;')
+		.on('click', function(event) {
+			help.dialog( 'open' );
+			return false;
+		})
+		.prependTo(parent);
+		return help;
+	};
+	
 	$.fn.deletable = function() {
 		var unit = $(this);
 		var $confirmDialog = $( document.createElement('div') )
@@ -75,6 +97,7 @@ var LOOSE_FORMATION_GAP = Math.round( inchesToPx(0.5) );
 				return false;
 			});	
 		addPlayerClass(unit, deleteButton);
+		return unit;
 	}
 })(jQuery);
 
@@ -82,7 +105,9 @@ $(function() {
 	bindFunctionsToButtons();
 	initializePlayerTabs();
 	initializeSceneryManager();
-	$( '#control-panel' ).tabs({ activate: activateTabs });
+	$( '#control-panel' ).tabs({ activate: activateTabs, collapsible: true }).draggable();
+	$('.help').helpful();
+	loadReportIfExists();
 	
 	function activateTabs(event, ui) {
 		$('.unit').draggable( "disable" );
@@ -93,6 +118,9 @@ $(function() {
 		}
 		else {
 			$('.unit').draggable( "enable" );
+			if ( ui.newPanel.attr('id') == 'collapse' ) {
+				$('#control-panel').tabs('option', 'active', false);
+			}
 		}
 	}
 	
@@ -101,11 +129,17 @@ $(function() {
 		$( ".add-unit" ).on("click", addUnit);
 		$( ".update-unit" ).on("click", updateUnit);
 		$( "#add-remote-scenery" ).on("click", loadRemoteScenery);
-		$( "#dump-button" ).on("click", dumpHTML);
-		$( "#slurp-button" ).on("click", slurpHTML);
+		$( "#dump-button" ).on("click", dumpHTML); // DEPRECATED
+		$( "#load-button" ).on("click", function(event) {
+			$.getJSON("reports/" + $('#report-id').val() + ".json", loadReportFromJSON);
+		});
+		$( "#slurp-button" ).on("click", slurpHTML); // DEPRECATED
+		$( "#save-button" ).on("click", saveReportToServer);
 		$( "#start-report").on("click", toggleReportState);
 		$( ".rank-and-file").on("change", { callback: updateModelCount }, modelCountHandler);
 		$( ".model-count").on("change", { callback: validateModelCount }, modelCountHandler);
+		$( '#advanced-link' ).on("click", function(event) { $('#advanced').toggle( 'blind' ); return false; });
+		
 	}
 	
 	function initializeSceneryManager() {
@@ -122,6 +156,23 @@ $(function() {
 	function initializePlayerTabs() {
 		resetUnitManagerInfo(1);
 		resetUnitManagerInfo(2);
+	}
+	
+	function loadReportIfExists() {
+		var report = getParameterByName('report');
+		if (report) {
+			$.getJSON("reports/" + report + ".json", loadReportFromJSON);
+		}
+		$('#report-id').val( report );
+	}
+	
+	function getParameterByName(name)
+	{
+	  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+	  var regex = new RegExp( "[\\?&]" + name + "=([^&#]*)" );
+	  var results = regex.exec(window.location.search);
+	  if (results == null) { return undefined; }
+	  return decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 });
 
@@ -222,7 +273,7 @@ function addMeasurementHooks(scenery, height) {
 
 /* ---- UNITS ---- */
 function addUnit(event) {
-	var playerNumber = parseInt( event.target.parentElement.parentElement.dataset.player );
+	var playerNumber = parseInt( event.target.dataset.player );
 	var unitID = "player-" + playerNumber + "-unit-" + getNextID('.player-' + playerNumber);
 	var data = initializeUnitData(playerNumber, { artifactType: 'unit' });
 	
@@ -522,11 +573,36 @@ function performRotation(artifact, angle) {
 
 /* ---- LOAD AND SAVE ---- */
 function dumpHTML(event) {
+	var output = stringifyArtifacts();
+	$('#battlefield-out').val( output );
+}
+
+function stringifyArtifacts() {
 	var artifacts = [];
 	$('.artifact').each(function(index) {
 		artifacts.push( getDataFromElement($(this)) );
 	});
-	$('#battlefield-out').val( JSON.stringify(artifacts) );
+	return JSON.stringify(artifacts);
+}
+
+function saveReportToServer() {
+	var artifacts = stringifyArtifacts();
+	$.post("report.php", { id: $('#report-id').val(), data: artifacts }, function(data) {
+		response = jQuery.parseJSON(data);
+		$( document.createElement('div') )
+		.dialog({
+		            modal: true,
+		            buttons: {
+		                Ok: function() {
+		                    $( this ).dialog( "close" );
+		                }
+		            }
+		        })
+		.html(response.message);
+		if (response.id) {
+			$('#report-id').val( response.id );
+		}
+	})
 }
 
 function getDataFromElement(unit) {
@@ -560,9 +636,13 @@ function slurpHTML(event) {
 	if ( $('#merge').prop('checked') == false) {
 		$('#battlefield').html('');
 	}
-	var input = jQuery.parseJSON( $('#battlefield-out').val() );
-	for (var j = 0; j < input.length; j++) {
-		var artifactData = input[j];
+	var json = jQuery.parseJSON( $('#battlefield-out').val() );
+	loadReportFromJSON( json );
+}
+
+function loadReportFromJSON(json) {
+	for (var j = 0; j < json.length; j++) {
+		var artifactData = json[j];
 		
 		var artifact;
 		// artifacts need fresh IDs on load, so that we can merge

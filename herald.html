@@ -26,12 +26,12 @@
 	<div id="battlefield-bg">
 		<div id="battlefield"></div>
 	</div>
-	<div id="control-panel">
+	<div class="panel" id="control-panel">
 		<ul>
-			<li><a href="#scenery-manager">Scenery</a></li>
+			<li><a href="#report">Report</a></li>
 			<li><a href="#unit-manager-player-1">Player 1</a></li>
 			<li><a href="#unit-manager-player-2">Player 2</a></li>
-			<li><a href="#report">Report</a></li>
+			<li><a href="#scenery-manager">Scenery</a></li>
 		</ul>
 		<div id="unit-manager-player-1" class="unit-manager" data-player="1">
 			<div class="left">
@@ -55,7 +55,7 @@
 				<option value="100x150">100mm x 150mm</option>
 			</select><input type="checkbox" id="player-1-unit-loose-formation" /><span title="Unit is in loose / skirmish formation">Loose?</span></div>
 			<div>
-				<button class="add-unit">Add Unit</button>
+				<button class="add-unit" data-player="1">Add Unit</button>
 				<button disabled class="update-unit">Update Unit</button>
 			</div>
 		</div>
@@ -81,7 +81,7 @@
 				<option value="100x150">100mm x 150mm</option>
 			</select><input type="checkbox" id="player-2-unit-loose-formation" /><span title="Unit is in loose / skirmish formation">Loose?</span></div>
 			<div>
-				<button class="add-unit">Add Unit</button>
+				<button class="add-unit" data-player="2">Add Unit</button>
 				<button disabled class="update-unit">Update Unit</button>
 			</div>
 		</div>
@@ -94,11 +94,18 @@
 			<hr />
 		</div>
 		<div id="report">
-			<div><button id="start-report">Start Report (locks scenery)</button></div>
+			<div><button id="start-report">Start Report (locks scenery)</button><button id="save-button">Save Report</button></div>
 			<hr />
-			<span>Your exported battle report will show up in this text area. Copy and paste it into a text editor (like Textedit or Notepad) and save it. You can also copy and paste a previously saved battle report into this text area and click load.</span>
-			<div><textarea id="battlefield-out"></textarea></div>
-			<div><button id="dump-button">Export Report</button><button id="slurp-button">Load Report</button><input type="checkbox" id="merge"><span title="Merge data with current report">Merge?</span></div>
+			<div>
+				Report ID<input type="text" id="report-id" size="5">
+				<button id="load-button">Load Report</button><input type="checkbox" id="merge"><span title="Merge data with current report">Merge?</span>
+			</div>
+			<a id="advanced-link" href="#advanced">Advanced</a>
+			<div id="advanced">
+				<div class="help">Your exported battle report will show up in this text area. Copy and paste it into a text editor (like Textedit or Notepad) and save it. You can also copy and paste a previously saved battle report into this text area and click load. Alternatively, use the "Save Report" button above and it will generate a link to this report and to the raw data which can be downloaded and saved.</div>
+				<div><textarea id="battlefield-out"></textarea></div>
+				<div><button id="dump-button">Export Report</button><button id="slurp-button">Import Report</button><input type="checkbox" id="merge"><span title="Merge data with current report">Merge?</span></div>
+			</div>
 			<hr />
 			<div>Movement / measurement arrows</div>
 		</div>

@@ -16,12 +16,24 @@ body {
 	height: 768px;
 }
 
-#control-panel {
-	border: 1px solid green;
-	float: left;
+.panel {
 	font-size: 12px;
 	margin-left: 10px;
-	max-width: 320px;
+	z-index: 100;
+	width: 320px;
+	float: left;
+}
+
+#advanced {
+	display: none;
+	border: 1px solid gray;
+	border-radius: 5px;
+	padding: 5px;
+}
+#advanced-link {
+	margin-left: 100px;
+	margin-top: 10px;
+	color: gray;
 }
 
 .footer {
@@ -30,7 +42,9 @@ body {
 	clear: both;
 	margin-top: 10px;
 }
-
+hr {
+	margin: 10px;
+}
 input {
 	margin-left: 15px;
 }
@@ -47,11 +61,17 @@ label {
 	text-align: right;
 }
 textarea {
-	width: 100%;
+	width: 95%;
 	height: 100px;
 }
 span {
 	font-size: 9px;
+}
+
+.help-link {
+	float: right;
+	cursor: pointer;
+	position: relative;
 }
 
 .left {
