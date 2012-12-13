@@ -1,240 +1,304 @@
+(function() {
+
+/* ---- INITIALIZE ---- */
+var jQuery;
 var artifactBeingRotated = false;
 var mouseStartAngle = false;
 var artifactStartAngle = false;
 var reportStarted = false;
 var LOOSE_FORMATION_GAP = Math.round( inchesToPx(0.5) );
+var BASE_URL = "http://godswearhats.com/herald/";
 
-(function($){
-	$.fn.playable = function() {
-		// FIXME - dealing with scenery on hover
-		return this.each(function() {
-			$(this).draggable( {cancel: '.handle'} )
-			.hover( 
-				function() {
-					if ( $(this).hasClass('scenery') && reportStarted ) { return; }
-					$(this).children('.control').show();
-				},
-				function() {
-					if ( $(this).hasClass('scenery') && reportStarted ) { return; }
-					$(this).children('.control').hide(); 
-				}
-			)
-			.rotatable()
-			.deletable();
-		});
-	};
-	
-	$.fn.rotatable = function() {
-		return this.each(function() {
-			$(this).data('angle', 0);
-			var handle = $( document.createElement('div') )
-				.addClass('handle')
-				.addClass('control')
-				.draggable({
-				    opacity: 0.01, 
-				    helper: 'clone',
-					start: dragStart
+if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.8.2') {
+	var scriptTag = document.createElement('script');
+    scriptTag.setAttribute("type","text/javascript");
+    scriptTag.setAttribute("src", "http://code.jquery.com/jquery-1.8.2.min.js");
+    (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(scriptTag);
+    scriptTag.onload = jQueryLoadHandler;
+} 
+else {
+    jQueryLoadHandler();
+}
+
+function jQueryLoadHandler() {
+    jQuery = window.jQuery;
+    main(); 
+}
+
+function main() {
+	jQuery.getScript("http://code.jquery.com/ui/1.9.1/jquery-ui.min.js", function() {
+	    jQuery.noConflict(true);
+		/* ---- LOAD EXTERNAL RESOURCES ---- */
+		getStylesheet("http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css");
+		getStylesheet(BASE_URL + "herald.css");
+		getControlPanel(); // calls init so that everything can be applied once the control panel arrives
+	});
+}
+
+function getControlPanel() {
+	var cp = jQuery( document.createElement('div') );
+	jQuery.get(BASE_URL + "control_panel.html", function(html) {
+		cp.html(html);
+		cp.appendTo('#battlefield');
+		init();
+	});
+	return cp;
+}
+
+function getStylesheet(sheetURL) {
+	jQuery( document.createElement('link') )
+			.attr({ 
+				rel: 'stylesheet',
+				href: sheetURL
+			})
+			.appendTo('head');
+}
+
+function init() {
+	(function(jQuery){		
+			jQuery.fn.playable = function() {
+				// FIXME - dealing with scenery on hover
+				return this.each(function() {
+					jQuery(this).draggable( {cancel: '.handle'} )
+					.hover( 
+						function() {
+							if ( jQuery(this).hasClass('lock') && reportStarted ) { return; }
+							jQuery(this).children('.control').show();
+						},
+						function() {
+							if ( jQuery(this).hasClass('lock') && reportStarted ) { return; }
+							jQuery(this).children('.control').hide(); 
+						}
+					)
+					.rotatable()
+					.deletable();
+				});
+			};
+
+			jQuery.fn.rotatable = function() {
+				return this.each(function() {
+					jQuery(this).data('angle', 0);
+					var handle = jQuery( document.createElement('div') )
+						.addClass('handle')
+						.addClass('control')
+						.draggable({
+						    opacity: 0.01, 
+						    helper: 'clone',
+							start: dragStart
+						})
+						.hide()
+						.on('mousedown', startRotate)
+						.appendTo( jQuery(this) );
+					addPlayerClass(jQuery(this), handle);		
+				});
+			};
+
+			jQuery.fn.helpful = function() {
+				return this.each(function() {
+					var parent = jQuery(this).parent();
+					var help = jQuery(this).dialog({
+						width: '400px',
+						autoOpen: false,
+						modal: true,
+			            buttons: {
+			                Ok: function() {
+			                    jQuery( this ).dialog( "close" );
+			                }
+			            }
+					});
+					var link = jQuery( document.createElement('span') )
+					.addClass('ui-icon ui-icon-help help-link')
+					.html('&nbsp;')
+					.on('click', function(event) {
+						help.dialog( 'open' );
+						return false;
+					})
+					.prependTo(parent);
+					return help;
 				})
-				.hide()
-				.on('mousedown', startRotate)
-				.appendTo( $(this) );
-			addPlayerClass($(this), handle);		
-		});
-	};
-	
-	$.fn.helpful = function() {
-		var parent = $(this).parent();
-		var help = $(this).dialog({
-			autoOpen: false,
-			modal: true,
-            buttons: {
-                Ok: function() {
-                    $( this ).dialog( "close" );
-                }
-            }
-		});
-		var link = $( document.createElement('span') )
-		.addClass('ui-icon ui-icon-help help-link')
-		.html('&nbsp;')
-		.on('click', function(event) {
-			help.dialog( 'open' );
-			return false;
-		})
-		.prependTo(parent);
-		return help;
-	};
-	
-	$.fn.deletable = function() {
-		var unit = $(this);
-		var $confirmDialog = $( document.createElement('div') )
-			.data( 'unit', unit.attr('id') )
-			.attr('title', "Delete this?")
-			.addClass('dialog')
-			.dialog({
-		            resizable: false,
-		            height: '40px',
-					width: '160px',
-		            modal: true,
-					autoOpen: false,
-		            buttons: {
-		                Delete: function() {
-		                    $(this).dialog( "close" );
-							var unitID = $(this).data('unit');
-							$( "#" + $(this).data('unit') ).remove();
-		                },
-		                Cancel: function() {
-		                    $(this).dialog( "close" );
-		                }
-		            }
-			});
-		var deleteButton = $( document.createElement('div') )
-			.appendTo(unit)
-			.addClass('delete-button')
-			.addClass('control')
-			.hide()
-			.on('click', function() {
-				$confirmDialog.dialog("open");
-				return false;
-			});	
-		addPlayerClass(unit, deleteButton);
-		return unit;
-	}
-})(jQuery);
+			};
 
-$(function() {
+			jQuery.fn.deletable = function() {
+				var unit = jQuery(this);
+				var confirmDialog = jQuery( document.createElement('div') )
+					.data( 'unit', unit.attr('id') )
+					.attr('title', "Delete this?")
+					.addClass('dialog')
+					.dialog({
+				            resizable: false,
+				            height: '40px',
+							width: '160px',
+				            modal: true,
+							autoOpen: false,
+				            buttons: {
+				                Delete: function() {
+				                    jQuery(this).dialog( "close" );
+									var unitID = jQuery(this).data('unit');
+									jQuery( "#" + jQuery(this).data('unit') ).remove();
+				                },
+				                Cancel: function() {
+				                    jQuery(this).dialog( "close" );
+				                }
+				            }
+					});
+				var deleteButton = jQuery( document.createElement('div') )
+					.appendTo(unit)
+					.addClass('delete-button')
+					.addClass('control')
+					.hide()
+					.on('click', function() {
+						confirmDialog.dialog("open");
+						return false;
+					});	
+				addPlayerClass(unit, deleteButton);
+				return unit;
+			}
+	})(jQuery);
+	
 	bindFunctionsToButtons();
 	initializePlayerTabs();
 	initializeSceneryManager();
-	$( '#control-panel' ).tabs({ activate: activateTabs, collapsible: true }).draggable();
-	$('.help').helpful();
+	jQuery( '#control-panel' ).tabs({ activate: activateTabs, collapsible: true, active: false }).draggable();
+	jQuery('.help').helpful();
 	loadReportIfExists();
-	
-	function activateTabs(event, ui) {
-		$('.unit').draggable( "disable" );
-		var player = ui.newPanel.data('player');
-		if (player) {
-			$('.unit').draggable( "disable" );
-			$('.unit.player-' + player).draggable( "enable" );
+}
+
+function activateTabs(event, ui) {
+	jQuery('.unit').draggable( "disable" );
+	var player = ui.newPanel.data('player');
+	if (player) {
+		jQuery('.unit').draggable( "disable" );
+		jQuery('.unit.player-' + player).draggable( "enable" );
+	}
+	else {
+		jQuery('.unit').draggable( "enable" );
+		if ( ui.newPanel.attr('id') == 'collapse' ) {
+			jQuery('#control-panel').tabs('option', 'active', false);
 		}
-		else {
-			$('.unit').draggable( "enable" );
-			if ( ui.newPanel.attr('id') == 'collapse' ) {
-				$('#control-panel').tabs('option', 'active', false);
-			}
-		}
+	}
+}
+
+function bindFunctionsToButtons() {
+	jQuery(document).on('mouseup', stopRotate);
+	jQuery( ".add-unit" ).on("click", addUnit);
+	jQuery( ".update-unit" ).on("click", updateUnit);
+	jQuery( "#add-remote-scenery" ).on("click", loadRemoteScenery);
+	jQuery( "#dump-button" ).on("click", dumpHTML); // DEPRECATED
+	jQuery( "#load-button" ).on("click", function(event) {
+		jQuery.getJSON("reports/" + jQuery('#report-id').val() + ".json", loadReportFromJSON);
+	});
+	jQuery( "#slurp-button" ).on("click", slurpHTML); // DEPRECATED
+	jQuery( "#save-button" ).on("click", saveReportToServer);
+	jQuery( "#start-report").on("click", toggleReportState);
+	jQuery( ".rank-and-file").on("change", { callback: updateModelCount }, modelCountHandler);
+	jQuery( ".model-count").on("change", { callback: validateModelCount }, modelCountHandler);
+	jQuery( '#advanced-link' ).on("click", function(event) { jQuery('#advanced').toggle( 'blind' ); return false; });
+	
+}
+
+function initializeSceneryManager() {
+	var scenery = ['tower', 'wall', 'tree', 'corner_hill', 'hill'];
+	for (var i = 0; i < scenery.length; i++) {
+		var image_src = BASE_URL + 'img/' + scenery[i] + '.png';
+		createSceneryButton( image_src, scenery[i].replace("_", " "), { controlPanelID: '#scenery-manager', aspectRatio: true, resizable: true, lock: true } );
 	}
 	
-	function bindFunctionsToButtons() {
-		$(document).on('mouseup', stopRotate);
-		$( ".add-unit" ).on("click", addUnit);
-		$( ".update-unit" ).on("click", updateUnit);
-		$( "#add-remote-scenery" ).on("click", loadRemoteScenery);
-		$( "#dump-button" ).on("click", dumpHTML); // DEPRECATED
-		$( "#load-button" ).on("click", function(event) {
-			$.getJSON("reports/" + $('#report-id').val() + ".json", loadReportFromJSON);
-		});
-		$( "#slurp-button" ).on("click", slurpHTML); // DEPRECATED
-		$( "#save-button" ).on("click", saveReportToServer);
-		$( "#start-report").on("click", toggleReportState);
-		$( ".rank-and-file").on("change", { callback: updateModelCount }, modelCountHandler);
-		$( ".model-count").on("change", { callback: validateModelCount }, modelCountHandler);
-		$( '#advanced-link' ).on("click", function(event) { $('#advanced').toggle( 'blind' ); return false; });
-		
+	// There has to be a better way to do this ...
+	createSceneryButton(BASE_URL + "img/red_arrow.png", "Player 1", { controlPanelID: '#report', aspectRatio: false, measure: true, resizable: true });
+	createSceneryButton(BASE_URL + "img/blue_arrow.png", "Player 2", { controlPanelID: '#report', aspectRatio: false, measure: true, resizable: true });
+	createSceneryButton(BASE_URL + "img/skull.png", "Kill", { controlPanelID: '#report', aspectRatio: false, resizable: true });
+	createSceneryButton(BASE_URL + "img/small_blast.png", "Blast", { controlPanelID: '#report', aspectRatio: false, resizable: false });
+	createSceneryButton(BASE_URL + "img/large_blast.png", "Large Blast", { controlPanelID: '#report', aspectRatio: false, resizable: false });
+	createSceneryButton(BASE_URL + "img/flame_template.png", "Template", { controlPanelID: '#report', aspectRatio: false, resizable: false });
+}
+
+function initializePlayerTabs() {
+	resetUnitManagerInfo(1);
+	resetUnitManagerInfo(2);
+}
+
+function loadReportIfExists() {
+	var report = getReportIDFromWidgetURL() || getParameterByName('report');
+	if (report) {
+		jQuery.getJSON(BASE_URL + "reports/" + report + ".json", loadReportFromJSON);
 	}
-	
-	function initializeSceneryManager() {
-		var scenery = ['tower', 'wall', 'tree', 'corner_hill', 'hill'];
-		for (var i = 0; i < scenery.length; i++) {
-			var image_src = 'img/' + scenery[i] + '.png';
-			createSceneryButton( image_src, scenery[i].replace("_", " "), true, '#scenery-manager' );
-		}
-		createSceneryButton( 'img/red_arrow.png', "Player 1", false, '#report' );
-		createSceneryButton( 'img/blue_arrow.png', "Player 2", false, '#report' );
-		// createSceneryButton( 'img/skull.png', "Kill Marker", true, '#report' ); // FIXME Make this not be z-index 10
-	}
-	
-	function initializePlayerTabs() {
-		resetUnitManagerInfo(1);
-		resetUnitManagerInfo(2);
-	}
-	
-	function loadReportIfExists() {
-		var report = getParameterByName('report');
-		if (report) {
-			$.getJSON("reports/" + report + ".json", loadReportFromJSON);
-		}
-		$('#report-id').val( report );
-	}
-	
-	function getParameterByName(name)
-	{
-	  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-	  var regex = new RegExp( "[\\?&]" + name + "=([^&#]*)" );
-	  var results = regex.exec(window.location.search);
-	  if (results == null) { return undefined; }
-	  return decodeURIComponent(results[1].replace(/\+/g, " "));
-	}
-});
+	jQuery('#report-id').val( report );
+}
+
+function getReportIDFromWidgetURL() {
+	var id = null;
+	jQuery('script').each(function() {
+		if (!this.src) { return null; }
+		var match = this.src.match(/herald(\.min)?\.js\?report=([A-Za-z0-9]+)/);
+		if (match) { id = match[2]; }
+	})
+	return id;
+}
+
+function getParameterByName(name)
+{
+  // name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+  var regex = new RegExp( "[\\?&]" + name + "=([^&#]*)" );
+  var results = regex.exec(window.location.search);
+  if (results == null) { return undefined; }
+  return decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 /* ---- SCENERY  ---- */
 function toggleReportState(event) {
 	if (reportStarted) {
 		reportStarted = false;
-		$("#start-report").text("Start Report (locks scenery)");
-		$('.scenery').draggable( {cancel :'.handle'} ).resizable({
-			autoHide: true,
-			aspectRatio: true
+		jQuery("#start-report").text("Start Report (locks scenery)");
+		jQuery('.scenery').draggable( {cancel :'.handle'} );
+		jQuery('.resizable-scenery').each(function() {
+			$(this).resizable({
+				autoHide: true,
+				aspectRatio: $(this).data('aspectRatio')
+			});
 		});
-		$('.add-unit').prop('disabled', false);
-		$('.dead-count').prop('disabled', true);
+		jQuery('.add-unit').prop('disabled', false);
+		jQuery('.dead-count').prop('disabled', true);
 	}
 	else {
 		reportStarted = true;
-		$("#start-report").text("Stop Report (unlocks scenery)");
-		$('.scenery').draggable( "destroy" ).resizable( "destroy" );
-		$('.add-unit').prop('disabled', true);
-		$('.dead-count').prop('disabled', false);
+		jQuery("#start-report").text("Stop Report (unlocks scenery)");
+		jQuery('.scenery').draggable( "destroy" );
+		jQuery('.resizable-scenery').resizable( "destroy" );
+		jQuery('.add-unit').prop('disabled', true);
+		jQuery('.dead-count').prop('disabled', false);
 	}
 }
 
 function loadRemoteScenery(event) {
-	var url = $('#scenery-url').val();
-	var label = $('#scenery-label').val();
-	createSceneryButton( url, label, true, '#scenery-manager' );
+	var url = jQuery('#scenery-url').val();
+	var label = jQuery('#scenery-label').val();
+	createSceneryButton( url, label, { controlPanelID: '#scenery-manager', aspectRatio: true } );
 }
 
-function createSceneryButton(url, label, isScenery, controlPanelID) {
-	$( document.createElement('img') )
+function createSceneryButton(url, label, data) {
+	jQuery( document.createElement('img') )
 	    .attr({
 			src: url,
 			alt: label
 		})
-		.data({
-			isScenery: isScenery,
-			controlPanelID: controlPanelID
-		})
+		.data( data )
 	    .load(function() {
-			$( document.createElement('button') )
-				.appendTo( $(controlPanelID) )
-				.on('click', { src: this.src, height: this.height, width: this.width, isScenery: isScenery}, addScenery)
+			 
+			jQuery( document.createElement('button') )
+				.appendTo( data.controlPanelID )
+				.on('click', jQuery.extend({}, data, { src: this.src, height: this.height, width: this.width }), addScenery)
 				.text( this.alt );
 	    });
 }
 
 function addScenery(event) {
 	var sceneryID = "scenery-unit-" + getNextID('.scenery');
-	var data = {
-		artifactType: 'scenery',
-		height: event.data.height,
-		width: event.data.width,
-		src: event.data.src,
-		isScenery: event.data.isScenery
-	}
-	createScenery(sceneryID, data);
+	event.data.artifactType = 'scenery';
+	createScenery(sceneryID, event.data);
 }
 
 function createScenery(sceneryID, data) {
-	var scenery = $( document.createElement('div') )
+	var scenery = jQuery( document.createElement('div') )
 		.addClass('scenery')
 		.addClass('artifact')
 		.attr('id', sceneryID)
@@ -242,18 +306,24 @@ function createScenery(sceneryID, data) {
 		.css({
 			'height': data.height + "px",
 			'width': data.width + "px",
-			'z-index': 10,
+			'z-index': data.lock ? 10 : 50,
 			'background-image': 'url(' + data.src + ')',
 			'background-repeat': 'none'
-		})
-		.resizable({
-			autoHide: true,
-			aspectRatio: data.isScenery
 		});
-		if (!data.isScenery) {
+		if (data.resizable) {
+			scenery.resizable({
+				autoHide: true,
+				aspectRatio: data.aspectRatio
+			});
+			scenery.addClass('resizable-scenery');
+		}
+		if (data.measure) {
 			addMeasurementHooks(scenery, data.height);
 		}
-	$('#battlefield').append(scenery);
+		if (data.lock) {
+			scenery.addClass('lock');
+		}
+	jQuery('#battlefield').append(scenery);
 	scenery.playable();
 	return scenery;
 }
@@ -262,7 +332,7 @@ function addMeasurementHooks(scenery, height) {
 	scenery.on('resize', function(event, ui) {
 		ui.element.children('.scenery-size').show().text( toNearestTenth(pxToInches(ui.size.height)) + "in.");
 	});
-	var scenerySize = $( document.createElement('div') )
+	var scenerySize = jQuery( document.createElement('div') )
 		.text( toNearestTenth(pxToInches( height )) + "in." )
 		.addClass('scenery-size')
 		.addClass('control')
@@ -276,31 +346,31 @@ function addUnit(event) {
 	var playerNumber = parseInt( event.target.dataset.player );
 	var unitID = "player-" + playerNumber + "-unit-" + getNextID('.player-' + playerNumber);
 	var data = initializeUnitData(playerNumber, { artifactType: 'unit' });
-	
+
 	createUnit(playerNumber, unitID, data);
 	resetUnitManagerInfo( playerNumber );
 }
 
 function initializeUnitData(playerNumber, data) {
 	var prefix = '#player-' + playerNumber + '-unit-';
-	var baseDimensions = $(prefix + "base-size").val().split("x");
+	var baseDimensions = jQuery(prefix + "base-size").val().split("x");
 	data.baseWidth = baseDimensions[0];
 	data.baseHeight = baseDimensions[1];
-	
-	data.looseFormation = $(prefix + 'loose-formation').is(':checked');
-	data.ranks = parseInt( $(prefix + "ranks").val() );
-	data.files = parseInt( $(prefix + "files").val() );
-	data.models = parseInt( $(prefix + "models").val() );
-	data.modelsDead = parseInt( $(prefix + "models-dead").val() );
+
+	data.looseFormation = jQuery(prefix + 'loose-formation').is(':checked');
+	data.ranks = parseInt( jQuery(prefix + "ranks").val() );
+	data.files = parseInt( jQuery(prefix + "files").val() );
+	data.models = parseInt( jQuery(prefix + "models").val() );
+	data.modelsDead = parseInt( jQuery(prefix + "models-dead").val() );
 	if (data.models == 0) { data.models = data.files * data.ranks }
-	data.title = $(prefix + "title").val();
+	data.title = jQuery(prefix + "title").val();
 	return data;
 }
 
 function getNextID(artifact) {
 	var number = 0;
-	$(".artifact" + artifact).each(function(index) {
-		var id = parseInt( $(this).attr('id').split('-').pop() );
+	jQuery(".artifact" + artifact).each(function(index) {
+		var id = parseInt( jQuery(this).attr('id').split('-').pop() );
 		if (id > number) { 
 			number = id;
 		}
@@ -309,39 +379,49 @@ function getNextID(artifact) {
 }
 
 function createUnit(playerNumber, unitID, data) {	
-	var unit = $( document.createElement('div') )
+	var unit = jQuery( document.createElement('div') )
 		.attr('id', unitID)
 		.data(data)
 		.data('player', playerNumber)
 		.addClass('unit')
 		.addClass('artifact')
 		.addClass('player-' + playerNumber);
-		
-	var title = $( document.createElement('div') )
+
+	var title = jQuery( document.createElement('div') )
 		.css('clear', 'both')
 		.addClass('unit-title')
 		.text( data.title );
-		
+
 	if (parseInt(playerNumber) == 1) { title.appendTo(unit); }
 	addModelsToUnit( playerNumber, unit, data );		
 	if (parseInt(playerNumber) == 2) { title.appendTo(unit); }
-	
-	$('#battlefield').append(unit);
+
+	jQuery('#battlefield').append(unit);
 	unit.playable();
 	unit.on('click', { unitID: unitID }, highlightUnit);
+	unit.offset({
+		top: startingTopForPlayer(playerNumber, unit),
+		left: (jQuery('#battlefield').width() / 2) - (unit.width() / 2)
+	})
 	return unit;
 }
 
+function startingTopForPlayer(playerNumber, unit) {
+	if (playerNumber == 1)
+		return 10;
+	return jQuery('#battlefield').height() - unit.height() - 10;
+}
+
 function addModelsToUnit(playerNumber, unit, data) {
-	var unitModels = $( document.createElement('div') )
+	var unitModels = jQuery( document.createElement('div') )
 		.addClass('unit-models')
 		.addClass( 'player-' + unit.data('player') );
-		
+
 	var rows = createUnitArray(playerNumber, unit, data);
 	var margin = playerUnitsFaceSouth(playerNumber) ? 'margin-top' : 'margin-bottom';
-	$.each(rows, function(rowIndex, cols) {
-		var row = $( document.createElement('div') ).css('clear', 'both');
-		$.each(cols, function(colIndex, model) {
+	jQuery.each(rows, function(rowIndex, cols) {
+		var row = jQuery( document.createElement('div') ).css('clear', 'both');
+		jQuery.each(cols, function(colIndex, model) {
 			if (data.looseFormation) {
 				if (colIndex != 0) { // left most column
 					model.css('margin-left', LOOSE_FORMATION_GAP + "px");
@@ -381,7 +461,7 @@ function createUnitArray(playerNumber, unit, data) {
 }
 
 function createNewModel(baseWidth, baseHeight, dead) {
-	return $( document.createElement('div') )
+	return jQuery( document.createElement('div') )
 		.css( {
 			'height': Math.round( mmToPx(baseHeight) ) - 2 + "px",
 			'width': Math.round( mmToPx(baseWidth) ) - 2 + "px",
@@ -409,7 +489,7 @@ function calculateUnitDimension(baseSize, count, looseFormation) {
 }
 
 function updateUnit(event) {
-	var oldUnit = $( '#' + $(event.target).data('unit') );
+	var oldUnit = jQuery( '#' + jQuery(event.target).data('unit') );
 	var data = oldUnit.data();
 	if (data.top === undefined) {
 		data.top = oldUnit.offset().top;
@@ -423,35 +503,35 @@ function updateUnit(event) {
 
 function resetUnitManagerInfo(player) {
 	setUnitManagerInfo( player, defaultUnitData() ); // clear out the unit data
-	$('#unit-manager-player-' + player + ' .update-unit').prop('disabled', true);
+	jQuery('#unit-manager-player-' + player + ' .update-unit').prop('disabled', true);
 }
 
 function highlightUnit(event) {
-	var unit = $("#" + event.data.unitID);
+	var unit = jQuery("#" + event.data.unitID);
 	var models = unit.children('.unit-models');
 	deselectAllUnits(event);
-	
+
 	models.css({ 'box-shadow': "8px 8px 20px #000" });
 	displayUnitInfo(unit);
 }
 
 function displayUnitInfo(unit) {
 	var player = parseInt( unit.data('player') );
-	$('#control-panel').tabs('select', player); // Depends on player 1 being second tab and player 2 being third tab on zero-index array
+	jQuery('#control-panel').tabs('select', player); // Depends on player 1 being second tab and player 2 being third tab on zero-index array
 	setUnitManagerInfo( player, unit.data() );
-	$('#unit-manager-player-' + player + ' .update-unit').prop('disabled', false).data( 'unit', unit.attr('id') );
+	jQuery('#unit-manager-player-' + player + ' .update-unit').prop('disabled', false).data( 'unit', unit.attr('id') );
 }
 
 function setUnitManagerInfo(player, data) {
 	var prefix = '#player-' + player + '-unit-';
-	
-	$(prefix + 'ranks').val( data.ranks );
-	$(prefix + 'files').val( data.files );
-	$(prefix + 'models').val( data.models );
-	$(prefix + 'models-dead').val( data.modelsDead );
-	$(prefix + 'title').val( data.title );
-	$(prefix + 'base-size option[value="' + data.baseHeight + 'x' + data.baseWidth + '"]').prop('selected', true);
-	$(prefix + 'loose-formation').prop('checked', data.looseFormation );
+
+	jQuery(prefix + 'ranks').val( data.ranks );
+	jQuery(prefix + 'files').val( data.files );
+	jQuery(prefix + 'models').val( data.models );
+	jQuery(prefix + 'models-dead').val( data.modelsDead );
+	jQuery(prefix + 'title').val( data.title );
+	jQuery(prefix + 'base-size option[value="' + data.baseHeight + 'x' + data.baseWidth + '"]').prop('selected', true);
+	jQuery(prefix + 'loose-formation').prop('checked', data.looseFormation );
 }
 
 function defaultUnitData() {
@@ -468,7 +548,7 @@ function defaultUnitData() {
 }
 
 function deselectAllUnits(event) {
-	$('.unit-models').css({ 'box-shadow': "3px 3px 8px #222" });
+	jQuery('.unit-models').css({ 'box-shadow': "3px 3px 8px #222" });
 }
 
 function addPlayerClass(unit, element) {
@@ -480,33 +560,33 @@ function addPlayerClass(unit, element) {
 
 function modelCountHandler(event) {
 	var prefix = '#' + event.target.id.match(/player-\d+-unit-/).pop();
-	var ranks = parseInt( $(prefix + "ranks").val() ) || 1;
-	var files = parseInt( $(prefix + "files").val() ) || 1;
+	var ranks = parseInt( jQuery(prefix + "ranks").val() ) || 1;
+	var files = parseInt( jQuery(prefix + "files").val() ) || 1;
 	var min = ((ranks - 1) * files) + 1;
 	var max = ranks * files;
 	event.data.callback(prefix, min, max);
 }
 
 function updateModelCount(prefix, min, max) {
-	$(prefix + 'model-count').text( min + '-' + max );
-	$(prefix + 'models').val( max );
+	jQuery(prefix + 'model-count').text( min + '-' + max );
+	jQuery(prefix + 'models').val( max );
 }
 
 function validateModelCount(prefix, min, max) {
-	var value = $(prefix + 'models').val();
+	var value = jQuery(prefix + 'models').val();
 	if (value < min) { 
 		value = min;
 	}
 	else if (value > max) {
 		value = max;
 	}
-	$(prefix + 'models').val( value )
+	jQuery(prefix + 'models').val( value )
 }
 
 /* ---- ROTATABLE ---- */
 function rotateArtifact(event) {
 	if (!artifactBeingRotated) return;
-	
+
 	var center = getArtifactCenter( artifactBeingRotated );
 	var xFromCenter = event.pageX - center[0];
 	var yFromCenter = event.pageY - center[1];
@@ -514,34 +594,34 @@ function rotateArtifact(event) {
 
 	var rotateAngle = mouseAngle - mouseStartAngle + artifactStartAngle;
 	setRotationAngle(artifactBeingRotated, rotateAngle)
-	
+
 	return false;
 }
 
 function setRotationAngle(artifactBeingRotated, rotateAngle) {
 	performRotation(artifactBeingRotated, rotateAngle);
 	artifactBeingRotated.data('angle', rotateAngle );
-	
+
 	return artifactBeingRotated;
 }
 
 function startRotate(event) {
-	artifactBeingRotated = $(this).parent();
-	
+	artifactBeingRotated = jQuery(this).parent();
+
 	var center = getArtifactCenter( artifactBeingRotated );
 	var startXFromCenter = event.pageX - center[0];
 	var startYFromCenter = event.pageY - center[1];
 	mouseStartAngle = Math.atan2(startYFromCenter, startXFromCenter);
 	artifactStartAngle = artifactBeingRotated.data('angle');
-	
-	$(document).on( 'mousemove', rotateArtifact );
-  
+
+	jQuery(document).on( 'mousemove', rotateArtifact );
+
 	return false;
 }
 
 function stopRotate( event ) {
 	if ( !artifactBeingRotated ) return;
-	$(document).unbind( 'mousemove' );
+	jQuery(document).unbind( 'mousemove' );
 	setTimeout( function() { artifactBeingRotated = false; }, 10 );
 	return false;
 }
@@ -574,33 +654,33 @@ function performRotation(artifact, angle) {
 /* ---- LOAD AND SAVE ---- */
 function dumpHTML(event) {
 	var output = stringifyArtifacts();
-	$('#battlefield-out').val( output );
+	jQuery('#battlefield-out').val( output );
 }
 
 function stringifyArtifacts() {
 	var artifacts = [];
-	$('.artifact').each(function(index) {
-		artifacts.push( getDataFromElement($(this)) );
+	jQuery('.artifact').each(function(index) {
+		artifacts.push( getDataFromElement(jQuery(this)) );
 	});
 	return JSON.stringify(artifacts);
 }
 
 function saveReportToServer() {
 	var artifacts = stringifyArtifacts();
-	$.post("report.php", { id: $('#report-id').val(), data: artifacts }, function(data) {
+	jQuery.post("report.php", { id: jQuery('#report-id').val(), data: artifacts }, function(data) {
 		response = jQuery.parseJSON(data);
-		$( document.createElement('div') )
+		jQuery( document.createElement('div') )
 		.dialog({
 		            modal: true,
 		            buttons: {
 		                Ok: function() {
-		                    $( this ).dialog( "close" );
+		                    jQuery( this ).dialog( "close" );
 		                }
 		            }
 		        })
 		.html(response.message);
 		if (response.id) {
-			$('#report-id').val( response.id );
+			jQuery('#report-id').val( response.id );
 		}
 	})
 }
@@ -633,17 +713,17 @@ function getDataFromElement(unit) {
 }
 
 function slurpHTML(event) {
-	if ( $('#merge').prop('checked') == false) {
-		$('#battlefield').html('');
+	if ( jQuery('#merge').prop('checked') == false) {
+		jQuery('#battlefield').html('');
 	}
-	var json = jQuery.parseJSON( $('#battlefield-out').val() );
+	var json = jQuery.parseJSON( jQuery('#battlefield-out').val() );
 	loadReportFromJSON( json );
 }
 
 function loadReportFromJSON(json) {
 	for (var j = 0; j < json.length; j++) {
 		var artifactData = json[j];
-		
+
 		var artifact;
 		// artifacts need fresh IDs on load, so that we can merge
 		if (artifactData.artifactType == 'scenery') {
@@ -694,3 +774,5 @@ function colorForPlayer(player) {
 	}
 	return 'blue';
 }
+
+})();

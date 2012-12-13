@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" type="text/css" media="screen" title="jquery-ui" charset="utf-8">
-	<script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-	<style type="text/css">@import "herald.css";</style>
-	<title>Herald Online Battle Reporter for Miniatures Wargames - Alpha</title>
 	<script src="herald.min.js" type="text/javascript" charset="utf-8"></script>
+	<title>Herald Online Battle Reporter for Miniatures Wargames - Alpha</title>
 	<script type="text/javascript">
 
 	  var _gaq = _gaq || [];
@@ -22,93 +18,6 @@
 	</script>
 </head>
 <body>
-	<div id="battlefield-bg">
-		<div id="battlefield"></div>
-	</div>
-	<div class="panel" id="control-panel">
-		<ul>
-			<li><a href="#report">Report</a></li>
-			<li><a href="#unit-manager-player-1">Player 1</a></li>
-			<li><a href="#unit-manager-player-2">Player 2</a></li>
-			<li><a href="#scenery-manager">Scenery</a></li>
-		</ul>
-		<div id="unit-manager-player-1" class="unit-manager" data-player="1">
-			<div class="left">
-				<div><label for="player-1-unit-files">Files</label><input type="text" class="rank-and-file" id="player-1-unit-files" size="2" /></div>
-				<div><label for="player-1-unit-ranks">Ranks</label><input type="text" class="rank-and-file" id="player-1-unit-ranks" size="2" /></div>
-			</div>
-			<div class="left">
-				<div class="model-number"><label for="player-1-unit-models"># Models</label><input type="text" class="model-count" id="player-1-unit-models" size="3" /><span id="player-1-unit-model-count"></span></div>
-				<div class="model-number"><label class="dead-count" for="player-1-unit-models-dead"># Dead</label><input type="text" disabled class="dead-count" id="player-1-unit-models-dead" size="3" /></div>
-			</div>
-			<div><label for="player-1-unit-title">Unit Title</label><input type="text" id="player-1-unit-title"/></div>
-			<div><label for="player-1-unit-base-size">Base Size</label><select id="player-1-unit-base-size">
-				<option value="20x20">20mm x 20mm</option>
-				<option value="25x25">25mm x 25mm</option>
-				<option value="25x50">25mm x 50mm</option>
-				<option value="40x40">40mm x 40mm</option>
-				<option value="50x50">50mm x 50mm</option>
-				<option value="50x60">50mm x 60mm</option>
-				<option value="50x100">50mm x 100mm</option>
-				<option value="100x100">100mm x 100mm</option>
-				<option value="100x150">100mm x 150mm</option>
-			</select><input type="checkbox" id="player-1-unit-loose-formation" /><span title="Unit is in loose / skirmish formation">Loose?</span></div>
-			<div>
-				<button class="add-unit" data-player="1">Add Unit</button>
-				<button disabled class="update-unit">Update Unit</button>
-			</div>
-		</div>
-		<div id="unit-manager-player-2" class="unit-manager" data-player="2">
-			<div class="left">
-				<div><label for="player-2-unit-files">Files</label><input type="text" class="rank-and-file" id="player-2-unit-files" size="2" /></div>
-				<div><label for="player-2-unit-ranks">Ranks</label><input type="text" class="rank-and-file" id="player-2-unit-ranks" size="2" /></div>
-			</div>
-			<div class="left">
-				<div class="model-number"><label for="player-2-unit-models"># Models</label><input type="text" class="model-count" id="player-2-unit-models" size="3" /><span id="player-2-unit-model-count"></span></div>
-				<div class="model-number"><label class="dead-count" for="player-2-unit-models-dead"># Dead</label><input type="text" disabled class="dead-count" id="player-2-unit-models-dead" size="3" /></div>
-			</div>
-			<div><label for="player-2-unit-title">Unit Title</label><input type="text" id="player-2-unit-title"/></div>
-			<div><label for="player-2-unit-base-size">Base Size</label><select id="player-2-unit-base-size">
-				<option value="20x20">20mm x 20mm</option>
-				<option value="25x25">25mm x 25mm</option>
-				<option value="25x50">25mm x 50mm</option>
-				<option value="40x40">40mm x 40mm</option>
-				<option value="50x50">50mm x 50mm</option>
-				<option value="50x60">50mm x 60mm</option>
-				<option value="50x100">50mm x 100mm</option>
-				<option value="100x100">100mm x 100mm</option>
-				<option value="100x150">100mm x 150mm</option>
-			</select><input type="checkbox" id="player-2-unit-loose-formation" /><span title="Unit is in loose / skirmish formation">Loose?</span></div>
-			<div>
-				<button class="add-unit" data-player="2">Add Unit</button>
-				<button disabled class="update-unit">Update Unit</button>
-			</div>
-		</div>
-		<div id="scenery-manager">
-			<div>
-				<div><label for="scenery-url">URL</label><input type="text" id="scenery-url" /></div>
-				<div><label for="scenery-label">Label</label><input type="text" id="scenery-label" /></div>
-				<div><button class="add-scenery" id="add-remote-scenery">Add Custom Scenery</button></div>
-			</div>
-			<hr />
-		</div>
-		<div id="report">
-			<div><button id="start-report">Start Report (locks scenery)</button><button id="save-button">Save Report</button></div>
-			<hr />
-			<div>
-				Report ID<input type="text" id="report-id" size="5">
-				<button id="load-button">Load Report</button><input type="checkbox" id="merge"><span title="Merge data with current report">Merge?</span>
-			</div>
-			<a id="advanced-link" href="#advanced">Advanced</a>
-			<div id="advanced">
-				<div class="help">Your exported battle report will show up in this text area. Copy and paste it into a text editor (like Textedit or Notepad) and save it. You can also copy and paste a previously saved battle report into this text area and click load. Alternatively, use the "Save Report" button above and it will generate a link to this report and to the raw data which can be downloaded and saved.</div>
-				<div><textarea id="battlefield-out"></textarea></div>
-				<div><button id="dump-button">Export Report</button><button id="slurp-button">Import Report</button><input type="checkbox" id="merge"><span title="Merge data with current report">Merge?</span></div>
-			</div>
-			<hr />
-			<div>Movement / measurement arrows</div>
-		</div>
-	</div>
-	<div class="footer"><a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Herald Battle Reporter</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://godswearhats.com" property="cc:attributionName" rel="cc:attributionURL">godswearhats</a> is licensed under a <br /><a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.</div>
+	<div id="battlefield"></div>
 </body>
 </html>
