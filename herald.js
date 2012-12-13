@@ -7,7 +7,7 @@ var mouseStartAngle = false;
 var artifactStartAngle = false;
 var reportStarted = false;
 var LOOSE_FORMATION_GAP = Math.round( inchesToPx(0.5) );
-var BASE_URL = "http://godswearhats.com/herald/";
+var BASE_URL = window.BASE_URL || "http://godswearhats.com/herald/";
 
 if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.8.2') {
 	var scriptTag = document.createElement('script');
@@ -325,6 +325,10 @@ function createScenery(sceneryID, data) {
 		}
 	jQuery('#battlefield').append(scenery);
 	scenery.playable();
+	scenery.offset({
+		top: (jQuery('#battlefield').height() / 2) - (scenery.height() / 2),
+		left: (jQuery('#battlefield').width() / 2) - (scenery.width() / 2)
+	})
 	return scenery;
 }
 
