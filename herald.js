@@ -36,10 +36,10 @@ function main() {
 }
 
 function getControlPanel() {
-	var cp = jQuery( document.createElement('div') );
+	var cp = jQuery( document.createElement('div') ).css('position', 'absolute');
 	jQuery.get(BASE_URL + "control_panel.html", function(html) {
 		cp.html(html);
-		cp.appendTo('#battlefield');
+		jQuery('#battlefield').after(cp);
 		init();
 	});
 	return cp;
@@ -184,9 +184,7 @@ function bindFunctionsToButtons() {
 	jQuery( ".update-unit" ).on("click", updateUnit);
 	jQuery( "#add-remote-scenery" ).on("click", loadRemoteScenery);
 	jQuery( "#dump-button" ).on("click", dumpHTML); // DEPRECATED
-	jQuery( "#load-button" ).on("click", function(event) {
-		jQuery.getJSON("reports/" + jQuery('#report-id').val() + ".json", loadReportFromJSON);
-	});
+	jQuery( "#load-button" ).on("click", loadReportFromServer);
 	jQuery( "#slurp-button" ).on("click", slurpHTML); // DEPRECATED
 	jQuery( "#save-button" ).on("click", saveReportToServer);
 	jQuery( "#start-report").on("click", toggleReportState);
@@ -200,16 +198,16 @@ function initializeSceneryManager() {
 	var scenery = ['tower', 'wall', 'tree', 'corner_hill', 'hill'];
 	for (var i = 0; i < scenery.length; i++) {
 		var image_src = BASE_URL + 'img/' + scenery[i] + '.png';
-		createSceneryButton( image_src, scenery[i].replace("_", " "), { controlPanelID: '#scenery-manager', aspectRatio: true, resizable: true, lock: true } );
+		createSceneryButton( image_src, scenery[i].replace("_", " "), { controlPanelID: '#scenery-manager', aspectRatio: true, isResizable: true, lock: true } );
 	}
 	
 	// There has to be a better way to do this ...
-	createSceneryButton(BASE_URL + "img/red_arrow.png", "Player 1", { controlPanelID: '#report', aspectRatio: false, measure: true, resizable: true });
-	createSceneryButton(BASE_URL + "img/blue_arrow.png", "Player 2", { controlPanelID: '#report', aspectRatio: false, measure: true, resizable: true });
-	createSceneryButton(BASE_URL + "img/skull.png", "Kill", { controlPanelID: '#report', aspectRatio: false, resizable: true });
-	createSceneryButton(BASE_URL + "img/small_blast.png", "Blast", { controlPanelID: '#report', aspectRatio: false, resizable: false });
-	createSceneryButton(BASE_URL + "img/large_blast.png", "Large Blast", { controlPanelID: '#report', aspectRatio: false, resizable: false });
-	createSceneryButton(BASE_URL + "img/flame_template.png", "Template", { controlPanelID: '#report', aspectRatio: false, resizable: false });
+	createSceneryButton(BASE_URL + "img/red_arrow.png", "Player 1", { controlPanelID: '#report', aspectRatio: false, measure: true, isResizable: true });
+	createSceneryButton(BASE_URL + "img/blue_arrow.png", "Player 2", { controlPanelID: '#report', aspectRatio: false, measure: true, isResizable: true });
+	createSceneryButton(BASE_URL + "img/skull.png", "Kill", { controlPanelID: '#report', aspectRatio: false, isResizable: true });
+	createSceneryButton(BASE_URL + "img/small_blast.png", "Blast", { controlPanelID: '#report', aspectRatio: false, isResizable: false });
+	createSceneryButton(BASE_URL + "img/large_blast.png", "Large Blast", { controlPanelID: '#report', aspectRatio: false, isResizable: false });
+	createSceneryButton(BASE_URL + "img/flame_template.png", "Template", { controlPanelID: '#report', aspectRatio: false, isResizable: false });
 }
 
 function initializePlayerTabs() {
@@ -310,7 +308,7 @@ function createScenery(sceneryID, data) {
 			'background-image': 'url(' + data.src + ')',
 			'background-repeat': 'none'
 		});
-		if (data.resizable) {
+		if (data.isResizable) {
 			scenery.resizable({
 				autoHide: true,
 				aspectRatio: data.aspectRatio
@@ -689,6 +687,15 @@ function saveReportToServer() {
 	})
 }
 
+function loadReportFromServer(event) {
+	console.log("Loading report from server");
+	if ( jQuery('#merge').prop('checked') == false) {
+		console.log("Merge false");
+		jQuery('#battlefield').html('');
+	}
+	jQuery.getJSON("reports/" + jQuery('#report-id').val() + ".json", loadReportFromJSON);
+}
+
 function getDataFromElement(unit) {
 	var offset = getArtifactOffset(unit);
 	var data = {
@@ -711,7 +718,10 @@ function getDataFromElement(unit) {
 		data.src = unit.data('src');
 		data.height = parseInt( unit.css('height') );
 		data.width = parseInt( unit.css('width') );
-		data.isScenery = unit.data('isScenery');
+		data.aspectRatio = unit.data('aspectRatio');
+		data.isResizable = unit.data('isResizable');
+		data.measure = unit.data('measure');
+		data.lock = unit.data('lock');
 	}
 	return data;
 }
