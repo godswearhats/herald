@@ -247,7 +247,7 @@ function toggleReportState(event) {
 	if (reportStarted) {
 		reportStarted = false;
 		jQuery("#start-report").text("Start Report (locks scenery)");
-		jQuery('.scenery').draggable( {cancel :'.handle'} );
+		jQuery('.scenery').draggable( {cancel :'.handle'} ).css({'z-index': 50});
 		jQuery('.resizable-scenery').each(function() {
 			$(this).resizable({
 				autoHide: true,
@@ -260,7 +260,7 @@ function toggleReportState(event) {
 	else {
 		reportStarted = true;
 		jQuery("#start-report").text("Stop Report (unlocks scenery)");
-		jQuery('.scenery').draggable( "destroy" );
+		jQuery('.scenery').draggable( "destroy" ).css({'z-index': 10});
 		jQuery('.resizable-scenery').resizable( "destroy" );
 		jQuery('.add-unit').prop('disabled', true);
 		jQuery('.dead-count').prop('disabled', false);
