@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Armies</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+<body>
+
+  <div data-role="page" id="list">
+  	<div data-role="header">
+      <h1>Armies</h1>
+  	</div>
+    <a href="#new" class="ui-btn ui-icon-plus ui-btn-icon-right">New List ...</a>
+  	<div role="main" class="ui-content">
+
+      <ul data-role="listview" data-inset="true" data-divider-theme="a">
+          <li data-role="list-divider">Elves <span class="ui-li-count">2</span></li>
+          <li><a href="#build">Wet Coast 2250</a></li>
+          <li><a href="#build">Dragon Rider 2000</a></li>
+          <li data-role="list-divider">The Herd <span class="ui-li-count">1</span></li>
+          <li><a href="#build">Joe's army</a></li>
+      </ul>
+  	</div>
+  </div>
+
+  <!-- Start of second page -->
+<div data-role="page" id="new">
+
+  <div role="main" class="ui-content">
+    <a href="#list" class="ui-btn ui-icon-back ui-btn-icon-left">Choose your army</a>
+    <form>
+      <label for="army-name">Army name (optional)</label>
+      <input name="army-name" id="army-name" value="" placeholder="e.g. Adepticon 2019" type="text">
+    </form>
+    <ul data-role="listview" data-inset="true">
+      <li><a href="#build">Elves <span class="ui-li-count">2</span></a></li>
+      <li><a href="#build">The Herd<span class="ui-li-count">1</span></a></li>
+      <li><a href="#build">Abyssal Dwarves</a></li>
+      <li><a href="#build">Abyssals</a></li>
+      <li><a href="#build">Dwarves</a></li>
+      <li><a href="#build">Empire of Dust</a></li>
+      <li><a href="#build">Forces of Basilea</a></li>
+      <li><a href="#build">Forces of Nature</a></li>
+      <li><a href="#build">Goblins</a></li>
+      <li><a href="#build">Kingdoms of Men</a></li>
+      <li><a href="#build">Ogres</a></li>
+      <li><a href="#build">Ratkin</a></li>
+      <li><a href="#build">Salamanders</a></li>
+      <li><a href="#build">The Brotherhood</a></li>
+      <li><a href="#build">The League of Rhordia</a></li>
+      <li><a href="#build">Trident Realms</a></li>
+      <li><a href="#build">Twilight Kin</a></li>
+      <li><a href="#build">Undead</a></li>
+      <li><a href="#build">Varangur</a></li>
+    </ul>
+	</div>
+
+</div>
+
+<div data-role="page" id="build">
+
+  <div role="main" class="ui-content">
+    <a href="#new" class="ui-btn ui-icon-back ui-btn-icon-left">Building Elves</a>
+    <script type="text/javascript">
+      var elves = {
+// TODO load in elves.json!
+
+}
+    </script>
+    <ul data-role="listview" data-inset="true">
+      <li><a href="#build">Elves <span class="ui-li-count">12</span></a></li>
+      <li><a href="#build">The Herd<span class="ui-li-count">4</span></a></li>
+      <li><a href="#build">Abyssal Dwarves</a></li>
+      <li><a href="#build">Abyssals</a></li>
+      <li><a href="#build">Dwarves</a></li>
+      <li><a href="#build">Empire of Dust</a></li>
+      <li><a href="#build">Forces of Basilea</a></li>
+      <li><a href="#build">Forces of Nature</a></li>
+      <li><a href="#build">Goblins</a></li>
+      <li><a href="#build">Kingdoms of Men</a></li>
+      <li><a href="#build">Ogres</a></li>
+      <li><a href="#build">Ratkin</a></li>
+      <li><a href="#build">Salamanders</a></li>
+      <li><a href="#build">The Brotherhood</a></li>
+      <li><a href="#build">The League of Rhordia</a></li>
+      <li><a href="#build">Trident Realms</a></li>
+      <li><a href="#build">Twilight Kin</a></li>
+      <li><a href="#build">Undead</a></li>
+      <li><a href="#build">Varangur</a></li>
+    </ul>
+	</div>
+
+</div>
+
+</body>
+
+</html>
