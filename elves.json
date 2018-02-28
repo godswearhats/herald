@@ -1,5 +1,10 @@
 {
+  "version": 1,
+  "revised": "2018-02-26",
+  "name": "Elves",
+  "entries": {
     "Kindred Tallspears": {
+        "id": 1,
         "special": [
             "Elite",
             "Phalanx"
@@ -42,6 +47,7 @@
         }
     },
     "Therennian Sea Guard": {
+        "id": 2,
         "special": [
             "Bows",
             "Elite",
@@ -74,6 +80,7 @@
         }
     },
     "Palace Guard": {
+        "id": 3,
         "special": [
             {
                 "Crushing Strength": 1
@@ -107,6 +114,7 @@
         }
     },
     "Kindred Archers": {
+        "id": 4,
         "special": [
             "Bows",
             "Elite"
@@ -149,6 +157,7 @@
         }
     },
     "Kindred Gladestalkers": {
+        "id": 5,
         "special": [
             "Bows",
             "Elite",
@@ -182,6 +191,7 @@
         }
     },
     "Hunters of the Wild": {
+        "id": 6,
         "special": [
             "Pathfinder",
             "Vanguard"
@@ -226,6 +236,7 @@
         }
     },
     "Battlecats": {
+        "id": 7,
         "irregular": true,
         "special": [
             {
@@ -254,6 +265,7 @@
         }
     },
     "Forest Shamblers": {
+        "id": 8,
         "special": [
             {
                 "Crushing Strength": 1
@@ -289,6 +301,7 @@
         }
     },
     "Stormwind Cavalry": {
+        "id": 9,
         "special": [
             "Elite",
             {
@@ -322,6 +335,7 @@
         }
     },
     "Silverbreeze Cavalry": {
+        "id": 10,
         "special": [
             "Bows",
             "Elite",
@@ -343,6 +357,7 @@
         }
     },
     "The Windborne": {
+        "id": 11,
         "special": [
             "Elite",
             "Nimble",
@@ -365,6 +380,7 @@
         }
     },
     "Drakon Riders": {
+        "id": 12,
         "special": [
             {
                 "Crushing Strength": 1
@@ -402,6 +418,7 @@
         }
     },
     "War Chariots": {
+        "id": 13,
         "base": [
             50,
             100
@@ -440,6 +457,7 @@
         }
     },
     "Bolt Thrower": {
+        "id": 14,
         "special": [
             {
                 "Blast": "D3"
@@ -466,6 +484,7 @@
         }
     },
     "Dragon Breath": {
+        "id": 15,
         "special": [
             {
                 "Breath Attack": "Att"
@@ -488,6 +507,7 @@
         }
     },
     "Elven King": {
+        "id": 16,
         "special": [
             {
                 "Crushing Strength": 1
@@ -529,6 +549,7 @@
         }
     },
     "Dragon Kindred Lord": {
+        "id": 17,
         "special": [
             {
                 "Breath Attack": 15
@@ -556,6 +577,7 @@
         }
     },
     "Drakon Rider Lord": {
+        "id": 18,
         "special": [
             {
                 "Crushing Strength": 1
@@ -583,6 +605,7 @@
         }
     },
     "Elven Prince": {
+        "id": 19,
         "special": [
             {
                 "Crushing Strength": 1
@@ -623,6 +646,7 @@
         }
     },
     "Noble War Chariot": {
+        "id": 20,
         "base": [
             50,
             100
@@ -651,6 +675,7 @@
         }
     },
     "Elven Mage": {
+        "id": 21,
         "special": [
             "Elite",
             {
@@ -708,6 +733,7 @@
         }
     },
     "Army Standard Bearer": {
+        "id": 22,
         "special": [
             "Elite",
             "Individual",
@@ -741,6 +767,7 @@
         }
     },
     "Master Hunter": {
+        "id": 23,
         "special": [
             "Bow",
             "Elite",
@@ -773,6 +800,7 @@
         }
     },
     "Forest Warden": {
+        "id": 24,
         "special": [
             {
                 "Crushing Strength": 2
@@ -797,6 +825,7 @@
         }
     },
     "Tree Herder": {
+        "id": 25,
         "special": [
             {
                 "Crushing Strength": 3
@@ -825,6 +854,7 @@
         }
     },
     "Argus Rodinar": {
+        "id": 26,
         "base": [
             50,
             50
@@ -851,6 +881,7 @@
         }
     },
     "The Green Lady": {
+        "id": 27,
         "special": [
             "Elite",
             "Fly",
@@ -888,6 +919,7 @@
         }
     },
     "Tydarion Dragonlord": {
+        "id": 28,
         "base": [
             75,
             75
@@ -919,4 +951,5 @@
             }
         }
     }
+  }
 }
