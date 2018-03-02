@@ -10,6 +10,20 @@
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
 	<script src="js/jquery-2.2.4.js"></script>
 	<script src="js/jquery.mobile-1.4.5.js"></script>
+	<script src="js/shared.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#new").on( "pagecontainerbeforehide", function( event, ui ) {
+				alert("Bloop!")
+				console.log(ui)
+				herald.army = {
+					'template': loadArmy(event.target.dataset.army),
+					'name': $('#army-name').val(),
+					'limit': $('#army-limit').val()
+				}
+			})
+		})
+	</script>
 </head>
 
 <body>
@@ -71,36 +85,62 @@
     <form>
 			<label for="army-name">Army name (optional)</label>
       <input name="army-name" id="army-name" value="" placeholder="e.g. Adepticon 2019" type="text">
-			<label for="army-points">Points Value (optional)</label>
-			<input name="army-points" id="army-points" value="" placeholder="2000" type="text">
+			<label for="army-limit">Points Limit (optional)</label>
+			<input name="army-limit" id="army-limit" value="" placeholder="2000" type="text">
     </form>
     <ul data-role="listview" data-inset="true">
-      <li><a href="#build">Elves <span class="ui-li-count">2</span></a></li>
-      <li><a href="#build">The Herd<span class="ui-li-count">1</span></a></li>
-      <li><a href="#build">Abyssal Dwarves</a></li>
-      <li><a href="#build">Abyssals</a></li>
-      <li><a href="#build">Dwarves</a></li>
-      <li><a href="#build">Empire of Dust</a></li>
-      <li><a href="#build">Forces of Basilea</a></li>
-      <li><a href="#build">Forces of Nature</a></li>
-      <li><a href="#build">Goblins</a></li>
-      <li><a href="#build">Kingdoms of Men</a></li>
-      <li><a href="#build">Ogres</a></li>
-      <li><a href="#build">Ratkin</a></li>
-      <li><a href="#build">Salamanders</a></li>
-      <li><a href="#build">The Brotherhood</a></li>
-      <li><a href="#build">The League of Rhordia</a></li>
-      <li><a href="#build">Trident Realms</a></li>
-      <li><a href="#build">Twilight Kin</a></li>
-      <li><a href="#build">Undead</a></li>
-      <li><a href="#build">Varangur</a></li>
+      <li><a href="#build" class="build" data-army="elves">Elves <span class="ui-li-count">2</span></a></li>
+      <li><a href="#build" class="build" data-army="herd">The Herd<span class="ui-li-count">1</span></a></li>
+      <li><a href="#build" class="build" data-army="abyssal-dwarfs">Abyssal Dwarfs</a></li>
+      <li><a href="#build" class="build" data-army="abyss">Forces of the Abyss</a></li>
+      <li><a href="#build" class="build" data-army="dwarfs">Dwarfs</a></li>
+      <li><a href="#build" class="build" data-army="dust">Empire of Dust</a></li>
+      <li><a href="#build" class="build" data-army="basilea">Forces of Basilea</a></li>
+      <li><a href="#build" class="build" data-army="nature">Forces of Nature</a></li>
+      <li><a href="#build" class="build" data-army="goblins">Goblins</a></li>
+      <li><a href="#build" class="build" data-army="men">Kingdoms of Men</a></li>
+      <li><a href="#build" class="build" data-army="ogres">Ogres</a></li>
+      <li><a href="#build" class="build" data-army="ratkin">Ratkin</a></li>
+      <li><a href="#build" class="build" data-army="salamanders">Salamanders</a></li>
+      <li><a href="#build" class="build" data-army="brotherhood">The Brotherhood</a></li>
+      <li><a href="#build" class="build" data-army="rhordia">The League of Rhordia</a></li>
+      <li><a href="#build" class="build" data-army="trident">Trident Realms</a></li>
+      <li><a href="#build" class="build" data-army="kin">Twilight Kin</a></li>
+      <li><a href="#build" class="build" data-army="undead">Undead</a></li>
+      <li><a href="#build" class="build" data-army="varangur">Varangur</a></li>
     </ul>
 	</div>
 </div>
 
 <!-- #build: actually build your army -->
 <div data-role="page" id="build" data-action="#show-units">
+	<div role="main" class="ui-content">
+		<ul data-role="listview" id="army-entries">
 
+		</ul>
+	</div>
+	<script type="text/javascript">
+	$( "#build" ).on( "pagecontainershow", function( event, ui ) {
+	  alert("Herald!");
+		$.each(herald.army.units, function(number, entry) {
+			var item = makeUnitStatsEntry(entry.name, herald.template.entries[entry.name].units[entry.unit])
+			$('#army-entries').append(item)
+		})
+	});
+
+	</script>
+</div>
+
+<!-- #unit-details: customize a given unit -->
+<div data-role="page" id="unit-details">
+	<div class="ui-content" role="main">
+		<div id="unit-entry">
+		</div>
+	</div>
+	<script type="text/javascript">
+		var item = makeUnitStatsTable(herald.currentUnit.name + ' (' + herald.currentUnit.unit + ')', herald.currentUnit.stats)
+		$('#unit-entry').append(item)
+	</script>
 </div>
 
 <!-- #artifacts: list of magical artifacts -->
@@ -183,43 +223,6 @@
     <div data-inset="true" data-filter="true" data-role="collapsibleset" data-input="#filter-units" id="unit-choices">
     </div>
 		<script type="text/javascript">
-			var types = ['Inf', 'Lrg Inf', 'Cav', 'Lrg Cav', 'Mon', 'War Machine']
-
-			function getFlat(stat) {
-				if (stat) { return stat }
-				return '&mdash;'
-			}
-
-			function getPlus(stat) {
-				if (stat) { return stat + '+' }
-				return '&mdash;'
-			}
-
-			function getNerve(waver, rout) {
-				if (!waver) { waver = '-' }
-				return waver + '/' + rout
-			}
-
-			function makeUnitStatsEntry(label, stats) {
-				var unitChoice = document.createElement('li')
-				var anchor = document.createElement('a')
-				var table = '<table border="0"><tr style="border-bottom: 1px solid grey;">'
-				+ '<th>Unit Size</th><th>Sp</th><th>Me</th><th>Ra</th><th>De</th><th>Att</th><th>Ne</th><th>Pts</th>'
-				+ '<td rowspan="2"><a href="#artifacts" data-transition="slide" class="ui-btn ui-mini ui-corner-all ui-shadow ui-btn-inline ui-icon-carat-r ui-btn-icon-right ui-btn-a">Artifacts</a></td></tr><tr>'
-				+ '<td>' + label + '</td>'
-				+ '<td>' + getFlat(stats.speed) + '</td>'
-				+ '<td>' + getPlus(stats.melee) + '</td>'
-				+ '<td>' + getPlus(stats.ranged) + '</td>'
-				+ '<td>' + getPlus(stats.defence) + '</td>'
-				+ '<td>' + getFlat(stats.attacks) + '</td>'
-				+ '<td>' + getNerve(stats.waver, stats.rout) + '</td>'
-				+ '<td>' + stats.points + '</td></tr></table>'
-				anchor.innerHTML = table
-				$(anchor).attr('href', '#unit-details')
-				unitChoice.appendChild(anchor)
-				return unitChoice
-			}
-
 			function makeUnitEntry(name, entry) {
 				var item = document.createElement('div')
 				var type = (entry.type >= 10)
@@ -235,8 +238,8 @@
 				item.setAttribute('data-iconpos', 'right')
 				item.setAttribute('data-inset', 'false')
 				var unitSizes = document.createElement('ul')
-				$.each(entry.units, function(label, stats) {
-					var unitChoice = makeUnitStatsEntry(label, stats)
+				$.each(entry.units, function(unit, stats) {
+					var unitChoice = makeUnitStatsEntry(name, unit, stats)
 					unitSizes.appendChild(unitChoice)
 				})
 				item.appendChild(unitSizes)
@@ -245,11 +248,9 @@
 				return item
 			}
 
-			$.getJSON('data/elves.json', function(data) {
-				$.each(data.entries, function(name, entry) {
-					var item = makeUnitEntry(name, entry)
-					$('#unit-choices').append(item)
-				})
+			$.each(herald.template, function(name, entry) {
+				var item = makeUnitEntry(name, entry)
+				$('#unit-choices').append(item)
 			})
     </script>
 	</div>

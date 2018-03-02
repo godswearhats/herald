@@ -230,6 +230,7 @@
                         "Regeneration": 5
                     }
                 ],
+                "only": "Regiment",
                 "requires": "The Green Lady",
                 "limit": 1
             }
