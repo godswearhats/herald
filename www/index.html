@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Armies</title>
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
+	<script src="js/jquery-2.2.4.js"></script>
+	<script src="js/jquery.mobile-1.4.5.js"></script>
+</head>
+
+<body>
+
+<!-- Header and footer -->
+<div id="header" data-role="header">
+	<a id="header-menu" href="#new" class="ui-btn ui-btn-icon-left ui-icon-bars ui-btn-icon-notext ui-corner-all ui-btn-inline">Menu</a>
+	<h3 id="header-title">Elves</h3>
+	<a id="header-action" href="#" class="ui-btn ui-btn-b ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all ui-btn-inline">Add Unit</a>
+</div>
+
+<div id="footer" data-role="footer">
+	<div id="navbar" data-role="navbar">
+		<ul>
+			<li><a href="#armies" class="ui-btn-active">Armies</a></li>
+			<li><a href="#battles">Battles</a></li>
+			<li><a href="#events">Events</a></li>
+		</ul>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$( "[data-role='header'], [data-role='footer']" ).toolbar( {'theme': 'a'})
+	})
+	// Update the contents of the toolbars
+	$(document).on('pagecontainerchange', function() {
+			// TODO highlight buttons for navbar
+	    var title = $('.ui-page-active').jqmData('title')
+			if (title) {
+				$('#header-title').text(title)
+			}
+			var action = $('.ui-page-active').jqmData('action')
+			if (action) {
+				$('#header-action').attr('href', action).show()
+			}
+			else {
+				$('#header-action').hide()
+			}
+	})
+</script>
+
+<!-- #army-list: List of all the armies created -->
+<div data-role="page" data-title="Armies" data-action="#new" id="army-list">
+	<div role="main" class="ui-content">
+
+    <ul data-role="listview" data-inset="true" data-divider-theme="a">
+        <li data-role="list-divider">Elves <span class="ui-li-count">2</span></li>
+        <li><a href="#build">Wet Coast 2250</a></li>
+        <li><a href="#build">Dragon Rider 2000</a></li>
+        <li data-role="list-divider">The Herd <span class="ui-li-count">1</span></li>
+        <li><a href="#build">Joe's army</a></li>
+    </ul>
+	</div>
+</div>
+
+  <!-- #new: Create a new army -->
+<div data-role="page" data-title="Create new army" id="new">
+  <div role="main" class="ui-content">
+    <form>
+			<label for="army-name">Army name (optional)</label>
+      <input name="army-name" id="army-name" value="" placeholder="e.g. Adepticon 2019" type="text">
+			<label for="army-points">Points Value (optional)</label>
+			<input name="army-points" id="army-points" value="" placeholder="2000" type="text">
+    </form>
+    <ul data-role="listview" data-inset="true">
+      <li><a href="#build">Elves <span class="ui-li-count">2</span></a></li>
+      <li><a href="#build">The Herd<span class="ui-li-count">1</span></a></li>
+      <li><a href="#build">Abyssal Dwarves</a></li>
+      <li><a href="#build">Abyssals</a></li>
+      <li><a href="#build">Dwarves</a></li>
+      <li><a href="#build">Empire of Dust</a></li>
+      <li><a href="#build">Forces of Basilea</a></li>
+      <li><a href="#build">Forces of Nature</a></li>
+      <li><a href="#build">Goblins</a></li>
+      <li><a href="#build">Kingdoms of Men</a></li>
+      <li><a href="#build">Ogres</a></li>
+      <li><a href="#build">Ratkin</a></li>
+      <li><a href="#build">Salamanders</a></li>
+      <li><a href="#build">The Brotherhood</a></li>
+      <li><a href="#build">The League of Rhordia</a></li>
+      <li><a href="#build">Trident Realms</a></li>
+      <li><a href="#build">Twilight Kin</a></li>
+      <li><a href="#build">Undead</a></li>
+      <li><a href="#build">Varangur</a></li>
+    </ul>
+	</div>
+</div>
+
+<!-- #build: actually build your army -->
+<div data-role="page" id="build" data-action="#show-units">
+
+</div>
+
+<!-- #artifacts: list of magical artifacts -->
+<div data-role="page" id="artifacts" data-theme="a">
+	<div role="main" class="ui-content">
+		<form class="ui-filterable">
+				<input id="artifacts-autocomplete" data-type="search" placeholder="Search artifacts...">
+		</form>
+		<ul id="artifacts-choices" data-role="listview" data-filter="true" data-input="#artifacts-autocomplete" data-inset="true">
+
+		</ul>
+
+	</div>
+	<script type="text/javascript">
+	function makeArtifactEntry(name, entry) {
+		var item = document.createElement('li')
+		var anchor = document.createElement('a')
+		$(anchor).text(name)
+		$(anchor).attr('href', '#build')
+		var points = document.createElement('span')
+		$(points).addClass('ui-li-count')
+		$(points).text(entry.points)
+		anchor.appendChild(points)
+		item.appendChild(anchor)
+		return item
+		// TODO add description and rules
+	}
+	$(function(){
+		var artifacts = {}
+		$.getJSON('data/artifacts.json', function(data) {
+			$.each(data, function(name, entry) {
+				var item = makeArtifactEntry(name, entry)
+				$('#artifacts-choices').append(item)
+			})
+		})
+	})
+	</script>
+</div>
+
+<!-- #show-units: show the units for your army -->
+<div data-role="page" id="show-units" data-title="Units">
+
+  <div role="main" class="ui-content">
+
+		<style>
+		table {
+			  border-collapse: collapse;
+			}
+			tr {
+			  border: solid;
+			  border-width: 1px 0;
+			}
+			tr:first-child {
+			  border-top: none;
+			}
+			tr:last-child {
+			  border-bottom: none;
+			}
+			th {
+				text-align: center;
+				font-size: 80%;
+				padding-right: 10px;
+			}
+			td {
+				text-align: center;
+				font-weight: lighter;
+				font-size: 80%;
+				padding-right: 8px;
+
+			}
+			h2 {
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+		</style>
+
+		<form class="ui-filterable">
+		    <input id="filter-units" data-type="search">
+		</form>
+    <div data-inset="true" data-filter="true" data-role="collapsibleset" data-input="#filter-units" id="unit-choices">
+    </div>
+		<script type="text/javascript">
+			var types = ['Inf', 'Lrg Inf', 'Cav', 'Lrg Cav', 'Mon', 'War Machine']
+
+			function getFlat(stat) {
+				if (stat) { return stat }
+				return '&mdash;'
+			}
+
+			function getPlus(stat) {
+				if (stat) { return stat + '+' }
+				return '&mdash;'
+			}
+
+			function getNerve(waver, rout) {
+				if (!waver) { waver = '-' }
+				return waver + '/' + rout
+			}
+
+			function makeUnitStatsEntry(label, stats) {
+				var unitChoice = document.createElement('li')
+				var anchor = document.createElement('a')
+				var table = '<table border="0"><tr style="border-bottom: 1px solid grey;">'
+				+ '<th>Unit Size</th><th>Sp</th><th>Me</th><th>Ra</th><th>De</th><th>Att</th><th>Ne</th><th>Pts</th>'
+				+ '<td rowspan="2"><a href="#artifacts" data-transition="slide" class="ui-btn ui-mini ui-corner-all ui-shadow ui-btn-inline ui-icon-carat-r ui-btn-icon-right ui-btn-a">Artifacts</a></td></tr><tr>'
+				+ '<td>' + label + '</td>'
+				+ '<td>' + getFlat(stats.speed) + '</td>'
+				+ '<td>' + getPlus(stats.melee) + '</td>'
+				+ '<td>' + getPlus(stats.ranged) + '</td>'
+				+ '<td>' + getPlus(stats.defence) + '</td>'
+				+ '<td>' + getFlat(stats.attacks) + '</td>'
+				+ '<td>' + getNerve(stats.waver, stats.rout) + '</td>'
+				+ '<td>' + stats.points + '</td></tr></table>'
+				anchor.innerHTML = table
+				$(anchor).attr('href', '#unit-details')
+				unitChoice.appendChild(anchor)
+				return unitChoice
+			}
+
+			function makeUnitEntry(name, entry) {
+				var item = document.createElement('div')
+				var type = (entry.type >= 10)
+					?	'Hero (' + types[entry.type - 10] + ')'
+					:	types[entry.type]
+
+				// expand if more than one unit choice (e.g. Troop, Regiment, Horde)
+				var header = document.createElement('h2')
+				header.innerHTML = name
+				item.appendChild(header)
+				item.setAttribute('data-role', 'collapsible')
+				item.setAttribute('data-filtertext', name + ' ' + type)
+				item.setAttribute('data-iconpos', 'right')
+				item.setAttribute('data-inset', 'false')
+				var unitSizes = document.createElement('ul')
+				$.each(entry.units, function(label, stats) {
+					var unitChoice = makeUnitStatsEntry(label, stats)
+					unitSizes.appendChild(unitChoice)
+				})
+				item.appendChild(unitSizes)
+				$(unitSizes).listview()
+				$(item).collapsible()
+				return item
+			}
+
+			$.getJSON('data/elves.json', function(data) {
+				$.each(data.entries, function(name, entry) {
+					var item = makeUnitEntry(name, entry)
+					$('#unit-choices').append(item)
+				})
+			})
+    </script>
+	</div>
+
+</div>
+
+</body>
+
+</html>
