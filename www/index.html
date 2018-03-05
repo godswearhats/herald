@@ -9,21 +9,28 @@
 	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
 	<script src="js/jquery-2.2.4.js"></script>
-	<script src="js/jquery.mobile-1.4.5.js"></script>
-	<script src="js/shared.js"></script>
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$("#new").on( "pagecontainerbeforehide", function( event, ui ) {
-				alert("Bloop!")
-				console.log(ui)
-				herald.army = {
-					'template': loadArmy(event.target.dataset.army),
-					'name': $('#army-name').val(),
-					'limit': $('#army-limit').val()
+		$(function(){
+			$( "[data-role='header'], [data-role='footer']" ).toolbar( {'theme': 'a'})
+		})
+		// Update the contents of the toolbars
+		$(document).on('pagecontainerchange', function(event, ui) {
+				// TODO highlight buttons for navbar
+		    var title = $('.ui-page-active').jqmData('title')
+				if (title) {
+					$('#header-title').text(title)
 				}
-			})
+				var action = $('.ui-page-active').jqmData('action')
+				if (action) {
+					$('#header-action').attr('href', action).show()
+				}
+				else {
+					$('#header-action').hide()
+				}
 		})
 	</script>
+	<script src="js/jquery.mobile-1.4.5.js"></script>
+	<script src="js/shared.js"></script>
 </head>
 
 <body>
@@ -44,26 +51,6 @@
 		</ul>
 	</div>
 </div>
-<script type="text/javascript">
-	$(function(){
-		$( "[data-role='header'], [data-role='footer']" ).toolbar( {'theme': 'a'})
-	})
-	// Update the contents of the toolbars
-	$(document).on('pagecontainerchange', function() {
-			// TODO highlight buttons for navbar
-	    var title = $('.ui-page-active').jqmData('title')
-			if (title) {
-				$('#header-title').text(title)
-			}
-			var action = $('.ui-page-active').jqmData('action')
-			if (action) {
-				$('#header-action').attr('href', action).show()
-			}
-			else {
-				$('#header-action').hide()
-			}
-	})
-</script>
 
 <!-- #army-list: List of all the armies created -->
 <div data-role="page" data-title="Armies" data-action="#new" id="army-list">
@@ -110,25 +97,35 @@
       <li><a href="#build" class="build" data-army="varangur">Varangur</a></li>
     </ul>
 	</div>
+	<script type="text/javascript">
+		$('a.build').on('click', function (event) {
+			army.load = event.currentTarget.dataset.army
+		})
+	</script>
 </div>
 
 <!-- #build: actually build your army -->
 <div data-role="page" id="build" data-action="#show-units">
+	<script type="text/javascript">
+		$('#build').on("pagebeforecreate", function(event, ui) {
+			console.log("Attempting to load " + army.load)
+			loadArmyTemplate(army.load, function() {
+					console.log("Loading army entries")
+					$.each(army.entries, function(label, entry) {
+						var item = makeUnitStatsEntry(label, army.entries[label].units[entry.unit])
+						$('#army-entries').append(item)
+						console.log("Finished loading army entries.")
+					})
+				}),
+				army.name = $('#army-name').val()
+				army.limit = $('#army-limit').val()
+			})
+	</script>
 	<div role="main" class="ui-content">
 		<ul data-role="listview" id="army-entries">
 
 		</ul>
 	</div>
-	<script type="text/javascript">
-	$( "#build" ).on( "pagecontainershow", function( event, ui ) {
-	  alert("Herald!");
-		$.each(herald.army.units, function(number, entry) {
-			var item = makeUnitStatsEntry(entry.name, herald.template.entries[entry.name].units[entry.unit])
-			$('#army-entries').append(item)
-		})
-	});
-
-	</script>
 </div>
 
 <!-- #unit-details: customize a given unit -->
@@ -138,8 +135,8 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		var item = makeUnitStatsTable(herald.currentUnit.name + ' (' + herald.currentUnit.unit + ')', herald.currentUnit.stats)
-		$('#unit-entry').append(item)
+		// var item = makeUnitStatsTable(army.currentUnit.name + ' (' + army.currentUnit.unit + ')', army.currentUnit.stats)
+		// $('#unit-entry').append(item)
 	</script>
 </div>
 
@@ -168,15 +165,6 @@
 		return item
 		// TODO add description and rules
 	}
-	$(function(){
-		var artifacts = {}
-		$.getJSON('data/artifacts.json', function(data) {
-			$.each(data, function(name, entry) {
-				var item = makeArtifactEntry(name, entry)
-				$('#artifacts-choices').append(item)
-			})
-		})
-	})
 	</script>
 </div>
 
@@ -248,9 +236,12 @@
 				return item
 			}
 
-			$.each(herald.template, function(name, entry) {
-				var item = makeUnitEntry(name, entry)
-				$('#unit-choices').append(item)
+			console.log(army)
+			$('#show-units').on('pagebeforecreate', function() {
+				$.each(army.template.entries, function(name, entry) {
+					var item = makeUnitEntry(name, entry)
+					$('#unit-choices').append(item)
+				})
 			})
     </script>
 	</div>

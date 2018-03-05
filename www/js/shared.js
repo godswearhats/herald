@@ -1,4 +1,14 @@
-const herald = {}
+
+// TODO make this load or create as appropriate
+const army = {
+  'currentUnit': {}, // unit being customized
+  'entries': {},  // the actual units and customizations for the list
+  'load': '',     // the name of the template to load, e.g. 'elves'
+  'label': '',    // the label for this particular army list
+  'limit': '',    // number of points to limit this list to
+  'template': {}  // the object of the underlying army file e.g. elves.json
+
+}
 const types = ['Inf', 'Lrg Inf', 'Cav', 'Lrg Cav', 'Mon', 'War Machine']
 const sizes = ['Legion', 'Horde', 'Regiment', 'Troop', 'War Machine', 'Monster', 'Hero']
 
@@ -23,7 +33,7 @@ function makeUnitStatsEntry(name, unit, stats) {
   anchor.innerHTML = makeUnitStatsTable(unit, stats)
   $(anchor).attr('href', '#unit-details')
   $(anchor).on('click', function(event) {
-    herald.currentUnit = {
+    army.currentUnit = {
       name: name,
       unit: unit,
       stats: stats
@@ -34,7 +44,7 @@ function makeUnitStatsEntry(name, unit, stats) {
 }
 
 function makeUnitStatsTable(label, stats) {
-  '<table border="0"><tr style="border-bottom: 1px solid grey;">'
+  return '<table border="0"><tr style="border-bottom: 1px solid grey;">'
   + '<th>Unit Size</th><th>Sp</th><th>Me</th><th>Ra</th><th>De</th><th>Att</th><th>Ne</th><th>Pts</th>'
   + '</tr><tr>'
   + '<td>' + label + '</td>'
@@ -47,8 +57,9 @@ function makeUnitStatsTable(label, stats) {
   + '<td>' + stats.points + '</td></tr></table>'
 }
 
-function loadArmy(name) {
+function loadArmyTemplate(name, callback) {
   $.getJSON('data/' + name + '.json', function(data) {
-    return data.entries
+    army.template = data
+    if (callback) { callback() }
   })
 }
