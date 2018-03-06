@@ -56,7 +56,7 @@
 <div data-role="page" data-title="Armies" data-action="#new" id="army-list">
 	<div role="main" class="ui-content">
 
-    <ul data-role="listview" data-inset="true" data-divider-theme="a">
+    <ul data-role="listview" data-divider-theme="a">
         <li data-role="list-divider">Elves <span class="ui-li-count">2</span></li>
         <li><a href="#build">Wet Coast 2250</a></li>
         <li><a href="#build">Dragon Rider 2000</a></li>
@@ -75,7 +75,7 @@
 			<label for="army-limit">Points Limit (optional)</label>
 			<input name="army-limit" id="army-limit" value="" placeholder="2000" type="text">
     </form>
-    <ul data-role="listview" data-inset="true">
+    <ul data-role="listview">
       <li><a href="#build" class="build" data-army="elves">Elves <span class="ui-li-count">2</span></a></li>
       <li><a href="#build" class="build" data-army="herd">The Herd<span class="ui-li-count">1</span></a></li>
       <li><a href="#build" class="build" data-army="abyssal-dwarfs">Abyssal Dwarfs</a></li>
@@ -91,7 +91,7 @@
       <li><a href="#build" class="build" data-army="salamanders">Salamanders</a></li>
       <li><a href="#build" class="build" data-army="brotherhood">The Brotherhood</a></li>
       <li><a href="#build" class="build" data-army="rhordia">The League of Rhordia</a></li>
-      <li><a href="#build" class="build" data-army="trident">Trident Realms</a></li>
+      <li><a href="#build" class="build" data-army="trident">The Trident Realm of Neritica</a></li>
       <li><a href="#build" class="build" data-army="kin">Twilight Kin</a></li>
       <li><a href="#build" class="build" data-army="undead">Undead</a></li>
       <li><a href="#build" class="build" data-army="varangur">Varangur</a></li>
@@ -107,19 +107,19 @@
 <!-- #build: actually build your army -->
 <div data-role="page" id="build" data-action="#show-units">
 	<script type="text/javascript">
-		$('#build').on("pagebeforecreate", function(event, ui) {
-			console.log("Attempting to load " + army.load)
+		$('#build').on("pagebeforeshow", function(event, ui) {
 			loadArmyTemplate(army.load, function() {
-					console.log("Loading army entries")
-					$.each(army.entries, function(label, entry) {
-						var item = makeUnitStatsEntry(label, army.entries[label].units[entry.unit])
-						$('#army-entries').append(item)
-						console.log("Finished loading army entries.")
-					})
-				}),
-				army.name = $('#army-name').val()
-				army.limit = $('#army-limit').val()
+				$('#army-entries').html('')
+				$.each(army.entries, function(number, entry) {
+					var item = makeUnitStatsEntry(entry.name, entry.unit, entry.stats, true)
+					$('#army-entries').append(item)
+				})
+				$('#army-entries').listview('refresh')
 			})
+			army.name = $('#army-name').val()
+			army.limit = $('#army-limit').val()
+			$('#build').attr('data-title', army.name)
+		})
 	</script>
 	<div role="main" class="ui-content">
 		<ul data-role="listview" id="army-entries">
@@ -131,12 +131,21 @@
 <!-- #unit-details: customize a given unit -->
 <div data-role="page" id="unit-details">
 	<div class="ui-content" role="main">
-		<div id="unit-entry">
-		</div>
+		<ul data-role="listview" id="entry-wrapper">
+		</ul>
+		<a href="#build" class="ui-btn ui-btn-inline">Cancel</a>
+		<a href="#build" id="save-unit" class="ui-btn ui-btn-inline">Save</a>
 	</div>
 	<script type="text/javascript">
-		// var item = makeUnitStatsTable(army.currentUnit.name + ' (' + army.currentUnit.unit + ')', army.currentUnit.stats)
-		// $('#unit-entry').append(item)
+		$('#unit-details').on('pagebeforeshow', function() {
+			var item = makeUnitStatsEntry(army.currentUnit.name, army.currentUnit.unit, army.currentUnit.stats, true)
+			$('#entry-wrapper').html(item)
+			$('#save-unit').one('click', function() {
+				army.entries.push(army.currentUnit)
+				army.currentUnit = {}
+			})
+			$('#entry-wrapper').listview('refresh')
+		})
 	</script>
 </div>
 
@@ -146,10 +155,9 @@
 		<form class="ui-filterable">
 				<input id="artifacts-autocomplete" data-type="search" placeholder="Search artifacts...">
 		</form>
-		<ul id="artifacts-choices" data-role="listview" data-filter="true" data-input="#artifacts-autocomplete" data-inset="true">
+		<ul id="artifacts-choices" data-role="listview" data-filter="true" data-input="#artifacts-autocomplete">
 
 		</ul>
-
 	</div>
 	<script type="text/javascript">
 	function makeArtifactEntry(name, entry) {
@@ -170,9 +178,7 @@
 
 <!-- #show-units: show the units for your army -->
 <div data-role="page" id="show-units" data-title="Units">
-
   <div role="main" class="ui-content">
-
 		<style>
 		table {
 			  border-collapse: collapse;
@@ -190,13 +196,13 @@
 			th {
 				text-align: center;
 				font-size: 80%;
-				padding-right: 10px;
+				padding-right: 9px;
 			}
 			td {
 				text-align: center;
 				font-weight: lighter;
 				font-size: 80%;
-				padding-right: 8px;
+				padding-right: 7px;
 
 			}
 			h2 {
@@ -204,11 +210,10 @@
 				margin-bottom: 0px;
 			}
 		</style>
-
 		<form class="ui-filterable">
 		    <input id="filter-units" data-type="search">
 		</form>
-    <div data-inset="true" data-filter="true" data-role="collapsibleset" data-input="#filter-units" id="unit-choices">
+    <div data-filter="true" data-role="collapsibleset" data-input="#filter-units" id="unit-choices">
     </div>
 		<script type="text/javascript">
 			function makeUnitEntry(name, entry) {
@@ -227,7 +232,7 @@
 				item.setAttribute('data-inset', 'false')
 				var unitSizes = document.createElement('ul')
 				$.each(entry.units, function(unit, stats) {
-					var unitChoice = makeUnitStatsEntry(name, unit, stats)
+					var unitChoice = makeUnitStatsEntry(name, unit, stats, false)
 					unitSizes.appendChild(unitChoice)
 				})
 				item.appendChild(unitSizes)
@@ -235,9 +240,7 @@
 				$(item).collapsible()
 				return item
 			}
-
-			console.log(army)
-			$('#show-units').on('pagebeforecreate', function() {
+			$('#show-units').on('pagebeforeshow', function() {
 				$.each(army.template.entries, function(name, entry) {
 					var item = makeUnitEntry(name, entry)
 					$('#unit-choices').append(item)
@@ -245,7 +248,6 @@
 			})
     </script>
 	</div>
-
 </div>
 
 </body>

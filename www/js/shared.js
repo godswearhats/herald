@@ -2,7 +2,7 @@
 // TODO make this load or create as appropriate
 const army = {
   'currentUnit': {}, // unit being customized
-  'entries': {},  // the actual units and customizations for the list
+  'entries': [],  // the actual units and customizations for the list
   'load': '',     // the name of the template to load, e.g. 'elves'
   'label': '',    // the label for this particular army list
   'limit': '',    // number of points to limit this list to
@@ -27,10 +27,10 @@ function getNerve(waver, rout) {
   return waver + '/' + rout
 }
 
-function makeUnitStatsEntry(name, unit, stats) {
+function makeUnitStatsEntry(name, unit, stats, displayName) {
   var unitChoice = document.createElement('li')
   var anchor = document.createElement('a')
-  anchor.innerHTML = makeUnitStatsTable(unit, stats)
+  anchor.innerHTML = makeUnitStatsTable(name, unit, stats, displayName)
   $(anchor).attr('href', '#unit-details')
   $(anchor).on('click', function(event) {
     army.currentUnit = {
@@ -39,22 +39,36 @@ function makeUnitStatsEntry(name, unit, stats) {
       stats: stats
     }
   })
+  // if (displayName) {
+  //   var points = document.createElement('span')
+  //   $(points).addClass('ui-li-count')
+  //   $(points).text(stats.points)
+  //   anchor.appendChild(points)
+  // }
   unitChoice.appendChild(anchor)
   return unitChoice
 }
 
-function makeUnitStatsTable(label, stats) {
-  return '<table border="0"><tr style="border-bottom: 1px solid grey;">'
-  + '<th>Unit Size</th><th>Sp</th><th>Me</th><th>Ra</th><th>De</th><th>Att</th><th>Ne</th><th>Pts</th>'
-  + '</tr><tr>'
-  + '<td>' + label + '</td>'
+function makeUnitStatsTable(name, unit, stats, displayName) {
+  var statsTable = displayName ? '<h3>' + name + '</h3>' : ''
+  statsTable += '<table border="0"><tr style="border-bottom: 1px solid grey;">'
+  + '<th>Unit Size</th><th>Sp</th><th>Me</th><th>Ra</th><th>De</th><th>Att</th><th>Ne</th>'
+  if (!displayName) {
+    statsTable += '<th>Pts</th>'
+  }
+  statsTable += '</tr><tr>'
+  + '<td>' + unit + '</td>'
   + '<td>' + getFlat(stats.speed) + '</td>'
   + '<td>' + getPlus(stats.melee) + '</td>'
   + '<td>' + getPlus(stats.ranged) + '</td>'
   + '<td>' + getPlus(stats.defence) + '</td>'
   + '<td>' + getFlat(stats.attacks) + '</td>'
   + '<td>' + getNerve(stats.waver, stats.rout) + '</td>'
-  + '<td>' + stats.points + '</td></tr></table>'
+  if (!displayName) {
+    statsTable += '<td>' + stats.points + '</td>'
+  }
+  statsTable += '</tr></table>'
+  return statsTable
 }
 
 function loadArmyTemplate(name, callback) {
