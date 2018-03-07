@@ -69,12 +69,6 @@
   <!-- #new: Create a new army -->
 <div data-role="page" data-title="Create new army" id="new">
   <div role="main" class="ui-content">
-    <form>
-			<label for="army-name">Army name (optional)</label>
-      <input name="army-name" id="army-name" value="" placeholder="e.g. Adepticon 2019" type="text">
-			<label for="army-limit">Points Limit (optional)</label>
-			<input name="army-limit" id="army-limit" value="" placeholder="2000" type="text">
-    </form>
     <ul data-role="listview">
       <li><a href="#build" class="build" data-army="elves">Elves <span class="ui-li-count">2</span></a></li>
       <li><a href="#build" class="build" data-army="herd">The Herd<span class="ui-li-count">1</span></a></li>
@@ -116,9 +110,6 @@
 				})
 				$('#army-entries').listview('refresh')
 			})
-			army.name = $('#army-name').val()
-			army.limit = $('#army-limit').val()
-			$('#build').attr('data-title', army.name)
 		})
 	</script>
 	<div role="main" class="ui-content">
@@ -138,7 +129,7 @@
 	</div>
 	<script type="text/javascript">
 		$('#unit-details').on('pagebeforeshow', function() {
-			var item = makeUnitStatsEntry(army.currentUnit.name, army.currentUnit.unit, army.currentUnit.stats, true)
+			var item = makeUnitStatsTable(army.currentUnit.name, army.currentUnit.unit, army.currentUnit.stats, true)
 			$('#entry-wrapper').html(item)
 			$('#save-unit').one('click', function() {
 				army.entries.push(army.currentUnit)
@@ -159,28 +150,13 @@
 
 		</ul>
 	</div>
-	<script type="text/javascript">
-	function makeArtifactEntry(name, entry) {
-		var item = document.createElement('li')
-		var anchor = document.createElement('a')
-		$(anchor).text(name)
-		$(anchor).attr('href', '#build')
-		var points = document.createElement('span')
-		$(points).addClass('ui-li-count')
-		$(points).text(entry.points)
-		anchor.appendChild(points)
-		item.appendChild(anchor)
-		return item
-		// TODO add description and rules
-	}
-	</script>
 </div>
 
 <!-- #show-units: show the units for your army -->
 <div data-role="page" id="show-units" data-title="Units">
   <div role="main" class="ui-content">
 		<style>
-		table {
+			table {
 			  border-collapse: collapse;
 			}
 			tr {
@@ -216,30 +192,6 @@
     <div data-filter="true" data-role="collapsibleset" data-input="#filter-units" id="unit-choices">
     </div>
 		<script type="text/javascript">
-			function makeUnitEntry(name, entry) {
-				var item = document.createElement('div')
-				var type = (entry.type >= 10)
-					?	'Hero (' + types[entry.type - 10] + ')'
-					:	types[entry.type]
-
-				// expand if more than one unit choice (e.g. Troop, Regiment, Horde)
-				var header = document.createElement('h2')
-				header.innerHTML = name
-				item.appendChild(header)
-				item.setAttribute('data-role', 'collapsible')
-				item.setAttribute('data-filtertext', name + ' ' + type)
-				item.setAttribute('data-iconpos', 'right')
-				item.setAttribute('data-inset', 'false')
-				var unitSizes = document.createElement('ul')
-				$.each(entry.units, function(unit, stats) {
-					var unitChoice = makeUnitStatsEntry(name, unit, stats, false)
-					unitSizes.appendChild(unitChoice)
-				})
-				item.appendChild(unitSizes)
-				$(unitSizes).listview()
-				$(item).collapsible()
-				return item
-			}
 			$('#show-units').on('pagebeforeshow', function() {
 				$.each(army.template.entries, function(name, entry) {
 					var item = makeUnitEntry(name, entry)
