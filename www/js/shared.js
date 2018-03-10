@@ -1,16 +1,34 @@
-
-// TODO make this load or create as appropriate
-const army = {
-  'currentUnit': {}, // unit being customized
-  'entries': [],  // the actual units and customizations for the list
-  'load': '',     // the name of the template to load, e.g. 'elves'
-  'label': '',    // the label for this particular army list
-  'limit': '',    // number of points to limit this list to
-  'template': {}  // the object of the underlying army file e.g. elves.json
-
+var army = {
+    'currentUnit': {}, // unit being customized
+    'entries': [],  // the actual units and customizations for the list
+    'load': '',     // the name of the template to load, e.g. 'elves'
+    'label': '',    // the label for this particular army list
+    'limit': '',    // number of points to limit this list to
+    'template': {},  // the object of the underlying army file e.g. elves.json
+    /* counts of different unit types */
+    'hordes': 0,
+    'regiments': 0,
+    'troops': 0,
+    'warMachines': 0,
+    'monsters': 0,
+    'heroes': 0,
+    'points': 0   
 }
+if (localStorage.getItem('army')) {
+  army.entries = JSON.parse(localStorage.getItem('army'))
+  // TODO FIXME START HERE DON'T FORGET!
+}
+
 const types = ['Inf', 'Lrg Inf', 'Cav', 'Lrg Cav', 'Mon', 'War Machine']
 const sizes = ['Legion', 'Horde', 'Regiment', 'Troop', 'War Machine', 'Monster', 'Hero']
+
+const LEGION = 0
+const HORDE = 1
+const REGIMENT = 2
+const TROOP = 3
+const WAR_MACHINE = 4
+const MONSTER = 5
+const HERO = 6
 
 function getFlat(stat) {
   if (stat) { return stat }
@@ -25,6 +43,13 @@ function getPlus(stat) {
 function getNerve(waver, rout) {
   if (!waver) { waver = '-' }
   return waver + '/' + rout
+}
+
+function loadArmyTemplate(name, callback) {
+  $.getJSON('data/' + name + '.json', function(data) {
+    army.template = data
+    if (callback) { callback() }
+  })
 }
 
 function makeArtifactEntry(name, entry) {
@@ -45,8 +70,15 @@ function makeArtifactEntry(name, entry) {
 function makeUnitEntry(name, entry) {
   var item = document.createElement('div')
   var type = (entry.type >= 10)
-    ?	'Hero (' + types[entry.type - 10] + ')'
-    :	types[entry.type]
+    ?  'Hero (' + types[entry.type - 10] + ')'
+    :  types[entry.type]
+
+  if (entry.irregular) {
+    name += '*'
+  }
+  if (entry.legend) {
+    name += ' [1]'
+  }
 
   // expand if more than one unit choice (e.g. Troop, Regiment, Horde)
   var header = document.createElement('h2')
@@ -60,7 +92,8 @@ function makeUnitEntry(name, entry) {
   item.setAttribute('data-inset', 'false')
   var unitSizes = document.createElement('ul')
   $.each(entry.units, function(unit, stats) {
-    var unitChoice = makeUnitStatsEntry(name, unit, stats, false)
+    stats.entry = entry
+    var unitChoice = makeUnitStatsEntry(name, unit, stats)
     unitSizes.appendChild(unitChoice)
   })
   item.appendChild(unitSizes)
@@ -69,13 +102,13 @@ function makeUnitEntry(name, entry) {
   return item
 }
 
-// TODO resume here
+// TODO resume here - this function just copy/pasted
 function makeUnitOptions(options) {
   var unitOptions = document.createElement('ul')
   $.each(options, function(label, option) {
     var optionEntry = document.createElement('li')
     var anchor = document.createElement('a')
-    anchor.innerHTML = makeUnitStatsTable(name, unit, stats, displayName)
+    anchor.innerHTML = makeUnitStatsTable(unit, stats, entry, displayName)
     $(anchor).attr('href', '#unit-details')
     $(anchor).on('click', function(event) {
       army.currentUnit = {
@@ -90,24 +123,20 @@ function makeUnitOptions(options) {
 }
 
 // creates a list item that is linked to unit-details page
-function makeUnitStatsEntry(name, unit, stats, displayName) {
+function makeUnitStatsEntry(name, unit, stats) {
   var unitChoice = document.createElement('li')
   var anchor = document.createElement('a')
-  anchor.innerHTML = makeUnitStatsTable(name, unit, stats, displayName)
+  anchor.innerHTML = makeUnitStatsTable(name, unit, stats)
   $(anchor).attr('href', '#unit-details')
   $(anchor).on('click', function(event) {
     army.currentUnit = {
       name: name,
       unit: unit,
-      stats: stats
+      stats: stats,
+      irregular: stats.entry.irregular,
+      type: stats.entry.type
     }
   })
-  // if (displayName) {
-  //   var points = document.createElement('span')
-  //   $(points).addClass('ui-li-count')
-  //   $(points).text(stats.points)
-  //   anchor.appendChild(points)
-  // }
   unitChoice.appendChild(anchor)
   return unitChoice
 }
@@ -135,9 +164,38 @@ function makeUnitStatsTable(name, unit, stats, displayName) {
   return statsTable
 }
 
-function loadArmyTemplate(name, callback) {
-  $.getJSON('data/' + name + '.json', function(data) {
-    army.template = data
-    if (callback) { callback() }
-  })
+function saveUnit() {
+  army.entries.push(army.currentUnit)
+  var item = makeUnitStatsEntry(army.currentUnit.name, army.currentUnit.unit, army.currentUnit.stats, true)
+  $('#army-entries').append(item)
+  if (army.currentUnit.irregular) {
+    army.troops += 1
+  }
+  else {
+    switch (sizes.indexOf(army.currentUnit.unit)) {
+      case LEGION:
+      case HORDE:
+        army.hordes += 1
+        break
+      case REGIMENT:
+        army.regiments += 1
+        break
+      case TROOP:
+        army.troops += 1
+        break
+      case WAR_MACHINE:
+        army.warMachines += 1
+        break
+      case MONSTER:
+        army.monsters += 1
+        break
+      case HERO:
+        army.heroes += 1
+        break
+    }
+  }
+
+  army.currentUnit = {}
+  // TODO make this actually store in a file
+  localStorage.setItem('army', JSON.stringify(army.entries))
 }
