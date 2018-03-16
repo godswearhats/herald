@@ -1,8 +1,8 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Armies</title>
+  <meta charset="utf-8"/>
 	<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
 	<meta name="format-detection" content="telephone=no">
 	<meta name="msapplication-tap-highlight" content="no">
@@ -30,6 +30,7 @@
 		})
 	</script>
 	<script src="js/jquery.mobile-1.4.5.js"></script>
+	<script src="js/army.js"></script>
 	<script src="js/shared.js"></script>
 </head>
 
@@ -93,7 +94,8 @@
 	</div>
 	<script type="text/javascript">
 		$('a.build').on('click', function (event) {
-			army.load = event.currentTarget.dataset.army
+      let race = event.currentTarget.dataset.army
+			army = new Army(race)
 		})
 	</script>
 </div>
@@ -101,44 +103,43 @@
 <!-- #build: actually build your army -->
 <div data-role="page" id="build" data-action="#show-units" data-title="Add units &rarr;">
 	<style>
-		span.count-ok {
-			color: green;
+		span.count-valid {
+			color: #333;
+      font-weight: bold;
 		}
 		span.count-not-ok {
-			color: red;
+			color: #8D0002;
 		}
+		span.count-invalid {
+			color: #C36F0E;
+		}
+    #army-header {
+      text-align: left;
+    }
 	</style>
 	<div role="main" class="ui-content">
 		<ul data-role="listview" id="army-entries">
-			<li>			
-				Hrd:<span id="horde-count" class="count-ok">0</span>
-				Rgmt:<span id="regiment-count"class="count-ok">0</span>
-				Trp:<span id="troop-count" class="count-ok">0</span>
-				WM:<span id="war-machine-count" class="count-ok">0</span>
-				Mon:<span id="monster-count" class="count-ok">0</span>
-				Hero:<span id="hero-count" class="count-ok">0</span>
-				Pts:<span id="point-total">0</span>
+			<li id="army-header">	
+				Drops: <span id="drop-count" class="count-ok">0</span>
+				Unit Strength: <span id="unit-strength" class="count-ok">0</span>
+				Points: <span id="point-total" class="count-ok">0</span>
+        <span id="army-valid">&9989;</span>
 			</li>
 		</ul>
 	</div>
 	<script type="text/javascript">
 		$('#build').on("pagebeforeshow", function(event, ui) {
-			console.log(army)
-			if (army.load) {
-				// TODO clean out army variable
-				loadArmyTemplate(army.load, function() {
-					army.load = false
-				})
-			}
-			else {				
-				$('#horde-count').text = army.hordes
-				$('#regiment-count').text = army.regiments
-				$('#troop-count').text = army.troop
-				$('#war-machine-count').text = army.warMachines
-				$('#monster-count').text = army.monsters
-				$('#hero-count').text = army.heroes
-				$('#army-entries').listview('refresh')			
-			}
+      if (army === undefined) {
+        army = new Army('elves') // TODO delete after testing
+      }
+      army.loadTemplate(function() {
+  			$('#drop-count').text(army.drops())
+  			$('#unit-strength').text(army.unitStrength())
+        $('#point-total').text(army.points)
+        army.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
+  			$('#army-entries').listview('refresh')
+        
+      })	
 		})
 	</script>
 </div>
@@ -153,10 +154,11 @@
 	</div>
 	<script type="text/javascript">
 		$('#unit-details').on('pagebeforeshow', function() {
-			var item = makeUnitStatsTable(army.currentUnit.name, army.currentUnit.unit, army.currentUnit.stats, true)
+			var item = makeUnitStatsTable(currentUnit.name, currentUnit.unit, currentUnit.stats, true)
 			$('#entry-wrapper').html(item)
-			$('#save-unit').one('click', saveUnit)
+			$('#save-unit').one('click', { army: army, toSave: currentUnit }, Army.addUnit)
 			$('#entry-wrapper').listview('refresh')
+      // TODO fix save/cancel buttons
 		})
 	</script>
 </div>
@@ -213,8 +215,7 @@
     <div data-filter="true" data-role="collapsibleset" data-input="#filter-units" id="unit-choices">
     </div>
 		<script type="text/javascript">
-			$('#show-units').on('pagebeforeshow', function() {
-				// TODO - load once
+			$('#show-units').one('pagebeforeshow', function() {
 				$.each(army.template.entries, function(name, entry) {
 					var item = makeUnitEntry(name, entry)
 					$('#unit-choices').append(item)
