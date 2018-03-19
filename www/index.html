@@ -8,8 +8,18 @@
 	<meta name="msapplication-tap-highlight" content="no">
 	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
-	<script src="js/jquery-2.2.4.js"></script>
+	<script src="lib/jquery-2.2.4.js"></script>
 	<script type="text/javascript">
+    var current = {
+      race: 'elves',
+      template: null,
+      list: null,
+      unit: null,
+      artifact: null,
+      spells: null,
+      options: null
+    }
+
 		$(function(){
 			$( "[data-role='header'], [data-role='footer']" ).toolbar( {'theme': 'a'})
 		})
@@ -29,9 +39,9 @@
 				}
 		})
 	</script>
-	<script src="js/jquery.mobile-1.4.5.js"></script>
+	<script src="lib/jquery.mobile-1.4.5.js"></script>
+	<script src="js/unit.js"></script>
 	<script src="js/army.js"></script>
-	<script src="js/shared.js"></script>
 </head>
 
 <body>
@@ -94,8 +104,7 @@
 	</div>
 	<script type="text/javascript">
 		$('a.build').on('click', function (event) {
-      let race = event.currentTarget.dataset.army
-			army = new Army(race)
+      current.race = event.currentTarget.dataset.army
 		})
 	</script>
 </div>
@@ -128,18 +137,36 @@
 		</ul>
 	</div>
 	<script type="text/javascript">
-		$('#build').on("pagebeforeshow", function(event, ui) {
-      if (army === undefined) {
-        army = new Army('elves') // TODO delete after testing
-      }
-      army.loadTemplate(function() {
-  			$('#drop-count').text(army.drops())
-  			$('#unit-strength').text(army.unitStrength())
-        $('#point-total').text(army.points)
-        army.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
+    function updateList() {
+  			$('#drop-count').text(current.list.drops())
+  			$('#unit-strength').text(current.list.unitStrength())
+        $('#point-total').text(current.list.points)
+        current.list.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
   			$('#army-entries').listview('refresh')
-        
-      })	
+    }
+		$('#build').on("pagebeforeshow", function(event, ui) {
+      if (current.template && current.template.race && current.race === current.template.race) {
+        console.log('template already loaded')
+        updateList()
+      }
+      else {
+        console.log('attempting ajax')
+        $.ajax({
+          url: 'data/' + current.race + '.json',
+          beforeSend: function(xhr){
+            if (xhr.overrideMimeType)
+            {
+              xhr.overrideMimeType("application/json");
+            }
+          },
+          dataType: 'json',
+          success: function(data) {
+            current.template = new ArmyTemplate(current.race, data)
+            current.list = new ArmyList(current.race) // TODO be smarter
+            updateList()
+          }
+        })
+      } 
 		})
 	</script>
 </div>
@@ -147,18 +174,24 @@
 <!-- #unit-details: customize a given unit -->
 <div data-role="page" id="unit-details">
 	<div class="ui-content" role="main">
-		<ul data-role="listview" id="entry-wrapper">
-		</ul>
-		<a href="#build" class="ui-btn ui-btn-inline">Cancel</a>
-		<a href="#build" id="save-unit" class="ui-btn ui-btn-inline">Save</a>
+    <div style="padding-bottom: 15px">
+      <ul data-role="listview" data-inset="true" id="entry-wrapper">
+      </ul>
+    </div>
+    <a href="#artifacts" class="ui-btn">Add Artifact</a>
+		<a href="#build" class="ui-btn ui-btn-inline ui-mini">Cancel</a>
+		<a href="#build" id="save-unit" class="ui-btn ui-btn-inline ui-mini">Save</a>
 	</div>
 	<script type="text/javascript">
+    function addCurrentUnit(event) {
+      let entry = ListEntry.entryFromCurrentUnit()
+      current.list.addEntry(entry)
+      $('#army-entries').append(entry.toHTML())
+    }
 		$('#unit-details').on('pagebeforeshow', function() {
-			var item = makeUnitStatsTable(currentUnit.name, currentUnit.unit, currentUnit.stats, true)
-			$('#entry-wrapper').html(item)
-			$('#save-unit').one('click', { army: army, toSave: currentUnit }, Army.addUnit)
+			$('#entry-wrapper').html(current.unit.toHTML(true))
+			$('#save-unit').one('click', addCurrentUnit)
 			$('#entry-wrapper').listview('refresh')
-      // TODO fix save/cancel buttons
 		})
 	</script>
 </div>
@@ -173,6 +206,14 @@
 
 		</ul>
 	</div>
+  <script type="text/javascript">
+    // $('#arrtifacts').one('pagebeforeshow', function() {
+    //   $.each(army.template.entries, function(name, entry) {
+    //     var item = makeUnitEntry(name, entry)
+    //     $('#unit-choices').append(item)
+    //   })
+    // })
+  </script>
 </div>
 
 <!-- #show-units: show the units for your army -->
@@ -208,6 +249,14 @@
 				margin-top: 0px;
 				margin-bottom: 0px;
 			}
+      .unit-name {
+        float: left;
+      }
+      .unit-type {
+        float: right;
+        font-size: 75%;
+        color: gray;
+      }
 		</style>
 		<form class="ui-filterable">
 		    <input id="filter-units" data-type="search">
@@ -216,10 +265,7 @@
     </div>
 		<script type="text/javascript">
 			$('#show-units').one('pagebeforeshow', function() {
-				$.each(army.template.entries, function(name, entry) {
-					var item = makeUnitEntry(name, entry)
-					$('#unit-choices').append(item)
-				})
+        current.template.toHTML('#unit-choices')
 			})
     </script>
 	</div>

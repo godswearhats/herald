@@ -1,10 +1,8 @@
-class Army {
-  constructor(race, fn) {
-    this.race = race
-    this.entries = new Array()
-    this.label = ''
-    this.template = {}
-    this.loaded = false
+class ArmyList {
+  constructor(label) {
+    this.label = label || 'Unnamed'
+    this.template = null
+    this.entries = []
     
     this.hordes = 0
     this.regiments = 0
@@ -14,36 +12,6 @@ class Army {
     this.heroes = 0
     this.points = 0
   }
-  
-  loadTemplate(fn) {
-    if (this.loaded) {
-      fn(this)
-      return
-    }
-    var self = this
-    $.ajax({
-      url: 'data/' + this.race + '.json',
-      beforeSend: function(xhr){
-        if (xhr.overrideMimeType)
-        {
-          xhr.overrideMimeType("application/json");
-        }
-      },
-      dataType: 'json',
-      success: function(data) {
-        self.loaded = true
-        self.template = data
-        if (localStorage.getItem(self.race)) {
-          let temp = JSON.parse(localStorage.getItem(self.race))
-          for (let i = 0; i < temp.length; i++) {       
-            self.addUnit(temp[i])
-          }
-        }
-        fn(self)
-      }
-    })
-  }
-
   
   isValid() {
     var hard = this.hordes
@@ -63,14 +31,14 @@ class Army {
     return this.entries.length
   }
   
-  addUnit(data) {
-    this.entries.push(data)
+  addEntry(entry) {
+    this.entries.push(entry)
 
-    if (data.stats.irregular) {
+    if (entry.unit.master.irregular) {
       this.troops += 1
     }
     else {
-      switch (sizes.indexOf(data.unit)) {
+      switch (UNIT_SIZES.indexOf(entry.unit.size)) {
         case SIZE_LEGION:
         case SIZE_HORDE:
           this.hordes += 1
@@ -82,7 +50,7 @@ class Army {
           this.troops += 1
           break
         default:
-          switch (data.type) {
+          switch (entry.type) {
             case TYPE_WAR_ENGINE:
               this.warEngines += 1
               break
@@ -96,21 +64,45 @@ class Army {
       }
     }
 
-    this.points += data.stats.points
-    Army.displayUnit(data)
+    this.points += entry.unit.points
   }
   
-  static addUnit(event) {
-    var data = event.data.toSave
-    var self = event.data.army
-    self.addUnit(data)
+  // static load(label) {
+  //   current.list = new ArmyList(label)
+  //   console.log(current)
+  //   if (localStorage.getItem(label)) {
+  //     let temp = JSON.parse(localStorage.getItem(label))
+  //     temp.forEach(function (data) {
+  //       current.list.addEntry(new ListEntry(current.template, data))
+  //     })
+  //   }
+  //
+  //   console.log('List loading done')
+  //   console.log(current)
+  // }
+}
 
-    // TODO make this actually store in a file
-    localStorage.setItem(self.race, JSON.stringify(self.entries))
+class ListEntry {
+  constructor() {
+
   }
   
-  static displayUnit(data) {
-    var item = makeUnitStatsEntry(data.name, data.unit, data.stats, true)
-    $('#army-entries').append(item)
+  static entryFromCurrentUnit() {
+    var self = new ListEntry()
+    self.masterUnit = current.unit.masterUnit
+    self.unit = current.unit
+    self.artifact = current.artifact
+    self.spells = current.spells
+    self.options = current.options  
+    return self
+  }
+  
+  toHTML() {
+    return this.unit.toHTML(true)
+    // TODO add artifact, spells, options
+  }
+  
+  toString() {
+    
   }
 }
