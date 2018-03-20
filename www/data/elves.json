@@ -2,6 +2,7 @@
     "version": 2,
     "revised": "2018-03-19",
     "name": "Elves",
+    "alignment": "Good",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,

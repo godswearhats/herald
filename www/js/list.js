@@ -64,7 +64,7 @@ class ArmyList {
       }
     }
 
-    this.points += entry.unit.points
+    this.points += entry.points
   }
   
   // static load(label) {
@@ -87,19 +87,58 @@ class ListEntry {
 
   }
   
-  static entryFromCurrentUnit() {
+  static entryFromCurrent() {
     var self = new ListEntry()
-    self.masterUnit = current.unit.masterUnit
     self.unit = current.unit
     self.artifact = current.artifact
     self.spells = current.spells
-    self.options = current.options  
+    self.options = current.options
     return self
   }
   
   toHTML() {
-    return this.unit.toHTML(true)
+    var self = this
+    let entry = this.unit.toHTML(true, false, function(table) {
+      if (self.artifact) {
+        table += self._addRow(self.artifact)
+      }
+      if (self.spells) {
+        table += self._addRow(self.spells)
+      }
+      if (self.options) {
+        table += self._addRow(self.options)
+      }
+      if (self.artifact || self.spells || self.options) {
+        table += self._addRow({ name: 'Total', points: self.points, style: 'border-top: 1px solid grey' })
+      }
+      return table      
+    })
+    return entry
     // TODO add artifact, spells, options
+  }
+  
+  get points() {
+    let points = this.unit.points
+    if (this.artifact) { points += this.artifact.points }
+    if (this.spells) { points += this.spells.points }
+    if (this.options) { points += this.options.points }
+    return points
+  }
+  
+  _addRow(item) {
+    let row = document.createElement('tr')
+    let name = document.createElement('td')
+    let points = document.createElement('td')
+    name.setAttribute('colspan', '7')
+    name.setAttribute('style', 'text-align: right')
+    name.innerHTML = item.name
+    points.innerHTML = item.points
+    row.appendChild(name)
+    row.appendChild(points)
+    if (item.style) {
+      points.setAttribute('style', item.style)
+    }
+    return row.outerHTML
   }
   
   toString() {

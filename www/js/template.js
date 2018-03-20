@@ -27,28 +27,30 @@ class Unit {
   }
   
   // creates a list item that is linked to unit-details page
-  toHTML(displayName, item) {  
+  toHTML(displayName, item, fn) {  
     let unitChoice = document.createElement('li')
     let anchor = document.createElement('a')
     let name = displayName ? this.master.name : ''
-    anchor.innerHTML = this._table(name)
+    anchor.innerHTML = this._table(name, fn)
     $(anchor).attr('href', '#unit-details')
     var self = this
     $(anchor).on('click', function(event) {
       current.unit = self
-      $(item).collapsible('collapse')
+      if (item) {
+        $(item).collapsible('collapse')
+      }
     })
     unitChoice.appendChild(anchor)
     return unitChoice
   }
   
-  // creates the tabular layout for the unit entry
-  _table(name) {
+  // creates the tabular layout for the unit entry, callsback with the table open, ready for extra rows
+  _table(name, addRows) {
     let header = ''
     if (name) {
       header += '<h2>' + name + '</h2>'
-    }
-    return header + '<table border="0"><tr style="border-bottom: 1px solid grey;">'
+    }    
+    let table = '<table border="0"><tr style="border-bottom: 1px solid grey;">'
       + '<th>Unit Size</th><th>Sp</th><th>Me</th><th>Ra</th><th>De</th><th>Att</th><th>Ne</th><th>Pts</th></tr><tr>'
       + '<td>' + this.size + ' (' + this.models + ')' + '</td>'
       + '<td>' + this.speed + '</td>'
@@ -57,8 +59,14 @@ class Unit {
       + '<td>' + this.defence + '</td>'
       + '<td>' + this.attacks + '</td>'
       + '<td>' + this.nerve + '</td>'
-      + '<td>' + this.points + '</td>'
-      + '</tr></table>'
+      + '<td>' + this.points + '</td></tr>'
+    
+    if (addRows) {
+      table = addRows(table)
+    }
+    table += '</table>'
+    
+    return header + table
   }
   
   get speed() {

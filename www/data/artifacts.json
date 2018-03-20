@@ -1,4 +1,11 @@
 {
+    "No artifact": {
+        "id": 0,
+        "points": 0,
+        "rules": {
+        },
+        "description": "This unit has no artifacts."
+    }, 
     "Blade of Slashing": {
         "id": 1,
         "points": 5,
