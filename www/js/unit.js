@@ -27,18 +27,16 @@ class Unit {
   }
   
   // creates a list item that is linked to unit-details page
-  toHTML(displayName) {  
-    console.log("displayname")  
-    console.log(displayName)  
+  toHTML(displayName, item) {  
     let unitChoice = document.createElement('li')
     let anchor = document.createElement('a')
     let name = displayName ? this.master.name : ''
-    console.log(this.master)
     anchor.innerHTML = this._table(name)
     $(anchor).attr('href', '#unit-details')
     var self = this
     $(anchor).on('click', function(event) {
       current.unit = self
+      $(item).collapsible('collapse')
     })
     unitChoice.appendChild(anchor)
     return unitChoice
@@ -135,7 +133,7 @@ class MasterUnit {
       item.setAttribute('data-inset', 'false')
       let unitSizes = document.createElement('ul')
       this.units.forEach(function(unit) {
-        unitSizes.appendChild(unit.toHTML())
+        unitSizes.appendChild(unit.toHTML(false, item))
       })
       item.appendChild(unitSizes)
       $(unitSizes).listview()

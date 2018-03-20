@@ -146,11 +146,9 @@
     }
 		$('#build').on("pagebeforeshow", function(event, ui) {
       if (current.template && current.template.race && current.race === current.template.race) {
-        console.log('template already loaded')
         updateList()
       }
       else {
-        console.log('attempting ajax')
         $.ajax({
           url: 'data/' + current.race + '.json',
           beforeSend: function(xhr){
