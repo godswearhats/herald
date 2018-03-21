@@ -1,7 +1,7 @@
 class ArmyList {
   constructor(label) {
     this.label = label || 'Unnamed'
-    this.template = null
+    this.template = null // TODO check if used
     this.entries = []
     
     this.hordes = 0
@@ -67,19 +67,6 @@ class ArmyList {
     this.points += entry.points
   }
   
-  // static load(label) {
-  //   current.list = new ArmyList(label)
-  //   console.log(current)
-  //   if (localStorage.getItem(label)) {
-  //     let temp = JSON.parse(localStorage.getItem(label))
-  //     temp.forEach(function (data) {
-  //       current.list.addEntry(new ListEntry(current.template, data))
-  //     })
-  //   }
-  //
-  //   console.log('List loading done')
-  //   console.log(current)
-  // }
 }
 
 class ListEntry {

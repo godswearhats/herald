@@ -8,11 +8,14 @@
 	<meta name="msapplication-tap-highlight" content="no">
 	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
 	<script src="lib/jquery-2.2.4.js"></script>
 	<script src="lib/jquery.mobile-1.4.5.js"></script>
 	<script src="js/template.js"></script>
 	<script src="js/list.js"></script>
 	<script src="js/artifact.js"></script>
+	<script src="js/files.js"></script>
   
 	<script type="text/javascript">
     var current = {
@@ -25,6 +28,7 @@
       spells: null,
       options: null
     }
+    var armies = new Armies()
     
     var artifacts
     $.ajax({
@@ -49,7 +53,7 @@
 				// TODO highlight buttons for navbar
 		    var title = $('.ui-page-active').jqmData('title')
 				if (title) {
-					$('#header-title').text(title)
+					$('#header-title').text(title) // FIXME resume here - make army title editable for labeling, then add save army to file
 				}
 				var action = $('.ui-page-active').jqmData('action')
 				if (action) {
