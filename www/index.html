@@ -46,23 +46,24 @@
     })
 
 		$(function(){
-			$( "[data-role='header'], [data-role='footer']" ).toolbar( {'theme': 'a'})
+			$( "[data-role='header']" ).toolbar( {'theme': 'a'})
+      // $( "[data-role='header'], [data-role='footer']" ).toolbar( {'theme': 'a'})
 		})
-		// Update the contents of the toolbars
-		$(document).on('pagecontainerchange', function(event, ui) {
-				// TODO highlight buttons for navbar
-		    var title = $('.ui-page-active').jqmData('title')
-				if (title) {
-					$('#header-title').text(title) // FIXME resume here - make army title editable for labeling, then add save army to file
-				}
-				var action = $('.ui-page-active').jqmData('action')
-				if (action) {
-					$('#header-action').attr('href', action).show()
-				}
-				else {
-					$('#header-action').hide()
-				}
-		})
+    // Update the contents of the toolbars
+    $(document).on('pagecontainerchange', function(event, ui) {
+        // TODO highlight buttons for navbar
+        var title = $('.ui-page-active').jqmData('title')
+        if (title) {
+          $('#header-title').text(title)
+        }
+        var action = $('.ui-page-active').jqmData('action')
+        if (action) {
+          $('#header-action').attr('href', action).show()
+        }
+        else {
+          $('#header-action').hide()
+        }
+    })
 	</script>
 </head>
 
@@ -75,15 +76,15 @@
 	<a id="header-action" href="#" class="ui-btn ui-btn-b ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all ui-btn-inline">Add Unit</a>
 </div>
 
-<div id="footer" data-role="footer">
-	<div id="navbar" data-role="navbar">
-		<ul>
-			<li><a href="#armies" class="ui-btn-active">Armies</a></li>
-			<li><a href="#battles">Battles</a></li>
-			<li><a href="#events">Events</a></li>
-		</ul>
-	</div>
-</div>
+<!-- <div id="footer" data-role="footer">
+  <div id="navbar" data-role="navbar">
+    <ul>
+      <li><a href="#armies" class="ui-btn-active">Armies</a></li>
+      <li><a href="#battles">Battles</a></li>
+      <li><a href="#events">Events</a></li>
+    </ul>
+  </div>
+</div> -->
 
 <!-- #army-list: List of all the armies created -->
 <div data-role="page" data-title="Armies" data-action="#new" id="army-list">
@@ -103,32 +104,45 @@
 <div data-role="page" data-title="Create new army" id="new">
   <div role="main" class="ui-content">
     <ul data-role="listview">
-      <li><a href="#build" class="build" data-army="elves">Elves <span class="ui-li-count">2</span></a></li>
-      <li><a href="#build" class="build" data-army="herd">The Herd<span class="ui-li-count">1</span></a></li>
-      <li><a href="#build" class="build" data-army="abyssal-dwarfs">Abyssal Dwarfs</a></li>
-      <li><a href="#build" class="build" data-army="abyss">Forces of the Abyss</a></li>
-      <li><a href="#build" class="build" data-army="dwarfs">Dwarfs</a></li>
-      <li><a href="#build" class="build" data-army="dust">Empire of Dust</a></li>
-      <li><a href="#build" class="build" data-army="basilea">Forces of Basilea</a></li>
-      <li><a href="#build" class="build" data-army="nature">Forces of Nature</a></li>
-      <li><a href="#build" class="build" data-army="goblins">Goblins</a></li>
-      <li><a href="#build" class="build" data-army="men">Kingdoms of Men</a></li>
-      <li><a href="#build" class="build" data-army="ogres">Ogres</a></li>
-      <li><a href="#build" class="build" data-army="ratkin">Ratkin</a></li>
-      <li><a href="#build" class="build" data-army="salamanders">Salamanders</a></li>
-      <li><a href="#build" class="build" data-army="brotherhood">The Brotherhood</a></li>
-      <li><a href="#build" class="build" data-army="rhordia">The League of Rhordia</a></li>
-      <li><a href="#build" class="build" data-army="trident">The Trident Realm of Neritica</a></li>
-      <li><a href="#build" class="build" data-army="kin">Twilight Kin</a></li>
-      <li><a href="#build" class="build" data-army="undead">Undead</a></li>
-      <li><a href="#build" class="build" data-army="varangur">Varangur</a></li>
+      <li><a href="#popup-list-details" data-rel="pop-up" data-position-to="window" data-transition="pop" class="build" data-army="elves">Elves <span class="ui-li-count">2</span></a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="herd">The Herd<span class="ui-li-count">1</span></a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="abyssal-dwarfs">Abyssal Dwarfs</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="abyss">Forces of the Abyss</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="dwarfs">Dwarfs</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="dust">Empire of Dust</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="basilea">Forces of Basilea</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="nature">Forces of Nature</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="goblins">Goblins</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="men">Kingdoms of Men</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="ogres">Ogres</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="ratkin">Ratkin</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="salamanders">Salamanders</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="brotherhood">The Brotherhood</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="rhordia">The League of Rhordia</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="trident">The Trident Realm of Neritica</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="kin">Twilight Kin</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="undead">Undead</a></li>
+      <li><a href="#popup-list-details" data-position-to="window" data-transition="pop" class="build" data-army="varangur">Varangur</a></li>
     </ul>
 	</div>
 	<script type="text/javascript">
 		$('a.build').on('click', function (event) {
       current.race = event.currentTarget.dataset.army
+      // $('#army-list-name').placeholder // TODO something fun here
 		})
 	</script>
+</div>
+
+<!-- #popup-list-detials: Popup for army name (and maybe points later TODO) -->
+<div data-role="popup" id="popup-list-details" data-theme="a" class="ui-corner-all" data-dismissible="false">
+    <form>
+        <div style="padding:10px 20px;">
+            <label for="list-label">Army name:</label>
+            <input name="list-label" id="list-label" value="" data-theme="a" type="text">
+            <a href="#new" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-rel="back">Back</a>
+            <a href="#build" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-transition="flow">Create</a> 
+        </div>
+    </form>
 </div>
 
 <!-- #build: actually build your army -->
@@ -160,11 +174,11 @@
 	</div>
 	<script type="text/javascript">
     function updateList() {
-  			$('#drop-count').text(current.list.drops())
-  			$('#unit-strength').text(current.list.unitStrength())
-        $('#point-total').text(current.list.points)
-        current.list.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
-  			$('#army-entries').listview('refresh')
+			$('#drop-count').text(current.list.drops())
+			$('#unit-strength').text(current.list.unitStrength())
+      $('#point-total').text(current.list.points)
+      current.list.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
+			$('#army-entries').listview('refresh')
     }
 		$('#build').on("pagebeforeshow", function(event, ui) {
       if (current.template && current.template.race && current.race === current.template.race) {
@@ -182,7 +196,7 @@
           dataType: 'json',
           success: function(data) {
             current.template = new ArmyTemplate(current.race, data)
-            current.list = new ArmyList(current.race) // TODO be smarter
+            current.list = new ArmyList( $('#list-label').val() )
             updateList()
           }
         })
