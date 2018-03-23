@@ -52,8 +52,6 @@ class Armies {
             }, null)
           }, null)
         }
-        console.log("SHould have loaded all files now")
-        console.log(self)
       }, null)     
     }, null) // TODO add error handler
   }

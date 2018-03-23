@@ -1,7 +1,7 @@
 class ArmyList {
-  constructor(label) {
-    this.label = label || 'Unnamed'
-    this.template = null // TODO check if used
+  constructor(label, race) {
+    this.label = label
+    this.race = race
     this.entries = []
     
     this.hordes = 0

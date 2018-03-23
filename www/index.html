@@ -51,6 +51,7 @@
 		})
     // Update the contents of the toolbars
     $(document).on('pagecontainerchange', function(event, ui) {
+        console.log("Change of page: current = ", current)
         // TODO highlight buttons for navbar
         var title = $('.ui-page-active').jqmData('title')
         if (title) {
@@ -128,25 +129,29 @@
 	<script type="text/javascript">
 		$('a.build').on('click', function (event) {
       current.race = event.currentTarget.dataset.army
-      // $('#army-list-name').placeholder // TODO something fun here
 		})
 	</script>
 </div>
 
-<!-- #popup-list-detials: Popup for army name (and maybe points later TODO) -->
+<!-- #popup-list-details: Popup for army name (and maybe points later TODO) -->
 <div data-role="popup" id="popup-list-details" data-theme="a" class="ui-corner-all" data-dismissible="false">
     <form>
         <div style="padding:10px 20px;">
             <label for="list-label">Army name:</label>
             <input name="list-label" id="list-label" value="" data-theme="a" type="text">
             <a href="#new" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-rel="back">Back</a>
-            <a href="#build" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-transition="flow">Create</a> 
+            <a href="#build" class="create ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-transition="flow">Create</a> 
         </div>
     </form>
+    <script type="text/javascript">
+  		$('a.create').on('click', function (event) {
+        $('#build').jqmData('title', $('#list-label').val())
+      })      
+    </script>
 </div>
 
 <!-- #build: actually build your army -->
-<div data-role="page" id="build" data-action="#show-units" data-title="Add units &rarr;">
+<div data-role="page" id="build" data-action="#show-units">
 	<style>
 		span.count-valid {
 			color: #333;
@@ -181,11 +186,11 @@
 			$('#army-entries').listview('refresh')
     }
 		$('#build').on("pagebeforeshow", function(event, ui) {
-      if (current.template && current.template.race && current.race === current.template.race) {
+      if (current.template && current.template.race && current.race === current.template.race) { // we are currently editing
         updateList()
       }
       else {
-        $.ajax({
+        $.ajax({ // FIXME read from file instead
           url: 'data/' + current.race + '.json',
           beforeSend: function(xhr){
             if (xhr.overrideMimeType)
@@ -196,7 +201,7 @@
           dataType: 'json',
           success: function(data) {
             current.template = new ArmyTemplate(current.race, data)
-            current.list = new ArmyList( $('#list-label').val() )
+            current.list = new ArmyList( $('#list-label').val(), current.race )
             updateList()
           }
         })
