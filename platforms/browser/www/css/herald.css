@@ -1,0 +1,217 @@
+body {
+	font-family: Helvetica, Arial, "MS Trebuchet", sans-serif;
+}
+
+#battlefield {
+	width: 1152px;
+	height: 768px;
+	background-image: url("img/grass.png");
+	background-repeat: repeat;
+	border: 1px dashed black;
+	float: left;
+}
+
+#control-panel {
+	font-size: 12px;
+	margin-left: 10px;
+	z-index: 100;
+	width: 320px;
+	float: left;
+}
+
+#advanced {
+	display: none;
+	border: 1px solid gray;
+	border-radius: 5px;
+	padding: 5px;
+}
+#advanced-link {
+	margin-left: 100px;
+	margin-top: 10px;
+	color: gray;
+}
+
+.footer {
+	float: left;
+	font-size: 10px;
+	clear: both;
+	margin-top: 10px;
+}
+hr {
+	margin: 10px;
+}
+input {
+	margin-left: 15px;
+}
+select {
+	width: 150px;
+	margin: 3px 0px 2px 15px;
+}
+label {
+	display: block;
+	width: 70px;
+	float: left;
+	font-size: 12px;
+	clear: both;
+	line-height: 24px;
+	text-align: right;
+}
+textarea {
+	width: 95%;
+	height: 100px;
+}
+span {
+	font-size: 9px;
+}
+
+.help-link {
+	float: right;
+	cursor: pointer;
+	position: relative;
+}
+
+.left {
+	float: left;
+}
+
+.add-unit, .add-scenery {
+	display: block;
+	clear: both;
+	margin-left: 85px;
+}
+.update-unit, .add-unit {
+	float: left;
+}
+
+.ui-dialog {
+	font-size: 12px;
+}
+
+.handle {
+	position: absolute;
+	height: 10px;
+	width: 10px;
+	cursor: pointer;
+	background-image: url(img/rotate.png);
+	background-size: 100%;
+	left: 2px;
+	bottom: 2px;
+}
+
+.handle.player-2 {
+	bottom: 20px;
+}
+
+.delete-button {
+	position: absolute;
+    top: 2px;
+    right: 2px;
+    height: 10px;
+    width: 10px;
+	cursor: pointer;
+	background-image: url(img/delete.png);
+	background-size: 100%
+}
+
+.delete-button.player-1 {
+	top: 20px;
+}
+
+.unit {
+	background-color: transparent;
+	color: black;
+	cursor: move;
+	position: absolute;
+	word-wrap: break-word;
+	text-align: center;
+	z-index: 20;
+	min-width: 50px;
+}
+
+.unit.player-1 {
+	background-color: #AA3333;
+}
+
+.unit.player-2 {
+	background-color: blue;
+}
+
+.unit.player-1:hover {
+	background-color: rgba(128, 0, 0, 0.4);
+}
+
+.unit.player-2:hover {
+	background-color: rgba(0, 0, 128, 0.4);
+}
+
+.unit-models {
+	margin: 0 auto;
+	box-shadow: 3px 3px 8px #222;
+	z-index: 30;
+}
+
+.unit-title {
+	z-index: 25;
+}
+
+.scenery {
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	position: absolute;
+}
+
+.scenery-size {
+	position: absolute;
+	bottom: 20px;
+	right: -20px;
+	color: black;
+	background-color: #F1F1D4;
+	box-shadow: 3px 3px 8px #222;
+	padding: 2px;
+}
+
+.unit-models.player-1 {
+	border: 1px solid red;
+}
+
+.unit-models.player-2 {
+	border: 1px solid blue;
+}
+
+.unit-models.player-2:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: -20px; /*should be set to -border-width x 2 */
+	left: 50%;
+	left: -moz-calc(50% - 10px);
+	left: -webkit-calc(50% - 10px);
+	left: -o-calc(50% - 10px);
+	left: calc(50% - 10px);
+	width: 0;
+	height: 0;
+	border-color: transparent transparent blue transparent;
+	border-style: solid;
+	border-width: 10px;
+}
+
+.unit-models.player-1:after{
+	content: '';
+	display: block;
+	position: absolute;
+	top: 100%; /*should be set to 100% */
+	left: 50%;
+	left: -moz-calc(50% - 10px);
+	left: -webkit-calc(50% - 10px);
+	left: -o-calc(50% - 10px);
+	left: calc(50% - 10px);
+	width: 0;
+	height: 0;
+	border-color: red transparent transparent transparent;
+	border-style: solid;
+	border-width: 10px;
+}
+
+.tiny-help {
+	width: 10px;
+}
