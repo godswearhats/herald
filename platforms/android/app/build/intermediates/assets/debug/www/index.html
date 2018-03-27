@@ -8,15 +8,18 @@
 	<meta name="msapplication-tap-highlight" content="no">
 	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
 	<script src="lib/jquery-2.2.4.js"></script>
 	<script src="lib/jquery.mobile-1.4.5.js"></script>
 	<script src="js/template.js"></script>
 	<script src="js/list.js"></script>
 	<script src="js/artifact.js"></script>
+	<script src="js/files.js"></script>
   
 	<script type="text/javascript">
     var current = {
-      race: 'elves', // FIXME
+      race: null,
       template: null,
       list: null,
       entry: null,
@@ -25,40 +28,28 @@
       spells: null,
       options: null
     }
-    
+    var armies = new Armies() // load is called in index.js
     var artifacts
-    $.ajax({
-      url: 'data/artifacts.json',
-      beforeSend: function(xhr){
-        if (xhr.overrideMimeType)
-        {
-          xhr.overrideMimeType("application/json");
-        }
-      },
-      dataType: 'json',
-      success: function(data) {
-        artifacts = new ArtifactList(data)
-      }
-    })
 
 		$(function(){
-			$( "[data-role='header'], [data-role='footer']" ).toolbar( {'theme': 'a'})
+			$( "[data-role='header']" ).toolbar( {'theme': 'a'})
+      // $( "[data-role='header'], [data-role='footer']" ).toolbar( {'theme': 'a'}) put back in when footer is needed
 		})
-		// Update the contents of the toolbars
-		$(document).on('pagecontainerchange', function(event, ui) {
-				// TODO highlight buttons for navbar
-		    var title = $('.ui-page-active').jqmData('title')
-				if (title) {
-					$('#header-title').text(title)
-				}
-				var action = $('.ui-page-active').jqmData('action')
-				if (action) {
-					$('#header-action').attr('href', action).show()
-				}
-				else {
-					$('#header-action').hide()
-				}
-		})
+    // Update the contents of the toolbars
+    $(document).on('pagecontainerchange', function(event, ui) {
+        // console.log("Change of page: current = ", current)
+        var title = $('.ui-page-active').jqmData('title')
+        if (title) {
+          $('#header-title').text(title)
+        }
+        var action = $('.ui-page-active').jqmData('action')
+        if (action) {
+          $('#header-action').attr('href', action).show()
+        }
+        else {
+          $('#header-action').hide()
+        }
+    })
 	</script>
 </head>
 
@@ -71,64 +62,66 @@
 	<a id="header-action" href="#" class="ui-btn ui-btn-b ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all ui-btn-inline">Add Unit</a>
 </div>
 
-<div id="footer" data-role="footer">
-	<div id="navbar" data-role="navbar">
-		<ul>
-			<li><a href="#armies" class="ui-btn-active">Armies</a></li>
-			<li><a href="#battles">Battles</a></li>
-			<li><a href="#events">Events</a></li>
-		</ul>
-	</div>
-</div>
+<!-- <div id="footer" data-role="footer">
+  <div id="navbar" data-role="navbar">
+    <ul>
+      <li><a href="#armies" class="ui-btn-active">Armies</a></li>
+      <li><a href="#battles">Battles</a></li>
+      <li><a href="#events">Events</a></li>
+    </ul>
+  </div>
+</div> -->
 
 <!-- #army-list: List of all the armies created -->
-<div data-role="page" data-title="Armies" data-action="#new" id="army-list">
+<div data-role="page" data-title="Armies" data-action="#new" id="army-lists">
 	<div role="main" class="ui-content">
-
-    <ul data-role="listview" data-divider-theme="a">
-        <li data-role="list-divider">Elves <span class="ui-li-count">2</span></li>
-        <li><a href="#build">Wet Coast 2250</a></li>
-        <li><a href="#build">Dragon Rider 2000</a></li>
-        <li data-role="list-divider">The Herd <span class="ui-li-count">1</span></li>
-        <li><a href="#build">Joe's army</a></li>
-    </ul>
 	</div>
+	<script type="text/javascript">
+		$('#army-lists').on("pagebeforeshow", function(event, ui) {
+      $('#army-lists > div.ui-content').html(armies.listsToHTML())
+  		$('a.army-list').on('click', function (event) {
+        current.list = armies.lists[event.currentTarget.dataset.list]
+        current.race = current.list.race
+  		})
+  	})
+	</script>
 </div>
 
   <!-- #new: Create a new army -->
 <div data-role="page" data-title="Create new army" id="new">
   <div role="main" class="ui-content">
-    <ul data-role="listview">
-      <li><a href="#build" class="build" data-army="elves">Elves <span class="ui-li-count">2</span></a></li>
-      <li><a href="#build" class="build" data-army="herd">The Herd<span class="ui-li-count">1</span></a></li>
-      <li><a href="#build" class="build" data-army="abyssal-dwarfs">Abyssal Dwarfs</a></li>
-      <li><a href="#build" class="build" data-army="abyss">Forces of the Abyss</a></li>
-      <li><a href="#build" class="build" data-army="dwarfs">Dwarfs</a></li>
-      <li><a href="#build" class="build" data-army="dust">Empire of Dust</a></li>
-      <li><a href="#build" class="build" data-army="basilea">Forces of Basilea</a></li>
-      <li><a href="#build" class="build" data-army="nature">Forces of Nature</a></li>
-      <li><a href="#build" class="build" data-army="goblins">Goblins</a></li>
-      <li><a href="#build" class="build" data-army="men">Kingdoms of Men</a></li>
-      <li><a href="#build" class="build" data-army="ogres">Ogres</a></li>
-      <li><a href="#build" class="build" data-army="ratkin">Ratkin</a></li>
-      <li><a href="#build" class="build" data-army="salamanders">Salamanders</a></li>
-      <li><a href="#build" class="build" data-army="brotherhood">The Brotherhood</a></li>
-      <li><a href="#build" class="build" data-army="rhordia">The League of Rhordia</a></li>
-      <li><a href="#build" class="build" data-army="trident">The Trident Realm of Neritica</a></li>
-      <li><a href="#build" class="build" data-army="kin">Twilight Kin</a></li>
-      <li><a href="#build" class="build" data-army="undead">Undead</a></li>
-      <li><a href="#build" class="build" data-army="varangur">Varangur</a></li>
-    </ul>
 	</div>
 	<script type="text/javascript">
-		$('a.build').on('click', function (event) {
-      current.race = event.currentTarget.dataset.army
-		})
+		$('#new').on("pagebeforeshow", function(event, ui) {
+      $('#new > div.ui-content').html(armies.toHTML())
+  		$('a.build').on('click', function (event) {
+        current.race = event.currentTarget.dataset.race
+  		})
+  	})
 	</script>
 </div>
 
+<!-- #popup-list-details: Popup for army name (and maybe points later TODO) -->
+<div data-role="popup" id="popup-list-details" data-theme="a" class="ui-corner-all" data-dismissible="false">
+    <form>
+        <div style="padding:10px 20px;">
+            <label for="list-label">Army name:</label>
+            <input name="list-label" id="list-label" value="" data-theme="a" type="text">
+            <a href="#new" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-rel="back">Back</a>
+            <a href="#build" class="create ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-transition="flow">Create</a> 
+        </div>
+    </form>
+    <script type="text/javascript">
+  		$('a.create').on('click', function (event) {
+        current.list = new ArmyList( $('#list-label').val(), current.race )
+        $('#build').jqmData('title', current.list.label)
+        $('#list-label').val('')
+      })      
+    </script>
+</div>
+
 <!-- #build: actually build your army -->
-<div data-role="page" id="build" data-action="#show-units" data-title="Add units &rarr;">
+<div data-role="page" id="build" data-action="#show-units">
 	<style>
 		span.count-valid {
 			color: #333;
@@ -156,33 +149,18 @@
 	</div>
 	<script type="text/javascript">
     function updateList() {
-  			$('#drop-count').text(current.list.drops())
-  			$('#unit-strength').text(current.list.unitStrength())
-        $('#point-total').text(current.list.points)
-        current.list.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
-  			$('#army-entries').listview('refresh')
+			$('#drop-count').text(current.list.drops())
+			$('#unit-strength').text(current.list.unitStrength())
+      $('#point-total').text(current.list.points)
+      current.list.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
+      current.list.save() // exciting!
+			$('#army-entries').listview('refresh')
     }
 		$('#build').on("pagebeforeshow", function(event, ui) {
-      if (current.template && current.template.race && current.race === current.template.race) {
-        updateList()
+      if (!current.template || current.race !== current.template.race) { // new arrmy
+        current.template = armies[current.race]
       }
-      else {
-        $.ajax({
-          url: 'data/' + current.race + '.json',
-          beforeSend: function(xhr){
-            if (xhr.overrideMimeType)
-            {
-              xhr.overrideMimeType("application/json");
-            }
-          },
-          dataType: 'json',
-          success: function(data) {
-            current.template = new ArmyTemplate(current.race, data)
-            current.list = new ArmyList(current.race) // TODO be smarter
-            updateList()
-          }
-        })
-      } 
+      updateList()
 		})
 	</script>
 </div>
@@ -204,7 +182,7 @@
       $('#army-entries').append(current.entry.toHTML())
       current.entry = current.unit = current.artifact = current.spells = current.options = null
     }
-		$('#save-unit').one('click', addCurrentUnit)
+		$('#save-unit').on('click', addCurrentUnit)
     
 		$('#unit-details').on('pagebeforeshow', function() {
       current.entry = ListEntry.entryFromCurrent()
@@ -271,8 +249,8 @@
 		<a href="#unit-details" class="ui-btn ui-btn-inline ui-mini">Cancel</a>
 		<a href="#unit-details" id="save-artifact" class="ui-btn ui-btn-inline ui-mini">Save</a>
 		<script type="text/javascript">
-			$('#show-units').one('pagebeforeshow', function() {
-        current.template.toHTML('#unit-choices')
+			$('#show-units').on('pagebeforeshow', function() {
+        armies.template[current.race].toHTML('#unit-choices')
 			})
     </script>
 	</div>
