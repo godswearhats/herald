@@ -1,7 +1,7 @@
 class ArmyList {
-  constructor(label) {
-    this.label = label || 'Unnamed'
-    this.template = null
+  constructor(label, race) {
+    this.label = label
+    this.race = race
     this.entries = []
     
     this.hordes = 0
@@ -67,19 +67,41 @@ class ArmyList {
     this.points += entry.points
   }
   
-  // static load(label) {
-  //   current.list = new ArmyList(label)
-  //   console.log(current)
-  //   if (localStorage.getItem(label)) {
-  //     let temp = JSON.parse(localStorage.getItem(label))
-  //     temp.forEach(function (data) {
-  //       current.list.addEntry(new ListEntry(current.template, data))
-  //     })
-  //   }
-  //
-  //   console.log('List loading done')
-  //   console.log(current)
-  // }
+  get filename() {
+    return this.label + '.json'
+  }
+  
+  toJSON() {
+    
+    for (let i = 0; i < this.entries.length; i++) {
+      this.entries[i]
+    }
+  }
+  
+  // write to storage, and update armies data structure
+  save() {
+    var self = this
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {   
+      armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
+        fileEntry.createWriter(function (fileWriter) {
+          fileWriter.onerror = HeraldFile.logError
+          fileWriter.onwriteend = function(event) {
+            armies.lists[self.race][self.label] = self
+          }
+          let entries = []
+          for (var i = 0; i < self.entries.length; i++) {
+            entries.push(self.entries[i].toSave())
+          }
+          fileWriter.write(JSON.stringify(entries))
+        })
+      }, HeraldFile.logError)
+    }, HeraldFile.logError)
+  }
+  
+  load() {
+    
+  }
+  
 }
 
 class ListEntry {
@@ -141,7 +163,13 @@ class ListEntry {
     return row.outerHTML
   }
   
-  toString() {
-    
+  toSave() {
+    const entry = {
+      master: this.unit.master.id,
+      size: this.unit.size  
+    }
+    if (this.artifact) { entry.artifact = this.artifact.id }
+    // TODO add spells and options
+    return entry
   }
 }

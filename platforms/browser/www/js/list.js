@@ -71,35 +71,43 @@ class ArmyList {
     return this.label + '.json'
   }
   
-  toJSON() {
-    
-    for (let i = 0; i < this.entries.length; i++) {
-      this.entries[i]
-    }
-  }
-  
   // write to storage, and update armies data structure
   save() {
     var self = this
-    window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {   
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {
       armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
         fileEntry.createWriter(function (fileWriter) {
           fileWriter.onerror = HeraldFile.logError
           fileWriter.onwriteend = function(event) {
             armies.lists[self.race][self.label] = self
           }
+          // filewriter.onwrite = function(event)
           let entries = []
           for (var i = 0; i < self.entries.length; i++) {
             entries.push(self.entries[i].toSave())
           }
-          fileWriter.write(JSON.stringify(entries))
+          let list = {
+            label: self.label,
+            entries: entries,
+            lastEdited: Date.now()
+          }
+          fileWriter.write(JSON.stringify(list))
         })
       }, HeraldFile.logError)
     }, HeraldFile.logError)
   }
   
-  load() {
-    
+  load(data) {
+    for (let i = 0; i < data.length; i++) {
+      let datum = data[i]
+      let entry = new ListEntry()
+      entry.unit = armies.templates[this.race].masterUnits[datum.master].units[datum.index]
+      if (datum.artifact) {
+        entry.artifact = artifacts.artifactWithID(datum.artifact)
+      }
+      this.entries.push(entry)
+      // TODO add spells, options
+    }
   }
   
 }
@@ -136,7 +144,6 @@ class ListEntry {
       return table      
     })
     return entry
-    // TODO add artifact, spells, options
   }
   
   get points() {
@@ -166,7 +173,7 @@ class ListEntry {
   toSave() {
     const entry = {
       master: this.unit.master.id,
-      size: this.unit.size  
+      index: this.unit.master.units.indexOf(this.unit) 
     }
     if (this.artifact) { entry.artifact = this.artifact.id }
     // TODO add spells and options
