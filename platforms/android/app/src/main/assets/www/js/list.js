@@ -72,14 +72,16 @@ class ArmyList {
   }
   
   // write to storage, and update armies data structure
-  save() {
+  save(addToArmies) {
     var self = this
     window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {
       armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
         fileEntry.createWriter(function (fileWriter) {
           fileWriter.onerror = HeraldFile.logError
           fileWriter.onwriteend = function(event) {
-            armies.lists[self.race][self.label] = self
+            if (addToArmies) {
+              armies.lists[self.race].push(self)
+            }
           }
           // filewriter.onwrite = function(event)
           let entries = []
@@ -97,6 +99,15 @@ class ArmyList {
     }, HeraldFile.logError)
   }
   
+  delete() {
+    var self = this
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {
+      armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
+        fileEntry.remove()
+      }, HeraldFile.logError)
+    }, HeraldFile.logError)
+  }
+  
   load(data) {
     for (let i = 0; i < data.length; i++) {
       let datum = data[i]
@@ -110,6 +121,29 @@ class ArmyList {
     }
   }
   
+  toHTML() {
+    if (this.entries.length > 0) {
+      let list = document.createElement('ul')
+      list.setAttribute('id', 'army-entries')
+      list.appendChild(_createHeader())
+      for (let i = 0; i < this.entries.length; i++) {   
+        list.append(this.entries[i].toHTML())
+      }
+      $(list).listview()
+      return list
+    }
+    return 'Click the plus icon to add a unit'
+  }
+  
+  _createHeader() { // FIXME make this dynamic on creation
+    let header = document.createElement('li')
+    header.setAttribute('id', 'army-header')
+    header.innerHTML = 'Drops: <span id="drop-count" class="count-ok">0</span>' +
+                       'Unit Strength: <span id="unit-strength" class="count-ok">0</span>' +
+                       'Points: <span id="point-total" class="count-ok">0</span>' +
+                       '<span id="army-valid">&9989;</span>'
+    return header
+  }
 }
 
 class ListEntry {
