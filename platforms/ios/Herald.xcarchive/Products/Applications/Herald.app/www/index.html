@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
   <script type="text/javascript" src="cordova.js"></script>
   <script type="text/javascript" src="js/index.js"></script>
-	<script src="lib/jquery-2.2.4.js"></script>
+	<script src="lib/jquery-2.1.4.js"></script>
 	<script src="lib/jquery.mobile-1.4.5.js"></script>
 	<script src="js/template.js"></script>
 	<script src="js/list.js"></script>
@@ -18,6 +18,7 @@
 	<script src="js/files.js"></script>
   
 	<script type="text/javascript">
+    var heraldLoaded = false
     var current = {
       race: null,
       template: null,
@@ -80,49 +81,68 @@
 <!-- #army-list: List of all the armies created -->
 <div data-role="page" data-title="Armies" data-action="#new" id="army-lists">
 	<div role="main" class="ui-content">
+    Loading ...
 	</div>
 	<script type="text/javascript">
-		$('#army-lists').on("pagebeforeshow", function(event, ui) {
-      $('#army-lists > div.ui-content').html(armies.listsToHTML())
+    function updateAllLists() {
+      $('#army-lists > div.ui-content').html(armies.listsToHTML()) 
   		$('a.army-list').on('click', function (event) {
-        current.list = armies.lists[event.currentTarget.dataset.list]
-        current.race = current.list.race
+        current.race = event.currentTarget.dataset.race
+        current.list = armies.lists[current.race][event.currentTarget.dataset.index]
+        $('#build').jqmData('title', current.list.label)
+        $('#build > div.ui-content').html(current.list.toHTML())
   		})
+    }
+		$('#army-lists').on("pagebeforeshow", function(event, ui) {
+      if (heraldLoaded) {
+        updateAllLists()
+      }
+      else {
+        var intervalId = window.setInterval(function () {
+          if (heraldLoaded) {
+            updateAllLists()
+            window.clearInterval(intervalId)
+          }
+        }, 100)
+      }
   	})
 	</script>
 </div>
 
   <!-- #new: Create a new army -->
 <div data-role="page" data-title="Create new army" id="new">
+  <!-- #popup-list-details: Popup for army name (and maybe points later TODO)  FIXME this doesn't pop up -->
+  <div data-role="popup" id="popup-list-details" data-theme="a" class="ui-corner-all" data-dismissible="false">
+      <form>
+          <div style="padding:10px 20px;">
+              <label for="list-label">Army name:</label>
+              <input name="list-label" id="list-label" value="" data-theme="a" type="text">
+              <a href="#new" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-rel="back">Back</a>
+              <a href="#build" class="create-new-army ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-transition="flow">Create</a> 
+          </div>
+      </form>
+      <script type="text/javascript">
+    		$('a.create-new-army').on('click', function (event) {
+          current.list = new ArmyList( $('#list-label').val(), current.race )
+          current.list.save(true)
+          $('#build').jqmData('title', current.list.label)
+          $('#build > div.ui-content').html(current.list.toHTML())
+          $('#list-label').val('')
+        })      
+      </script>
+  </div>
   <div role="main" class="ui-content">
+    <div id="army-templates">
+      
+    </div>
 	</div>
+
 	<script type="text/javascript">
 		$('#new').on("pagebeforeshow", function(event, ui) {
-      $('#new > div.ui-content').html(armies.toHTML())
-  		$('a.build').on('click', function (event) {
-        current.race = event.currentTarget.dataset.race
-  		})
+      $('#army-templates').html(armies.toHTML())
   	})
 	</script>
-</div>
 
-<!-- #popup-list-details: Popup for army name (and maybe points later TODO)  FIXME this doesn't pop up -->
-<div data-role="popup" id="popup-list-details" data-theme="a" class="ui-corner-all" data-dismissible="false">
-    <form>
-        <div style="padding:10px 20px;">
-            <label for="list-label">Army name:</label>
-            <input name="list-label" id="list-label" value="" data-theme="a" type="text">
-            <a href="#new" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-rel="back">Back</a>
-            <a href="#build" class="create ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a" data-transition="flow">Create</a> 
-        </div>
-    </form>
-    <script type="text/javascript">
-  		$('a.create').on('click', function (event) {
-        current.list = new ArmyList( $('#list-label').val(), current.race )
-        $('#build').jqmData('title', current.list.label)
-        $('#list-label').val('')
-      })      
-    </script>
 </div>
 
 <!-- #build: actually build your army -->
@@ -143,14 +163,6 @@
     }
 	</style>
 	<div role="main" class="ui-content">
-		<ul data-role="listview" id="army-entries">
-			<li id="army-header">	
-				Drops: <span id="drop-count" class="count-ok">0</span>
-				Unit Strength: <span id="unit-strength" class="count-ok">0</span>
-				Points: <span id="point-total" class="count-ok">0</span>
-        <span id="army-valid">&9989;</span>
-			</li>
-		</ul>
 	</div>
 	<script type="text/javascript">
     function updateList() {
@@ -158,11 +170,11 @@
 			$('#unit-strength').text(current.list.unitStrength())
       $('#point-total').text(current.list.points)
       current.list.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
-      current.list.save() // exciting!
+      current.list.save()
 			$('#army-entries').listview('refresh')
     }
 		$('#build').on("pagebeforeshow", function(event, ui) {
-      if (!current.template || current.race !== current.template.race) { // new arrmy
+      if (!current.template || current.race !== current.template.race) { // new army
         current.template = armies[current.race]
       }
       updateList()
@@ -212,7 +224,7 @@
 </div>
 
 <!-- #show-units: show the units for your army -->
-<div data-role="page" id="show-units" data-title="Units" data-back="#build">
+<div data-role="page" id="show-units" data-title="Units" data-back="#army-entries">
   <div role="main" class="ui-content">
 		<style>
 			table {

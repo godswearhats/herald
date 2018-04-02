@@ -125,7 +125,7 @@ class ArmyList {
     if (this.entries.length > 0) {
       let list = document.createElement('ul')
       list.setAttribute('id', 'army-entries')
-      list.appendChild(_createHeader())
+      list.appendChild(this._createHeader())
       for (let i = 0; i < this.entries.length; i++) {   
         list.append(this.entries[i].toHTML())
       }
@@ -148,7 +148,7 @@ class ArmyList {
 
 class ListEntry {
   constructor() {
-
+    this._html = null
   }
   
   static entryFromCurrent() {
@@ -160,24 +160,33 @@ class ListEntry {
     return self
   }
   
-  toHTML() {
-    var self = this
-    let entry = this.unit.toHTML(true, false, function(table) {
-      if (self.artifact) {
-        table += self._addRow(self.artifact)
-      }
-      if (self.spells) {
-        table += self._addRow(self.spells)
-      }
-      if (self.options) {
-        table += self._addRow(self.options)
-      }
-      if (self.artifact || self.spells || self.options) {
-        table += self._addRow({ name: 'Total', points: self.points, style: 'border-top: 1px solid grey' })
-      }
-      return table      
-    })
-    return entry
+  updateHTML() {
+    return this.toHTML(true)
+  }
+  
+  toHTML(refresh) {
+    if (!this._html || refresh) {
+      var self = this
+      let entry = this.unit.toHTML(true, false, function(table) {
+        if (self.artifact) {
+          table += self._addRow(self.artifact)
+        }
+        if (self.spells) {
+          table += self._addRow(self.spells)
+        }
+        if (self.options) {
+          table += self._addRow(self.options)
+        }
+        if (self.artifact || self.spells || self.options) {
+          table += self._addRow({ name: 'Total', points: self.points, style: 'border-top: 1px solid grey' })
+        }
+        return self._html = table      
+      })
+      return entry
+    }
+    else {
+      return this._html
+    }
   }
   
   get points() {

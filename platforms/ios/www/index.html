@@ -195,8 +195,8 @@
 	</div>
 	<script type="text/javascript">
     function addCurrentUnit(event) {
+      current.entry.updateHTML()
       current.list.addEntry(current.entry)
-      $('#army-entries').append(current.entry.toHTML())
       current.entry = current.unit = current.artifact = current.spells = current.options = null
     }
 		$('#save-unit').on('click', addCurrentUnit)
@@ -224,7 +224,7 @@
 </div>
 
 <!-- #show-units: show the units for your army -->
-<div data-role="page" id="show-units" data-title="Units" data-back="#army-entries">
+<div data-role="page" id="show-units" data-title="Units" data-back="#unit-details">
   <div role="main" class="ui-content">
 		<style>
 			table {

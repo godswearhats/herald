@@ -72,30 +72,78 @@ class ArmyList {
   }
   
   // write to storage, and update armies data structure
-  save() {
+  save(addToArmies) {
     var self = this
-    window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {   
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {
       armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
         fileEntry.createWriter(function (fileWriter) {
           fileWriter.onerror = HeraldFile.logError
           fileWriter.onwriteend = function(event) {
-            armies.lists[self.race][self.label] = self
+            if (addToArmies) {
+              armies.lists[self.race].push(self)
+            }
           }
+          // filewriter.onwrite = function(event)
           let entries = []
           for (var i = 0; i < self.entries.length; i++) {
             entries.push(self.entries[i].toSave())
           }
-          fileWriter.write(JSON.stringify(entries))
+          let list = {
+            label: self.label,
+            entries: entries,
+            lastEdited: Date.now()
+          }
+          fileWriter.write(JSON.stringify(list))
         })
       }, HeraldFile.logError)
     }, HeraldFile.logError)
   }
   
-  load(label, data) {
-    console.log("attempting to load data for army " + label)
-    console.log(data)
+  delete() {
+    var self = this
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {
+      armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
+        fileEntry.remove()
+      }, HeraldFile.logError)
+    }, HeraldFile.logError)
   }
   
+  load(data) {
+    for (let i = 0; i < data.length; i++) {
+      let datum = data[i]
+      let entry = new ListEntry()
+      entry.unit = armies.templates[this.race].masterUnits[datum.master].units[datum.index]
+      if (datum.artifact) {
+        entry.artifact = artifacts.artifactWithID(datum.artifact)
+      }
+      this.entries.push(entry)
+      // TODO add spells, options
+    }
+  }
+  
+  toHTML() {
+    if (this.entries.length > 0) {
+      let list = document.createElement('ul')
+      list.setAttribute('id', 'army-entries')
+      list.appendChild(_createHeader())
+      for (let i = 0; i < this.entries.length; i++) {   
+        list.append(this.entries[i].toHTML())
+      }
+      $(list).listview()
+      return list
+    }
+    return 'Click the plus icon to add a unit'
+  }
+  
+  _createHeader() { // FIXME make this dynamic on creation
+    let header = document.createElement('li')
+    header.setAttribute('id', 'army-header')
+    header.innerHTML = 'Drops: <span id="drop-count" class="count-ok">0</span>' +
+                       'Unit Strength: <span id="unit-strength" class="count-ok">0</span>' +
+                       'Points: <span id="point-total" class="count-ok">0</span>' +
+                       '<span id="army-valid">&9989;</span>'
+    return header
+  }
 }
 
 class ListEntry {
@@ -130,7 +178,6 @@ class ListEntry {
       return table      
     })
     return entry
-    // TODO add artifact, spells, options
   }
   
   get points() {
@@ -160,7 +207,7 @@ class ListEntry {
   toSave() {
     const entry = {
       master: this.unit.master.id,
-      size: this.unit.size  
+      index: this.unit.master.units.indexOf(this.unit) 
     }
     if (this.artifact) { entry.artifact = this.artifact.id }
     // TODO add spells and options

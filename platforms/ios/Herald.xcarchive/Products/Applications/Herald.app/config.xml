@@ -32,12 +32,8 @@
     </author>
     <content src="browser-sync-start.html" />
     <access origin="*" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
+    <allow-navigation href="*" />
+    <allow-intent href="*" />
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <preference name="AllowInlineMediaPlayback" value="false" />
@@ -53,13 +49,5 @@
     <preference name="PageLength" value="0" />
     <preference name="PaginationBreakingMode" value="page" />
     <preference name="PaginationMode" value="unpaginated" />
-    <allow-navigation href="*" />
-    <allow-navigation href="*" />
-    <allow-navigation href="*" />
-    <allow-navigation href="*" />
-    <allow-navigation href="*" />
-    <allow-navigation href="*" />
-    <allow-navigation href="*" />
-    <allow-navigation href="*" />
     <allow-navigation href="*" />
 </widget>

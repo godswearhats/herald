@@ -86,11 +86,11 @@
 		</data>
 		<key>Assets.car</key>
 		<data>
-		QPHtfx5RDQ1vp2Lhi7l5LwShCQo=
+		i60LIYd4TKbAo5HErbLcAxFr3AU=
 		</data>
 		<key>CDVLaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib</key>
 		<data>
-		8kH2S5SMjFgGmhA3XfxZwh8oNeY=
+		TU1DcuAgy14+qC32/q4Ty20r9js=
 		</data>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
 		<data>
@@ -98,7 +98,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib</key>
 		<data>
-		3t7/CH/GRY4y6aUS9S1bzMbAQOA=
+		qDFY19OK+cB+DLBbumpHJIwOWMQ=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -170,7 +170,7 @@
 		</data>
 		<key>MainViewController.nib</key>
 		<data>
-		h6Z0hpOAiEK9TwTWWllDDub+CSw=
+		8arq+PhxiL4o6Q655uIPrMc7QA0=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -182,7 +182,7 @@
 		</data>
 		<key>config.xml</key>
 		<data>
-		d/W7sy8aRbOW6uHRdTA23+j6PWQ=
+		6T8Rr8+FYMlQFo1BnKPA4NB01Ik=
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
@@ -1154,7 +1154,7 @@
 		</data>
 		<key>www/index.html</key>
 		<data>
-		n9dm9b46p6XAJXPcrbC5Yg3H6Bs=
+		k4bEmkn4W+eQnNLtNm4bIEG+md8=
 		</data>
 		<key>www/js/artifact.js</key>
 		<data>
@@ -1162,7 +1162,7 @@
 		</data>
 		<key>www/js/files.js</key>
 		<data>
-		Zkr2YEw9moeIRZ+wZ8T8XRl8x2k=
+		6+O8ryVYX9VVDFyFLtf1LCVpOu0=
 		</data>
 		<key>www/js/herald.js</key>
 		<data>
@@ -1174,15 +1174,19 @@
 		</data>
 		<key>www/js/index.js</key>
 		<data>
-		J9LLbbL7992WzMjpMgjL9ALFUV8=
+		KyZu2Q4JJp4pqntg1qpIrOwtXIc=
 		</data>
 		<key>www/js/list.js</key>
 		<data>
-		agjJ2LwE2kQhNZr8NRvVAWa4TWA=
+		llRlZrWM3TC37uUSOP7+2AHPqyI=
 		</data>
 		<key>www/js/template.js</key>
 		<data>
 		2O2Lph7Bb9csqzgjIiHoODwpvl4=
+		</data>
+		<key>www/lib/jquery-2.1.4.js</key>
+		<data>
+		D+1FrXpIrOhpvHJcpHSthqHvFWI=
 		</data>
 		<key>www/lib/jquery-2.2.4.js</key>
 		<data>
@@ -1507,22 +1511,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			QPHtfx5RDQ1vp2Lhi7l5LwShCQo=
+			i60LIYd4TKbAo5HErbLcAxFr3AU=
 			</data>
 			<key>hash2</key>
 			<data>
-			uGNAb5CDq1YfGDzL+1B5EoQ8xPu9Ap7t+mvdeVZkOIA=
+			CZD7fcvu9AbgvyeFSFohf6g78cQdGYAyHlxjtBDQuyE=
 			</data>
 		</dict>
 		<key>CDVLaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			8kH2S5SMjFgGmhA3XfxZwh8oNeY=
+			TU1DcuAgy14+qC32/q4Ty20r9js=
 			</data>
 			<key>hash2</key>
 			<data>
-			5CViliwkjeyY8CUBVYjknl+sNq1uvHM7sTAS+iivbsY=
+			6GEW7vDU0CgzFKOUQ2aKO+08ygfnG2zvU1YmWj2lOtA=
 			</data>
 		</dict>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
@@ -1540,11 +1544,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			3t7/CH/GRY4y6aUS9S1bzMbAQOA=
+			qDFY19OK+cB+DLBbumpHJIwOWMQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			Bk08t0lO2kDM6P3myyiRPEe7/YaxVNQdXIwAW+8xAm8=
+			nW8Rre3cO+QKt4j29FXv4gBAtRdKbD6KCSTN+BfWslU=
 			</data>
 		</dict>
 		<key>LaunchImage-568h@2x.png</key>
@@ -1727,11 +1731,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			h6Z0hpOAiEK9TwTWWllDDub+CSw=
+			8arq+PhxiL4o6Q655uIPrMc7QA0=
 			</data>
 			<key>hash2</key>
 			<data>
-			vNH1ks4lttWTqK3UYV7ffxYRQx1jZK09qXqYS9vmpO0=
+			RhchJbzGvmBw4kePuWiLpbtt8SNp9eEIZ6/NDeiJUEg=
 			</data>
 		</dict>
 		<key>archived-expanded-entitlements.xcent</key>
@@ -1749,11 +1753,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			d/W7sy8aRbOW6uHRdTA23+j6PWQ=
+			6T8Rr8+FYMlQFo1BnKPA4NB01Ik=
 			</data>
 			<key>hash2</key>
 			<data>
-			8zd0F64moYYZHeg1DT/5nz41fU7xjfmWgENUQUgv0qA=
+			qbNFzex0HfxD9k8hssVDQ/xxy7RPmUgYMfxIdYJl/Jk=
 			</data>
 		</dict>
 		<key>embedded.mobileprovision</key>
@@ -4422,11 +4426,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			n9dm9b46p6XAJXPcrbC5Yg3H6Bs=
+			k4bEmkn4W+eQnNLtNm4bIEG+md8=
 			</data>
 			<key>hash2</key>
 			<data>
-			S9mBlu55DK4ofhKu10ITduWpZOED/eGjMO284OWBsds=
+			Ek1kBXSoa9fVNxaq62bKGq7mvX2rwFtMYqYy4xF67oE=
 			</data>
 		</dict>
 		<key>www/js/artifact.js</key>
@@ -4444,11 +4448,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Zkr2YEw9moeIRZ+wZ8T8XRl8x2k=
+			6+O8ryVYX9VVDFyFLtf1LCVpOu0=
 			</data>
 			<key>hash2</key>
 			<data>
-			M9RIuo4v8fY8cCc9nxQNuQG0BI58QnqT3nBEEmfC4xQ=
+			zUVDLXDKTGuDCWYk7ZFrI/EAL5AmGm4obfCFEZ1nZfI=
 			</data>
 		</dict>
 		<key>www/js/herald.js</key>
@@ -4477,22 +4481,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			J9LLbbL7992WzMjpMgjL9ALFUV8=
+			KyZu2Q4JJp4pqntg1qpIrOwtXIc=
 			</data>
 			<key>hash2</key>
 			<data>
-			PkuqqYsiPiS50C9P4RZp80/CTUVue6YZ9cBydzLxGSM=
+			AJBnEBJgYFiq/GmAjPpGafprIVlvLMgXMKmlA+K4zCs=
 			</data>
 		</dict>
 		<key>www/js/list.js</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			agjJ2LwE2kQhNZr8NRvVAWa4TWA=
+			llRlZrWM3TC37uUSOP7+2AHPqyI=
 			</data>
 			<key>hash2</key>
 			<data>
-			sRuRLDqtSqGHDM7dvSVm9OVP4f6EHEeARV4z/kg8VGw=
+			Z3i6kuf92/TDw2IHQqwmqJ+6jSpc3e3/0Tz1CGQr6js=
 			</data>
 		</dict>
 		<key>www/js/template.js</key>
@@ -4504,6 +4508,17 @@
 			<key>hash2</key>
 			<data>
 			ellOEYoTjuMgP5Iw4FGzlSMpm+Lo0x+kfo0O0tujJMo=
+			</data>
+		</dict>
+		<key>www/lib/jquery-2.1.4.js</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			D+1FrXpIrOhpvHJcpHSthqHvFWI=
+			</data>
+			<key>hash2</key>
+			<data>
+			siFczlgw4jULnUICcdm9gjQPZkw/YPDqhQ9+nAOScE4=
 			</data>
 		</dict>
 		<key>www/lib/jquery-2.2.4.js</key>
