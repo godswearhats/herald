@@ -86,7 +86,7 @@
   <script type="text/javascript">
     function updateAllLists() {
       $('#army-lists > div.ui-content').html(armies.listsToHTML()) 
-      $('a.army-list').on('click', function (event) {
+      $('a.army-list').on('click', function (event) { // FIXME resume here. asynchronous event crap needs to be redone so that synchronicity can be guaranteed
         current.race = event.currentTarget.dataset.race
         current.list = armies.lists.get(current.race).get(event.currentTarget.dataset.label)
         $('#build').jqmData('title', current.list.label)
@@ -111,8 +111,8 @@
 
   <!-- #new: Create a new army -->
 <div data-role="page" data-title="Create new army" id="new">
-  <!-- #popup-list-details: Popup for army name (and maybe points later TODO)  FIXME this doesn't pop up -->
-  <div data-role="popup" id="popup-list-details" data-theme="a" class="ui-corner-all" data-dismissible="false">
+  <!-- #popup-list-details: Popup for army name (and maybe points later TODO) -->
+  <div data-role="popup" data-position-to="origin" data-transition="slidedown" id="popup-list-details" data-theme="a" class="ui-corner-all" data-dismissible="false">
       <form>
           <div style="padding:10px 20px;">
               <label for="list-label">Army name:</label>
@@ -165,19 +165,13 @@
   <div role="main" class="ui-content">
   </div>
   <script type="text/javascript">
-    function updateList() {
-      $('#drop-count').text(current.list.drops()) // FIXME resume here - make this dynamic inside list.js and call from save-unit on click
-      $('#unit-strength').text(current.list.unitStrength())
-      $('#point-total').text(current.list.points)
-      current.list.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
-      current.list.save()
-      $('#army-entries').listview('refresh')
-    }
     $('#build').on("pagebeforeshow", function(event, ui) {
       if (!current.template || current.race !== current.template.race) { // new army
         current.template = armies.templates.get(current.race)
       }
-      updateList()
+      else {
+        
+      }
     })
   </script>
 </div>
@@ -197,6 +191,7 @@
     function addCurrentUnit(event) {
       current.entry.updateHTML()
       current.list.addEntry(current.entry)
+      $('#build > div.ui-content').html(current.list.toHTML())   
       current.entry = current.unit = current.artifact = current.spells = current.options = null
     }
     $('#save-unit').on('click', addCurrentUnit)

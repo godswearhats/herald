@@ -127,7 +127,6 @@ class ArmyList {
   toHTML() {
     if (this.entries.length > 0) {
       let list = document.createElement('ul')
-      list.setAttribute('id', 'army-entries')
       list.appendChild(this._createHeader())
       for (let i = 0; i < this.entries.length; i++) {   
         list.append(this.entries[i].toHTML())
@@ -138,13 +137,20 @@ class ArmyList {
     return 'Click the plus icon to add a unit'
   }
   
-  _createHeader() { // FIXME make this dynamic on creation
+  _validitySymbol() {
+    return this.isValid() ? '&#9989;' : '&#9888;'
+  }
+  
+  _validityClass() {
+    return this.isValid() ? 'count-valid' : 'count-invalid'
+  }
+  
+  _createHeader() {
     let header = document.createElement('li')
-    header.setAttribute('id', 'army-header')
-    header.innerHTML = 'Drops: <span id="drop-count" class="count-ok">0</span>' +
-                       'Unit Strength: <span id="unit-strength" class="count-ok">0</span>' +
-                       'Points: <span id="point-total" class="count-ok">0</span>' +
-                       '<span id="army-valid">&9989;</span>'
+    header.innerHTML = `Drops: <span class="count-ok">${this.drops()}</span>
+                       Unit Strength: <span class="count-ok">${this.unitStrength()}</span>
+                       Points: <span class="count-ok">${this.points}</span>
+                       <span class="${this._validityClass}">${this._validitySymbol()}</span>`
     return header
   }
 }
@@ -169,7 +175,9 @@ class ListEntry {
   
   toHTML(refresh) {
     if (!this._html || refresh) {
+      let item = document.createElement('li')
       var self = this
+      
       let entry = this.unit.toHTML(true, false, function(table) {
         if (self.artifact) {
           table += self._addRow(self.artifact)
@@ -183,7 +191,8 @@ class ListEntry {
         if (self.artifact || self.spells || self.options) {
           table += self._addRow({ name: 'Total', points: self.points, style: 'border-top: 1px solid grey' })
         }
-        return self._html = table      
+        li.append(table)
+        return self._html = li      
       })
       return entry
     }

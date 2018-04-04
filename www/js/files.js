@@ -77,6 +77,7 @@ class Armies {
     listElement.setAttribute('data-divider-theme', 'a')
     listElement.setAttribute('data-split-icon', 'delete')
     for (let [race, label] of this.races) {
+      console.log(`Showing ${race} and ${label}`)
       if (this.lists.has(race)) {
         console.log('Displaying ' + race)
         console.log(this.lists.get(race))
@@ -84,7 +85,7 @@ class Armies {
         divider.setAttribute('data-role', 'list-divider')
         divider.innerHTML = this.labelFor(race) + '<span id="' + race + '-count" class="ui-li-count">' + this.lists.get(race).size + '</span>'
         listElement.appendChild(divider)
-        for (let [listLabel, list] of this.lists) {
+        for (let [listLabel, list] of this.lists.get(race)) {
           console.log('Army is ', list)
           const item = document.createElement('li')
           const anchor = document.createElement('a')
@@ -100,7 +101,8 @@ class Armies {
           delButton.setAttribute('data-race', race)
           $(delButton).on('click', function (event) {
             const race = event.currentTarget.dataset.race
-            const listLabel = event.currentTarget.dataset.listLabel
+            const listLabel = event.currentTarget.dataset.label
+            console.log(`Trying to delete ${listLabel} from ${race}`)
             armies.lists.get(race).get(listLabel).delete()
             armies.lists.get(race).delete(listLabel)
             if (armies.lists.get(race).size === 0) {
