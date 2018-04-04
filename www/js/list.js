@@ -80,7 +80,10 @@ class ArmyList {
           fileWriter.onerror = HeraldFile.logError
           fileWriter.onwriteend = function(event) {
             if (addToArmies) {
-              armies.lists[self.race].push(self)
+              if (!armies.lists.has(self.race)) {
+                armies.lists.set(self.race, new Map())
+              }
+              armies.lists.get(self.race).set(self.label, self)
             }
           }
           // filewriter.onwrite = function(event)
@@ -112,7 +115,7 @@ class ArmyList {
     for (let i = 0; i < data.length; i++) {
       let datum = data[i]
       let entry = new ListEntry()
-      entry.unit = armies.templates[this.race].masterUnits[datum.master].units[datum.index]
+      entry.unit = armies.templates.get(this.race).masterUnits[datum.master].units[datum.index]
       if (datum.artifact) {
         entry.artifact = artifacts.artifactWithID(datum.artifact)
       }

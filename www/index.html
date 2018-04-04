@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Armies</title>
+  <title>Armies</title>
   <meta charset="utf-8"/>
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-	<meta name="format-detection" content="telephone=no">
-	<meta name="msapplication-tap-highlight" content="no">
-	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+  <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
   <script type="text/javascript" src="cordova.js"></script>
   <script type="text/javascript" src="js/index.js"></script>
-	<script src="lib/jquery-2.1.4.js"></script>
-	<script src="lib/jquery.mobile-1.4.5.js"></script>
-	<script src="js/template.js"></script>
-	<script src="js/list.js"></script>
-	<script src="js/artifact.js"></script>
-	<script src="js/files.js"></script>
+  <script src="lib/jquery-2.1.4.js"></script>
+  <script src="lib/jquery.mobile-1.4.5.js"></script>
+  <script src="js/template.js"></script>
+  <script src="js/list.js"></script>
+  <script src="js/artifact.js"></script>
+  <script src="js/files.js"></script>
   
-	<script type="text/javascript">
+  <script type="text/javascript">
     var heraldLoaded = false
     var current = {
       race: null,
@@ -32,10 +32,10 @@
     var armies = new Armies() // load is called in index.js
     var artifacts
 
-		$(function(){
-			$( "[data-role='header']" ).toolbar( {'theme': 'a'})
+    $(function(){
+      $( "[data-role='header']" ).toolbar( {'theme': 'a'})
       // $( "[data-role='header'], [data-role='footer']" ).toolbar( {'theme': 'a'}) put back in when footer is needed
-		})
+    })
     // Update the contents of the toolbars
     $(document).on('pagecontainerchange', function(event, ui) {
         // console.log("Change of page: current = ", current)
@@ -56,16 +56,16 @@
           $('#header-back').attr('href', back).show()
         }
     })
-	</script>
+  </script>
 </head>
 
 <body>
 
 <!-- Header and footer -->
 <div id="header" data-role="header">
-	<a id="header-menu" href="#army-lists" class="ui-btn ui-btn-icon-left ui-icon-bars ui-btn-icon-notext ui-corner-all ui-btn-inline">Menu</a>
-	<h3 id="header-title">Elves</h3>
-	<a id="header-action" href="#" class="ui-btn ui-btn-b ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all ui-btn-inline">Add Unit</a>
+  <a id="header-menu" href="#army-lists" class="ui-btn ui-btn-icon-left ui-icon-bars ui-btn-icon-notext ui-corner-all ui-btn-inline">Menu</a>
+  <h3 id="header-title">Elves</h3>
+  <a id="header-action" href="#" class="ui-btn ui-btn-b ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all ui-btn-inline">Add Unit</a>
 </div>
 
 <!-- <div id="footer" data-role="footer">
@@ -80,20 +80,20 @@
 
 <!-- #army-list: List of all the armies created -->
 <div data-role="page" data-title="Armies" data-action="#new" id="army-lists">
-	<div role="main" class="ui-content">
+  <div role="main" class="ui-content">
     Loading ...
-	</div>
-	<script type="text/javascript">
+  </div>
+  <script type="text/javascript">
     function updateAllLists() {
       $('#army-lists > div.ui-content').html(armies.listsToHTML()) 
-  		$('a.army-list').on('click', function (event) {
+      $('a.army-list').on('click', function (event) {
         current.race = event.currentTarget.dataset.race
-        current.list = armies.lists[current.race][event.currentTarget.dataset.index]
+        current.list = armies.lists.get(current.race).get(event.currentTarget.dataset.label)
         $('#build').jqmData('title', current.list.label)
         $('#build > div.ui-content').html(current.list.toHTML())
-  		})
+      })
     }
-		$('#army-lists').on("pagebeforeshow", function(event, ui) {
+    $('#army-lists').on("pagebeforeshow", function(event, ui) {
       if (heraldLoaded) {
         updateAllLists()
       }
@@ -105,8 +105,8 @@
           }
         }, 100)
       }
-  	})
-	</script>
+    })
+  </script>
 </div>
 
   <!-- #new: Create a new army -->
@@ -122,7 +122,7 @@
           </div>
       </form>
       <script type="text/javascript">
-    		$('a.create-new-army').on('click', function (event) {
+        $('a.create-new-army').on('click', function (event) {
           current.list = new ArmyList( $('#list-label').val(), current.race )
           current.list.save(true)
           $('#build').jqmData('title', current.list.label)
@@ -135,87 +135,87 @@
     <div id="army-templates">
       
     </div>
-	</div>
+  </div>
 
-	<script type="text/javascript">
-		$('#new').on("pagebeforeshow", function(event, ui) {
+  <script type="text/javascript">
+    $('#new').on("pagebeforeshow", function(event, ui) {
       $('#army-templates').html(armies.toHTML())
-  	})
-	</script>
+    })
+  </script>
 
 </div>
 
 <!-- #build: actually build your army -->
 <div data-role="page" id="build" data-action="#show-units" data-back="#new">
-	<style>
-		span.count-valid {
-			color: #333;
+  <style>
+    span.count-valid {
+      color: #333;
       font-weight: bold;
-		}
-		span.count-not-ok {
-			color: #8D0002;
-		}
-		span.count-invalid {
-			color: #C36F0E;
-		}
+    }
+    span.count-not-ok {
+      color: #8D0002;
+    }
+    span.count-invalid {
+      color: #C36F0E;
+    }
     #army-header {
       text-align: left;
     }
-	</style>
-	<div role="main" class="ui-content">
-	</div>
-	<script type="text/javascript">
+  </style>
+  <div role="main" class="ui-content">
+  </div>
+  <script type="text/javascript">
     function updateList() {
-			$('#drop-count').text(current.list.drops())
-			$('#unit-strength').text(current.list.unitStrength())
+      $('#drop-count').text(current.list.drops()) // FIXME resume here - make this dynamic inside list.js and call from save-unit on click
+      $('#unit-strength').text(current.list.unitStrength())
       $('#point-total').text(current.list.points)
       current.list.isValid() ? $('#army-valid').html('&#9989;').toggleClass('count-valid count-invalid') : $('#army-valid').html('&#9888;').toggleClass('count-valid count-invalid')
       current.list.save()
-			$('#army-entries').listview('refresh')
+      $('#army-entries').listview('refresh')
     }
-		$('#build').on("pagebeforeshow", function(event, ui) {
+    $('#build').on("pagebeforeshow", function(event, ui) {
       if (!current.template || current.race !== current.template.race) { // new army
-        current.template = armies[current.race]
+        current.template = armies.templates.get(current.race)
       }
       updateList()
-		})
-	</script>
+    })
+  </script>
 </div>
 
 <!-- #unit-details: customize a given unit -->
 <div data-role="page" id="unit-details" data-back="#show-units">
-	<div class="ui-content" role="main">
+  <div class="ui-content" role="main">
     <div style="padding-bottom: 15px">
       <ul data-role="listview" data-inset="true" id="entry-wrapper">
       </ul>
     </div>
     <a href="#artifacts" class="ui-btn">Add Artifact</a>
-		<a href="#build" class="ui-btn ui-btn-inline ui-mini">Cancel</a>
-		<a href="#build" id="save-unit" class="ui-btn ui-btn-inline ui-mini">Save</a>
-	</div>
-	<script type="text/javascript">
+    <a href="#build" class="ui-btn ui-btn-inline ui-mini">Cancel</a>
+    <a href="#build" id="save-unit" class="ui-btn ui-btn-inline ui-mini">Save</a>
+  </div>
+  <script type="text/javascript">
     function addCurrentUnit(event) {
       current.entry.updateHTML()
       current.list.addEntry(current.entry)
       current.entry = current.unit = current.artifact = current.spells = current.options = null
     }
-		$('#save-unit').on('click', addCurrentUnit)
+    $('#save-unit').on('click', addCurrentUnit)
     
-		$('#unit-details').on('pagebeforeshow', function() {
+    $('#unit-details').on('pagebeforeshow', function() {
       current.entry = ListEntry.entryFromCurrent()
-			$('#entry-wrapper').html(current.entry.toHTML())
-			$('#entry-wrapper').listview('refresh')
-		})
-	</script>
+      $('#entry-wrapper').html(current.entry.toHTML())
+      $('#entry-wrapper').listview('refresh')
+    })
+  </script>
 </div>
 
 <!-- #artifacts: list of magical artifacts -->
 <div data-role="page" id="artifacts" data-theme="a" data-back="unit-details">
-	<div role="main" class="ui-content" id="artifacts-content">
-		<form class="ui-filterable">
-				<input id="artifacts-autocomplete" data-type="search" placeholder="Search artifacts...">
-		</form>
-	</div>
+  <div role="main" class="ui-content" id="artifacts-content">
+    <form class="ui-filterable">
+        <input id="artifacts-autocomplete" data-type="search" placeholder="Search artifacts...">
+    </form>
+  </div>
   <script type="text/javascript">
     $('#artifacts').one('pagebeforeshow', function() {
       $('#artifacts-content').append(artifacts.asList())
@@ -226,29 +226,29 @@
 <!-- #show-units: show the units for your army -->
 <div data-role="page" id="show-units" data-title="Units" data-back="#unit-details">
   <div role="main" class="ui-content">
-		<style>
-			table {
-			  border-collapse: collapse;
-			}
+    <style>
+      table {
+        border-collapse: collapse;
+      }
       table tr:nth-child(odd) td{
         background-color: white;
       }
-			th {
-				text-align: center;
-				font-size: 80%;
-				padding-right: 9px;
-			}
-			td {
-				text-align: center;
-				font-weight: lighter;
-				font-size: 80%;
-				padding-right: 7px;
+      th {
+        text-align: center;
+        font-size: 80%;
+        padding-right: 9px;
+      }
+      td {
+        text-align: center;
+        font-weight: lighter;
+        font-size: 80%;
+        padding-right: 7px;
 
-			}
-			h2 {
-				margin-top: 0px;
-				margin-bottom: 0px;
-			}
+      }
+      h2 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
       .unit-name {
         float: left;
       }
@@ -257,20 +257,20 @@
         font-size: 75%;
         color: gray;
       }
-		</style>
-		<form class="ui-filterable">
-		    <input id="filter-units" data-type="search">
-		</form>
+    </style>
+    <form class="ui-filterable">
+        <input id="filter-units" data-type="search">
+    </form>
     <div data-filter="true" data-role="collapsibleset" data-input="#filter-units" id="unit-choices">
     </div>
-		<a href="#unit-details" class="ui-btn ui-btn-inline ui-mini">Cancel</a>
-		<a href="#unit-details" id="save-artifact" class="ui-btn ui-btn-inline ui-mini">Save</a>
-		<script type="text/javascript">
-			$('#show-units').on('pagebeforeshow', function() {
-        armies.templates[current.race].toHTML('#unit-choices')
-			})
+    <a href="#unit-details" class="ui-btn ui-btn-inline ui-mini">Cancel</a>
+    <a href="#unit-details" id="save-artifact" class="ui-btn ui-btn-inline ui-mini">Save</a>
+    <script type="text/javascript">
+      $('#show-units').on('pagebeforeshow', function() {
+        armies.templates.get(current.race).toHTML('#unit-choices')
+      })
     </script>
-	</div>
+  </div>
 </div>
 
 </body>
