@@ -77,21 +77,18 @@ class Armies {
     listElement.setAttribute('data-divider-theme', 'a')
     listElement.setAttribute('data-split-icon', 'delete')
     for (let [race, label] of this.races) {
-      console.log(`Showing ${race} and ${label}`)
       if (this.lists.has(race)) {
-        console.log('Displaying ' + race)
-        console.log(this.lists.get(race))
         const divider = document.createElement('li')
         divider.setAttribute('data-role', 'list-divider')
         divider.innerHTML = this.labelFor(race) + '<span id="' + race + '-count" class="ui-li-count">' + this.lists.get(race).size + '</span>'
         listElement.appendChild(divider)
         for (let [listLabel, list] of this.lists.get(race)) {
-          console.log('Army is ', list)
           const item = document.createElement('li')
           const anchor = document.createElement('a')
           anchor.setAttribute('href', '#build')
           anchor.setAttribute('class', 'army-list')
           anchor.setAttribute('data-race', race)
+          anchor.setAttribute('data-label', listLabel)
           anchor.setAttribute('data-icon', 'edit')
           anchor.innerHTML = listLabel // TODO sort
           item.appendChild(anchor)
@@ -102,16 +99,13 @@ class Armies {
           $(delButton).on('click', function (event) {
             const race = event.currentTarget.dataset.race
             const listLabel = event.currentTarget.dataset.label
-            console.log(`Trying to delete ${listLabel} from ${race}`)
             armies.lists.get(race).get(listLabel).delete()
             armies.lists.get(race).delete(listLabel)
             if (armies.lists.get(race).size === 0) {
-              armies.list.delete(race)
-              console.log('lists are all gone!')
+              armies.lists.delete(race)
               updateAllLists()
             }
             else {
-              console.log(armies.lists.get(race))
               $('#' + race + '-count').html(armies.lists.get(race).size)
               $(item).remove()
               $(listElement).listview('refresh')
@@ -132,8 +126,6 @@ class Armies {
   // this is a horrific async mess that needs cleaning, but not sure how
   load(fn) {
     var self = this
-    console.log("self")
-    console.log(self)
     const LAST_RACE = 'varangur' // yuck, hack
     window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (root) {
       root.getDirectory('armies', { create: true }, function (dirEntry) {
@@ -141,12 +133,10 @@ class Armies {
         var raceIterator = self.races.entries()
         for (let [race, raceLabel] of raceIterator) {
           HeraldFile.readJSON('data/templates', race, function(data) {
-            console.log(self.templates)
             self.templates.set(race, new ArmyTemplate(race, data))
             dirEntry.getDirectory(race, { create: true }, function (listDir) {
               let dirReader = listDir.createReader()
               dirReader.readEntries(function(entries) {
-                console.log('processing ' + race)
                 if (entries.length) {
                   self.lists.set(race, new Map())
                   if (race === LAST_RACE) {

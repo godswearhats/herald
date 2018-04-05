@@ -72,7 +72,7 @@ class ArmyList {
   }
   
   // write to storage, and update armies data structure
-  save(addToArmies) {
+  save(addToArmies) { // FIXME resume here, either entries aren't saving or aren't loading
     var self = this
     window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {
       armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
@@ -175,30 +175,9 @@ class ListEntry {
   
   toHTML(refresh) {
     if (!this._html || refresh) {
-      let item = document.createElement('li')
-      var self = this
-      
-      let entry = this.unit.toHTML(true, false, function(table) {
-        if (self.artifact) {
-          table += self._addRow(self.artifact)
-        }
-        if (self.spells) {
-          table += self._addRow(self.spells)
-        }
-        if (self.options) {
-          table += self._addRow(self.options)
-        }
-        if (self.artifact || self.spells || self.options) {
-          table += self._addRow({ name: 'Total', points: self.points, style: 'border-top: 1px solid grey' })
-        }
-        li.append(table)
-        return self._html = li      
-      })
-      return entry
+      this._html = this.unit.toHTML(true, false, this)
     }
-    else {
-      return this._html
-    }
+    return this._html
   }
   
   get points() {

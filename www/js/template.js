@@ -27,11 +27,11 @@ class Unit {
   }
   
   // creates a list item that is linked to unit-details page
-  toHTML(displayName, item, fn) {  
+  toHTML(displayName, item, entry) {
     let unitChoice = document.createElement('li')
     let anchor = document.createElement('a')
     let name = displayName ? this.master.name : ''
-    anchor.innerHTML = this._table(name, fn)
+    anchor.innerHTML = this._table(name, entry)
     $(anchor).attr('href', '#unit-details')
     var self = this
     $(anchor).on('click', function(event) {
@@ -45,7 +45,7 @@ class Unit {
   }
   
   // creates the tabular layout for the unit entry, callsback with the table open, ready for extra rows
-  _table(name, addRows) {
+  _table(name, entry) {
     let header = ''
     if (name) {
       header += '<h2>' + name + '</h2>'
@@ -61,8 +61,19 @@ class Unit {
       + '<td>' + this.nerve + '</td>'
       + '<td>' + this.points + '</td></tr>'
     
-    if (addRows) {
-      table = addRows(table)
+    if (entry !== undefined) {
+      if (entry.artifact) {
+        table += entry._addRow(entry.artifact)
+      }
+      if (entry.spells) {
+        table += entry._addRow(entry.spells)
+      }
+      if (entry.options) {
+        table += entry._addRow(entry.options)
+      }
+      if (entry.artifact || entry.spells || entry.options) {
+        table += entry._addRow({ name: 'Total', points: entry.points, style: 'border-top: 1px solid grey' })
+      }
     }
     table += '</table>'
     
@@ -195,8 +206,8 @@ class ArmyTemplate {
   
   // TODO make this not take element as param
   toHTML(element) {
-    this.masterUnits.forEach(function(masterUnit) {
-      $(element).append(masterUnit.toHTML())
-    })
+    for (let i = 0; i < this.masterUnits.length; i++) {
+      $(element).append(this.masterUnits[i].toHTML())
+    }
   }
 }
