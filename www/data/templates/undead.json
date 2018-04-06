@@ -1,0 +1,1165 @@
+{
+    "version": 2,
+    "revised": "2018-03-19",
+    "name": "Undead",
+    "alignment": "Evil",
+    "masterUnits": {
+        "Skeleton Warriors": {
+            "id": 0,
+			"special": [
+				"Shambling",
+				{
+					"Lifeleech": 1
+				}
+			],
+            "type": 0,
+            "units": {
+				"Troop": {
+				  "points": 65,
+				  "models": 10,
+				  "speed": 5,
+				  "melee": 5,
+				  "ranged": false,
+				  "defence": 4,
+				  "attacks": 10,
+				  "waver": false,
+				  "rout": 12	
+				},
+                "Regiment": {
+                    "points": 90,
+                    "models": 20,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 12,
+                    "waver": false,
+                    "rout": 16
+                },
+                "Horde": {
+                    "points": 150,
+                    "models": 40,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 25,
+                    "waver": false,
+                    "rout": 23
+                }
+            },
+			"options": {
+				"Undead Giant Rats (Dogs?)": {
+					"options": [
+						{
+							"Lifeleech": 2
+						}
+					]
+				}
+			}
+        },
+        "Skeleton Spearmen": {
+            "id": 1,
+			"special": [
+				"Phalanx",
+				"Shambling",
+				{
+					"Lifeleech": 1
+				}
+			],
+            "type": 0,
+            "units": {
+				"Troop": {
+				  "points": 75,
+				  "models": 10,
+				  "speed": 5,
+				  "melee": 5,
+				  "ranged": false,
+				  "defence": 4,
+				  "attacks": 10,
+				  "waver": false,
+				  "rout": 12	
+				},
+                "Regiment": {
+                    "points": 105,
+                    "models": 20,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 15,
+                    "waver": false,
+                    "rout": 16
+                },
+                "Horde": {
+                    "points": 175,
+                    "models": 40,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 30,
+                    "waver": false,
+                    "rout": 23
+                }
+            },
+			"options": {
+				"Undead Giant Rats (Dogs?)": {
+					"options": [
+						{
+							"Lifeleech": 2
+						}
+					]
+				}
+			}
+        },
+        "Skeleton Archers": {
+            "id": 2,
+			"special": [
+				"Bows",
+				"Shambling",
+				{
+					"Lifeleech": 1
+				}
+			],
+            "type": 0,
+            "units": {
+				"Troop": {
+				  "points": 75,
+				  "models": 10,
+				  "speed": 5,
+				  "melee": 6,
+				  "ranged": 5,
+				  "defence": 4,
+				  "attacks": 8,
+				  "waver": false,
+				  "rout": 12	
+				},
+                "Regiment": {
+                    "points": 100,
+                    "models": 20,
+                    "speed": 5,
+                    "melee": 6,
+                    "ranged": 5,
+                    "defence": 4,
+                    "attacks": 10,
+                    "waver": false,
+                    "rout": 16
+                },
+                "Horde": {
+                    "points": 165,
+                    "models": 40,
+                    "speed": 5,
+                    "melee": 6,
+                    "ranged": 5,
+                    "defence": 4,
+                    "attacks": 20,
+                    "waver": false,
+                    "rout": 23
+                }
+            },
+			"options": {
+				"Undead Giant Rats (Dogs?)": {
+					"options": [
+						{
+							"Lifeleech": 2
+						}
+					]
+				}
+			}
+        },
+        "Ghouls": {
+            "id": 3,
+			"options": [
+				{
+					"Lifeleech": 1
+				}
+			],
+            "type": 0,
+            "units": {
+                "Troop": {
+                    "points": 65,
+                    "models": 10,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 10,
+                    "waver": 8,
+                    "rout": 10
+                },
+                "Regiment": {
+                    "points": 90,
+                    "models": 20,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 12,
+                    "waver": 12,
+                    "rout": 14
+				},
+                "Horde": {
+                    "points": 150,
+                    "models": 40,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 25,
+                    "waver": 19,
+                    "rout": 21
+                }
+            }
+        },
+        "Soul Reaver Infantry": {
+            "id": 4,
+            "special": [
+                {
+                	"Lifeleech": 2
+                },
+                {
+                	"Crushing Strength": 2
+                }
+            ],
+            "type": 0,
+            "units": {
+                "Troop": {
+                    "points": 180,
+                    "models": 10,
+                    "speed": 6,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 20,
+                    "waver": 11,
+                    "rout": 13
+                },
+                "Regiment": {
+                    "points": 260,
+                    "models": 20,
+                    "speed": 6,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 25,
+                    "waver": 15,
+                    "rout": 17
+                }
+            }
+        },
+        "Revenants": {
+            "id": 5,
+			"Base": [
+				25,
+				50
+			],
+            "special": [
+				"Shambling",
+				{
+					"Lifeleech": 1
+				}
+            ],
+            "type": 0,
+            "units": {
+                "Troop": {
+                    "points": 85,
+                    "models": 10,
+                    "speed": 5,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 10,
+                    "waver": false,
+                    "rout": 13
+                },
+                "Regiment": {
+                    "points": 120,
+                    "models": 20,
+                    "speed": 5,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 12,
+                    "waver": false,
+                    "rout": 17
+                },
+                "Horde": {
+                    "points": 200,
+                    "models": 40,
+                    "speed": 5,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 25,
+                    "waver": false,
+                    "rout": 24
+                }
+            }
+        },
+        "Soul Reaver Cavalry": {
+            "id": 6,
+            "special": [
+				{
+					"Crushing Strength": 1
+				},
+				{
+					"Lifeleech": 2
+				},
+				{
+					"Thunderous Charge": 2
+				}
+            ],
+            "type": 2,
+            "units": {
+                "Troop": {
+                    "points": 195,
+                    "models": 5,
+                    "speed": 8,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 6,
+                    "attacks": 10,
+                    "waver": 12,
+                    "rout": 14
+                },
+                "Regiment": {
+                    "points": 300,
+                    "models": 10,
+                    "speed": 8,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 6,
+                    "attacks": 20,
+                    "waver": 15,
+                    "rout": 17
+                }
+				
+            }
+        },
+        "Revenant Cavalary": {
+            "id": 7,
+            "special": [
+				"Shambling",
+                {
+                    "Thunderous Charge": 1
+                },
+				{
+					"Lifeleech": 1
+				}
+            ],
+            "type": 2,
+            "units": {
+                "Troop": {
+                    "points": 110,
+                    "models": 5,
+                    "speed": 8,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 8,
+                    "waver": false,
+                    "rout": 14
+                },
+                "Regiment": {
+                    "points": 170,
+                    "models": 10,
+                    "speed": 8,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 16,
+                    "waver": false,
+                    "rout": 17
+                }
+            }
+        },
+        "Wraiths": {
+            "id": 8,
+			"irregular": true,
+            "special": [
+				{
+					"Crushing Strength": 1
+				},
+                "Fly",
+				"Shambling",
+				{
+					"Lifeleech": 1
+				}
+            ],
+            "type": 0,
+            "units": {
+                "Troop": {
+                    "points": 140,
+                    "models": 10,
+                    "speed": 10,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 6,
+                    "attacks": 10,
+                    "waver": false,
+                    "rout": 12
+                },
+                "Regiment": {
+                    "points": 200,
+                    "models": 20,
+                    "speed": 10,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 6,
+                    "attacks": 12,
+                    "waver": false,
+                    "rout": 16
+                }
+            }
+        },
+        "Mummies": {
+            "id": 9,
+            "special": [
+				{
+					"Crushing Strength": 2
+				},
+                {
+                	"Regeneration": 5
+                },
+				"Shambling",
+				{
+					"Lifeleech": 1
+				}
+            ],
+            "type": 0,
+            "units": {
+                "Troop": {
+                    "points": 120,
+                    "models": 10,
+                    "speed": 5,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 10,
+                    "waver": false,
+                    "rout": 14
+                },
+                "Horde": {
+                    "points": 200,
+                    "models": 20,
+                    "speed": 5,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 12,
+                    "waver": false,
+                    "rout": 18
+                }
+            }
+        },
+        "Zombies": {
+            "id": 10,
+            "special": [
+				"Shambling",
+				{
+					"Lifeleech": 1
+				}
+            ],
+            "type": 0,
+            "units": {
+                "Regiment": {
+                    "points": 80,
+                    "models": 20,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 15,
+                    "waver": false,
+                    "rout": 15
+                },
+                "Horde": {
+                    "points": 130,
+                    "models": 40,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 30,
+                    "waver": false,
+                    "rout": 22
+                },
+                "Legion": {
+                    "points": 190,
+                    "models": 60,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 40,
+                    "waver": false,
+                    "rout": 28
+                }
+            },
+			"options": {
+				"Undead Giant Rats (Dogs?)": {
+					"options": [
+						{
+							"Lifeleech": 2
+						}
+					]
+				}
+			}
+        },
+        "Zombie Trolls": {
+            "id": 11,
+            "special": [
+                {
+                    "Crushing Strength": 2
+                },
+                "Shambling",
+				{
+					"Lifeleech": 1
+				}
+            ],
+            "type": 2,
+            "units": {
+                "Regiment": {
+                    "points": 115,
+                    "models": 3,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 9,
+                    "waver": false,
+                    "rout": 15
+                },
+                "Horde": {
+                    "points": 175,
+                    "models": 6,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 18,
+                    "waver": false,
+                    "rout": 18
+                }
+			}
+        },
+        "Werewolves": {
+            "id": 12,
+            "special": [
+                {
+                    "Crushing Strength": 1
+                },
+                "Nimble",
+				{
+					"Lifeleech": 1
+				}
+            ],
+            "type": 2,
+            "units": {
+                "Regiment": {
+                    "points": 160,
+                    "models": 3,
+                    "speed": 9,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 9,
+                    "waver": 12,
+                    "rout": 14
+                },
+                "Horde": {
+                    "points": 245,
+                    "models": 6,
+                    "speed": 9,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 18,
+                    "waver": 15,
+                    "rout": 17
+                }
+            }
+        },
+        "Wights": {
+            "id": 13,
+			"special": [
+				"Brutal",
+				{
+					"Crushing Stregth": 3
+				},
+				"Shambling",
+				{
+					"Lifeleech": 1
+				}
+			],
+            "type": 2,
+            "units": {
+                "Regiment": {
+                    "points": 155,
+                    "models": 3,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 9,
+                    "waver": false,
+                    "rout": 14
+				},
+                "Horde": {
+                    "points": 235,
+                    "models": 3,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 18,
+                    "waver": false,
+                    "rout": 17
+				}
+            }
+        },
+        "Balefire Catapult": {
+            "id": 14,
+            "special": [
+                {
+                    "Blast": "D6+2"
+				},
+				"Indirect Fire",
+				{
+					"Piercing": 2
+				}
+                "Reload!",
+                "Shambling",
+				"Vicious",
+				{
+					"Lifeleech": 1
+				}
+            ],
+            "type": 5,
+            "units": {
+                "Balefire Catapult": {
+                    "points": 100,
+                    "models": 1,
+                    "speed": 5,
+                    "melee": false,
+                    "ranged": 5,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": false,
+                    "rout": 11
+                }
+            }
+        },
+        "Revenant King": {
+            "id": 14,
+            "special": [
+                {
+                    "Crushing Strength": 1
+                },
+                "Individual",
+				"Inspiring",
+				{
+					"Lifeleech": 1
+				}
+            ],
+			"spells": {
+					"Surge": 6
+			},
+            "type": 10,
+            "units": {
+                "on foot": {
+                    "points": 120,
+                    "models": 1,
+                    "speed": 5,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 5,
+                    "waver": 14,
+                    "rout": 16
+                },
+                "on undead horse": {
+                    "points": 140,
+					"type": 11,
+                    "models": 1,
+                    "speed": 8,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 5,
+                    "waver": 14,
+                    "rout": 16
+                }
+            }
+        },
+        "Revenant King on Undead Wyrm": {
+            "id": 15,
+            "special": [
+                {
+                    "Crushing Strength": 3
+                },
+                "Inspiring",
+				{
+					"Lifeleech": 1
+				}
+            ],
+			"spells": {
+				"Surge": 6
+			},
+            "type": 14,
+            "units": {
+                "Base": {
+                    "points": 190,
+                    "models": 1,
+                    "speed": 7,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 9,
+                    "waver": 18,
+                    "rout": 20
+                },
+				"With Wings": {
+                    "points": 235,
+                    "models": 1,
+                    "speed": 10,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 9,
+                    "waver": 18,
+                    "rout": 20
+				}
+            }
+        },
+        "Undead Army Standard Bearer": {
+            "id": 16,
+            "special": [
+                "Individual",
+				"Inspiring",
+				"Shambling",
+				{
+					"Lifeleech": 1
+				}
+            ],
+            "type": 10,
+            "units": {
+                "on foot": {
+                    "points": 50,
+                    "models": 1,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": false,
+                    "rout": 13
+                },
+                "on horse": {
+                    "points": 65,
+                    "type": 12,
+                    "models": 1,
+                    "speed": 8,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": false,
+                    "rout": 13
+                }
+            }
+        },
+        "Cursed Pharaoh": {
+            "id": 17,
+            "special": [
+				{
+					"Crushing Stregth": 2
+				},
+                "Individual",
+                "Inspiring",
+				{
+					"Regeneration": 5
+				},
+				{
+					"Lifeleech": 1
+				}
+            ],
+			"spells": {
+				"Surge": 6
+			},
+            "type": 10,
+            "units": {
+                "Pharaoh": {
+                    "points": 145,
+                    "models": 1,
+                    "speed": 5,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 5,
+                    "waver": 15,
+                    "rout": 17
+                }
+            }
+        },
+        "Vampire Lord": {
+            "id": 18,
+            "special": [
+                {
+                	"Crushing Strength": 2
+                },
+				"Individual",
+				"Inspiring",
+                {
+                    "Lifeleech": 2
+                }
+            ],
+			"spells": {
+				"Surge": 3
+			},
+            "type": 10,
+            "units": {
+                "on foot": {
+                    "points": 220,
+                    "models": 1,
+                    "speed": 7,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 8,
+                    "waver": 14,
+                    "rout": 16
+                },
+				"on undead horse": {
+					"points": 235,
+					"models": 1,
+					"speed": 9,
+					"melee": 3,
+					"ranged": false,
+					"defence": 5,
+					"attacks": 8,
+					"waver": 14,
+					"rout": 16
+				}
+            },
+			"options": {
+				"spells": {
+					"Heal": {
+						"points": 10,
+						"value": 2
+					},
+					"Lightning Bolt": {
+						"points": 20,
+						"value": 3
+					}
+				}
+			}
+        },
+        "Vampire Lord on Undead Pegasus": {
+            "id": 19,
+            "special": [
+                {
+                	"Crushing Strength": 2
+                },
+				"Fly"
+				"Individual",
+				"Inspiring",
+                {
+                    "Lifeleech": 2
+                }
+            ],
+            "type": 14,
+			"spells": {
+				"Surge": 3
+			},
+            "units": {
+                "Vampire on Pegasus": {
+                    "points": 245,
+                    "models": 1,
+                    "speed": 10,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 8,
+                    "waver": 14,
+                    "rout": 16
+                }
+            },
+			"options": {
+				"spells": {
+					"Heal": {
+						"points": 10,
+						"value": 2
+					},
+					"Lightning Bolt": {
+						"points": 20,
+						"value": 3
+					}
+				}
+			}
+        },
+        "Vampire on Undead Dragon": {
+            "id": 20,
+            "special": [
+				{
+					"Breath Attack": 10
+				},
+                {
+                	"Crushing Strength": 3
+                },
+				"Fly"
+				"Individual",
+				"Inspiring",
+                {
+                    "Lifeleech": 2
+                }
+            ],
+            "spells": {
+                "Surge": 3
+            },
+            "type": 14,
+            "units": {
+                "Vampire on Undead Dragon": {
+                    "points": 330,
+                    "models": 1,
+                    "speed": 10,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 10,
+                    "waver": 17,
+                    "rout": 19
+                }
+            },
+			"options": {
+				"spells": {
+					"Heal": {
+						"points": 10,
+						"value": 2
+					},
+					"Lightning Bolt": {
+						"points": 20,
+						"value": 3
+					}
+				}
+			}
+        },
+        "Liche King": {
+            "id": 21,
+            "special": [
+				"Individual",
+				"Inspiring",
+				{
+					"Regeneration": 5
+				},
+                {
+                    "Lifeleech": 1
+                }
+            ],
+            "spells": {
+                "Surge": 12
+            },
+            "type": 10,
+            "units": {
+                "on foot": {
+                    "points": 145,
+                    "models": 1,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": 14,
+                    "rout": 16
+                },
+                "on undead horse": {
+                    "points": 165,
+                    "models": 1,
+                    "speed": 8,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": 14,
+                    "rout": 16
+                }
+            },
+			"options": {
+				"spells": {
+					"Heal": {
+						"points": 20,
+						"value": 6
+					},
+					"Lightning Bolt": {
+						"points": 35,
+						"value": 5
+					},
+					"Bane Chant": {
+						"points": 20,
+						"value": 3
+					}
+				}
+			}
+        },
+        "Necromancer": {
+            "id": 22,
+            "special": [
+				"Individual",
+                {
+                    "Lifeleech": 1
+                }
+            ],
+            "spells": {
+                "Surge": 8
+            },
+            "type": 10,
+            "units": {
+                "on foot": {
+                    "points": 85,
+                    "models": 1,
+                    "speed": 5,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": 10,
+                    "rout": 12
+                },
+                "on undead horse": {
+                    "points": 100,
+                    "models": 1,
+                    "speed": 8,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": 10,
+                    "rout": 12
+                }
+            },
+			"options": {
+				"spells": {
+					"Heal": {
+						"points": 15,
+						"value": 3
+					},
+					"Lightning Bolt": {
+						"points": 20,
+						"value": 3
+					},
+					"Bane Chant": {
+						"points": 15,
+						"value": 2
+					}
+				}
+			}
+        },
+        "Lykanis": {
+            "id": 23,
+            "special": [
+				{
+					"Crushing Strength": 2
+				},
+				"Inspiring (Werewolves only)",
+				"Nimble"
+            ],
+            "type": 12,
+            "units": {
+                "Lykanis": {
+                    "points": 145,
+                    "models": 1,
+                    "speed": 9,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 5,
+                    "waver": 13,
+                    "rout": 15
+                }
+            }
+        },
+        "Lady Ilona": {
+            "id": 24,
+            "special": [
+				{
+					"Crushing Strenght": 3
+				},
+				"Individual",
+				"Inspiring",
+                {
+                    "Lifeleech": 2
+                }
+            ],
+			"legend": true,
+            "spells": [
+				{
+                	"Surge": 3
+				},
+				{
+					"Heal": 3
+				},
+				{
+					"Lightning Bolt": 3
+				}
+			],
+            "type": 10,
+            "units": {
+                "Lady Ilona": {
+                    "points": 280,
+                    "models": 1,
+                    "speed": 8,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 6,
+                    "attacks": 8,
+                    "waver": 14,
+                    "rout": 16
+                }
+            }
+        },
+        "Mhorgoth the Faceless": {
+            "id": 25,
+            "special": [
+				"Fly",
+				"Individual",
+				"Very Inspiring",
+				{
+					"Regeneration": 5
+				},
+                {
+                    "Lifeleech": 1
+                }
+            ],
+			"legend": true,
+            "spells": [
+				{
+					"Bane-Chant": 4
+				},
+				{
+                	"Surge": 12
+				},
+				{
+					"Heal": 6
+				},
+				{
+					"Lightning Bolt": 6
+				}
+			],
+            "type": 10,
+            "units": {
+                "Mhorgoth": {
+                    "points": 270,
+                    "models": 1,
+                    "speed": 10,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 6,
+                    "attacks": 1,
+                    "waver": 17,
+                    "rout": 19
+                }
+            }
+        },
+    }
+}
