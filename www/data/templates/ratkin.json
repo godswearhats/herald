@@ -136,7 +136,7 @@
                     "rout": 14
                 },
                 "Horde": {
-                    "points": 2505,
+                    "points": 205,
                     "models": 40,
                     "speed": 6,
                     "melee": 4,
@@ -227,7 +227,7 @@
                     "ranged": 4,
                     "defence": 4,
                     "attacks": 5,
-                    "waver": 0,
+                    "waver": 8,
                     "rout": 10
                 }
             }
@@ -254,7 +254,7 @@
                 }
             },
 			"options": {
-				"Exchange Trhowing Weapons for Bows": {
+				"Exchange Throwing Weapons for Bows": {
 					"points": 10,
 					"special": [
 						"Bows"
@@ -301,7 +301,9 @@
             "id": 8,
 			"irregular": true,
             "special": [
-                "Height 0",
+				{
+					"Height": 0
+				},
 				"Nimble",
 				"Vicious"
             ],
@@ -422,8 +424,9 @@
                     "attacks": 10,
                     "waver": 8,
                     "rout": 10
-                },
-				"options":{
+                }
+            },
+			"options": {
 				"Storm of Lead": {
 					"points": 20,
 					"special": [
@@ -432,7 +435,7 @@
 						}
 					]
 				}
-            }
+			}
         },
         "Shredder": {
             "id": 12,
@@ -640,7 +643,7 @@
                     "rout": 13
 				}
             },
-			"options": [
+			"options": {
 				"Exchange shield for two-handed weapon" {
 					"cost": 0,
 					"defence": 4,
@@ -650,7 +653,7 @@
 						}
 					]
 				}
-			]
+			}
         },
         "Warlock": {
             "id": 16,
