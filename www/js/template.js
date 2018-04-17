@@ -26,16 +26,17 @@ class Unit {
     this.points = stats.points
   }
   
-  // creates a list item that is linked to unit-details page
+  // creates a list item that is linked to entry-details page
   toHTML(displayName, item, entry) {
     let unitChoice = document.createElement('li')
     let anchor = document.createElement('a')
     let name = displayName ? this.master.name : ''
     anchor.innerHTML = this._table(name, entry)
-    $(anchor).attr('href', '#unit-details')
+    $(anchor).attr('href', '#entry-details')
     var self = this
     $(anchor).on('click', function(event) {
       current.unit = self
+      current.entry = entry
       if (item) {
         $(item).collapsible('collapse')
       }
@@ -72,7 +73,7 @@ class Unit {
         table += entry._addRow(entry.options)
       }
       if (entry.artifact || entry.spells || entry.options) {
-        table += entry._addRow({ name: 'Total', points: entry.points, style: 'border-top: 1px solid grey' })
+        table += entry._addRow({ name: 'Total', points: entry.points(), style: 'border-top: 1px solid grey' })
       }
     }
     table += '</table>'

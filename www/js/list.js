@@ -4,27 +4,71 @@ class ArmyList {
     this.race = race
     this.entries = []
     
-    this.hordes = 0
-    this.regiments = 0
-    this.troops = 0
-    this.warEngines = 0
-    this.monsters = 0
-    this.heroes = 0
-    this.points = 0
+    this._unitStrength = 0
+    this._points = 0
+    this._isValid = undefined
   }
   
-  isValid() {
-    var hard = this.hordes
-    var soft = this.regiments
-    soft = hard + soft - this.warEngines
-    soft = hard + soft - this.monsters
-    soft = hard + soft - this.heroes
-    return (soft >= 0 && this.troops <= (this.hordes * 4 + this.regiments * 2))
+  isValid(refresh) {
+    if (this._isValid === undefined || refresh) {
+      let hordes = 0
+      let regiments = 0
+      let troops = 0
+      let monsters = 0
+      let warEngines = 0
+      let heroes = 0
+      for (let i = 0; i < this.entries.length; i++) {
+        let entry = this.entries[i]
+        
+        if (entry.isIrregular()) {
+          troops += 1
+        }
+        else {
+          switch (UNIT_SIZES.indexOf(entry.unit.size)) {
+            case SIZE_LEGION:
+            case SIZE_HORDE:
+              hordes += 1
+              break
+            case SIZE_REGIMENT:
+              regiments += 1
+              break
+            case SIZE_TROOP:
+              troops += 1
+              break
+            default:
+              switch (entry.unit.type) {
+                case TYPE_WAR_ENGINE:
+                  warEngines += 1
+                  break
+                case MONSTER:
+                  monsters += 1
+                  break
+                case HERO:
+                  heroes += 1
+                  break
+              }
+            }
+        }
+      }
+      let soft = regiments
+      soft = hordes + soft - warEngines
+      soft = hordes + soft - monsters
+      soft = hordes + soft - heroes
+      this._isValid = (soft >= 0 && troops <= (hordes * 4 + regiments * 2))
+    }
+
+    return this._isValid
   }
   
   // FIXME to include nimble, irregular, individual
-  unitStrength() {
-    return this.hordes * 3 + this.regiments * 2 + this.troops + this.warEngines + this.monsters + this.heroes
+  unitStrength(refresh) {
+    if (!this._unitStrength || refresh) {
+      this._unitStrength = 0
+      for (let i = 0; i < this.entries.length; i++) {
+        this._unitStrength += this.entries[i].unitStrength()
+      }
+    }
+    return this._unitStrength
   }
   
   drops() {
@@ -33,38 +77,25 @@ class ArmyList {
   
   addEntry(entry) {
     this.entries.push(entry)
-
-    if (entry.unit.master.irregular) {
-      this.troops += 1
+    current.entry = current.unit = current.artifact = current.spells = current.options = null
+  }
+  
+  removeEntry(entry) {
+    let index = this.entries.indexOf(entry)
+    console.log(`Found index ${index}`)
+    if (index >= 0) {
+      this.entries.splice(index, 1)
     }
-    else {
-      switch (UNIT_SIZES.indexOf(entry.unit.size)) {
-        case SIZE_LEGION:
-        case SIZE_HORDE:
-          this.hordes += 1
-          break
-        case SIZE_REGIMENT:
-          this.regiments += 1
-          break
-        case SIZE_TROOP:
-          this.troops += 1
-          break
-        default:
-          switch (entry.type) {
-            case TYPE_WAR_ENGINE:
-              this.warEngines += 1
-              break
-            case MONSTER:
-              this.monsters += 1
-              break
-            case HERO:
-              this.heroes += 1
-              break
-          }
+    current.entry = current.unit = current.artifact = current.spells = current.options = null
+  }
+  
+  points(refresh) {
+    if (!this._points || refresh) {
+      for (let i = 0; i < this.entries.length; i++) {
+        this._points += this.entries[i].points()
       }
     }
-
-    this.points += entry.points
+    return this._points
   }
   
   get filename() {
@@ -72,7 +103,7 @@ class ArmyList {
   }
   
   // write to storage, and update armies data structure
-  save(addToArmies) { // FIXME resume here, either entries aren't saving or aren't loading
+  save(addToArmies) {
     var self = this
     window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {
       armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
@@ -96,7 +127,8 @@ class ArmyList {
             entries: entries,
             lastEdited: Date.now()
           }
-          fileWriter.write(JSON.stringify(list))
+          let contents = JSON.stringify(list)
+          fileWriter.write(contents)
         })
       }, HeraldFile.logError)
     }, HeraldFile.logError)
@@ -114,12 +146,12 @@ class ArmyList {
   load(data) {
     for (let i = 0; i < data.length; i++) {
       let datum = data[i]
-      let entry = new ListEntry()
+      let entry = {}
       entry.unit = armies.templates.get(this.race).masterUnits[datum.master].units[datum.index]
       if (datum.artifact) {
         entry.artifact = artifacts.artifactWithID(datum.artifact)
       }
-      this.entries.push(entry)
+      this.entries.push( new ListEntry(entry) )
       // TODO add spells, options
     }
   }
@@ -134,7 +166,7 @@ class ArmyList {
       $(list).listview()
       return list
     }
-    return 'Click the plus icon to add a unit'
+    return 'Tap the plus button to add a unit'
   }
   
   _validitySymbol() {
@@ -149,43 +181,84 @@ class ArmyList {
     let header = document.createElement('li')
     header.innerHTML = `Drops: <span class="count-ok">${this.drops()}</span>
                        Unit Strength: <span class="count-ok">${this.unitStrength()}</span>
-                       Points: <span class="count-ok">${this.points}</span>
-                       <span class="${this._validityClass}">${this._validitySymbol()}</span>`
+                       Points: <span class="count-ok">${this.points()}</span>
+                       <span class="${this._validityClass()}">${this._validitySymbol()}</span>`
     return header
   }
 }
 
 class ListEntry {
-  constructor() {
+  constructor(data, isNew) {
     this._html = null
+    this.unit = data.unit
+    this.artifact = data.artifact
+    // this.spells = data.spells
+    // this.options = data.options
+    this.isNew = isNew
   }
   
-  static entryFromCurrent() {
-    var self = new ListEntry()
-    self.unit = current.unit
-    self.artifact = current.artifact
-    self.spells = current.spells
-    self.options = current.options
-    return self
+  toHTML() {
+    return this.unit.toHTML(true, false, this)
   }
   
-  updateHTML() {
-    return this.toHTML(true)
-  }
-  
-  toHTML(refresh) {
-    if (!this._html || refresh) {
-      this._html = this.unit.toHTML(true, false, this)
+  update(data) {
+    if (data.artifact) {
+      this.artifact = data.artifact
     }
-    return this._html
+    // TODO spells, options
   }
   
-  get points() {
+  points() {
     let points = this.unit.points
     if (this.artifact) { points += this.artifact.points }
     if (this.spells) { points += this.spells.points }
     if (this.options) { points += this.options.points }
     return points
+  }
+  
+  isIrregular() {
+    return this.unit.master.irregular
+  }
+  
+  unitStrength() { // FIXME include nimble, individual, height 0, etc.
+    if (this.isIndividual() || this.isWarEngine()) {
+      return 0
+    }
+    switch (UNIT_SIZES.indexOf(this.unit.size)) {
+      case SIZE_LEGION:
+      case SIZE_HORDE:
+        if (this.isHeightZero()) { return 1 }
+        return this.isNimbleAndLarge() ? 2 : 3
+        break
+      case SIZE_REGIMENT:
+        return (this.isNimbleAndLarge() || this.isHeightZero()) ? 1 : 2
+        break
+      case SIZE_TROOP:
+        return 1
+        break
+      default:
+          return 1
+          break
+      }
+  }
+  
+  // TODO
+  isIndividual() {
+    return false
+  }
+  
+  // TODO
+  isHeightZero() {
+    return false
+  }
+  
+  isWarEngine() {
+    return (this.unit.type === TYPE_WAR_ENGINE)
+  }
+  
+  // TODO
+  isNimbleAndLarge() {
+    return false
   }
   
   _addRow(item) {
@@ -210,6 +283,7 @@ class ListEntry {
       index: this.unit.master.units.indexOf(this.unit) 
     }
     if (this.artifact) { entry.artifact = this.artifact.id }
+    this.isNew = false
     // TODO add spells and options
     return entry
   }

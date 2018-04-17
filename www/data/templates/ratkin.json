@@ -424,14 +424,15 @@
                     "rout": 10
                 },
 				"options":{
-				"Storm of Lead": {
-					"points": 20,
-					"special": [
-						{
-							"Piercing": 1
-						}
-					]
-				}
+    				"Storm of Lead": {
+    					"points": 20,
+    					"special": [
+    						{
+    							"Piercing": 1
+    						}
+    					]
+    				}
+                }
             }
         },
         "Shredder": {
@@ -462,7 +463,7 @@
         },
         "Death Engine": {
             "id": 13,
-			"Base": [
+			"base": [
 				50,
 				100
 			],
@@ -538,7 +539,7 @@
 						},
 						"Vicious"
 					]
-				
+                }
             }
         },
         "Mutant Rat-Fiend": {
@@ -549,7 +550,7 @@
                 },
 				{
 					"Regeneration": 5
-				}
+				},
                 "Strider",
                 {
                     "Thunderous Charge": 1
@@ -640,8 +641,8 @@
                     "rout": 13
 				}
             },
-			"options": [
-				"Exchange shield for two-handed weapon" {
+			"options": {
+				"Exchange shield for two-handed weapon": {
 					"cost": 0,
 					"defence": 4,
 					"special": [
@@ -650,7 +651,7 @@
 						}
 					]
 				}
-			]
+			}
         },
         "Warlock": {
             "id": 16,
@@ -699,7 +700,7 @@
                     "Heal": {
                         "points": 15,
                         "value": 3
-                    },
+                    }
                 }
             }
         },
@@ -782,7 +783,7 @@
                 "Individual",
 				{
 					"Piercing": 1
-				}
+				},
                 "Stealthy",
 				"Throwing Weapons",
                 "Vanguard",

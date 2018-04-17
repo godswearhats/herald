@@ -12,10 +12,10 @@ class Artifact {
     let artifact = document.createElement('li')
     let anchor = document.createElement('a')
     anchor.innerHTML = this.label
-    $(anchor).attr('href', '#unit-details')
+    $(anchor).attr('href', '#entry-details')
     var self = this
     $(anchor).on('click', function(event) {
-      current.artifact = self
+      current.entry.artifact = self
     })
     artifact.appendChild(anchor)
     return artifact
