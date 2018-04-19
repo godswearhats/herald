@@ -43,6 +43,7 @@ class Armies {
       ['rhordia', 'The League of Rhordia'],
       ['trident', 'The Trident Realm of Neritica'],
       ['kin', 'Twilight Kin'],
+      ['nightstalkers', 'Night Stalkers'],
       ['undead', 'Undead'],
       ['varangur', 'Varangur']
     ])

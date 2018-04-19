@@ -169,20 +169,20 @@ class ArmyList {
     return 'Tap the plus button to add a unit'
   }
   
-  _validitySymbol() {
-    return this.isValid() ? '&#9989;' : '&#9888;'
+  _validitySymbol(refresh) {
+    return this.isValid(refresh) ? '&#9989;' : '&#9888;'
   }
   
-  _validityClass() {
-    return this.isValid() ? 'count-valid' : 'count-invalid'
+  _validityClass(refresh) {
+    return this.isValid(refresh) ? 'count-valid' : 'count-invalid'
   }
   
   _createHeader() {
     let header = document.createElement('li')
     header.innerHTML = `Drops: <span class="count-ok">${this.drops()}</span>
-                       Unit Strength: <span class="count-ok">${this.unitStrength()}</span>
-                       Points: <span class="count-ok">${this.points()}</span>
-                       <span class="${this._validityClass()}">${this._validitySymbol()}</span>`
+                       Unit Strength: <span class="count-ok">${this.unitStrength(true)}</span>
+                       Points: <span class="count-ok">${this.points(true)}</span>
+                       <span class="${this._validityClass(true)}">${this._validitySymbol()}</span>`
     return header
   }
 }
