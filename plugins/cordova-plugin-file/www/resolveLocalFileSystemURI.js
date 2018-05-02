@@ -45,7 +45,6 @@
      * @param errorCallback    invoked if error occurs retrieving file system entry
      */
     module.exports.resolveLocalFileSystemURL = module.exports.resolveLocalFileSystemURL || function (uri, successCallback, errorCallback) {
-      console.log("hwrewrew")
         argscheck.checkArgs('sFF', 'resolveLocalFileSystemURI', arguments);
         // error callback
         var fail = function (error) {

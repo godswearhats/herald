@@ -1,5 +1,5 @@
 class HeraldFile {
-  static readJSON(path, filename, fn, err) {
+  static readJSON_deprecated(path, filename, fn, err) {
     $.ajax({
       url: path + '/' + filename + '.json',
       beforeSend: function(xhr){
@@ -14,8 +14,41 @@ class HeraldFile {
     })
   }
   
+  static logError(err) {
+    console.trace(err)
+  }
+  
   static TEMPLATE_DIR() {
     return 'data'
+  }
+  
+  static nameFromEntry(entry) {
+    return entry.name.slice(0, -5)
+  }
+  
+  static filename(label) {
+    return label + '.json'
+  }
+  
+  static loadArtifacts() {
+    return HeraldFile.loadJSONFile(cordova.file.applicationDirectory, 'data', 'artifacts')
+  }
+  
+  static loadJSONFile(dir, path, name) {
+    return new Promise(function(resolve, reject) {
+      let fullPath = dir + '/' + path + '/' + HeraldFile.filename(name)
+      window.resolveLocalFileSystemURL(fullPath, function (fileEntry) {
+        fileEntry.file(function(file) {
+          let reader = new FileReader()
+          reader.onerror = reject
+          reader.onloadend = function (event) {
+            let data = JSON.parse(this.result)
+            resolve(data)
+          }
+          reader.readAsText(file)
+        })
+      }, reject)
+    })
   }
   
 }
@@ -124,6 +157,18 @@ class Armies {
     return listElement
   }
   
+  loadTemplates() {
+    let self = this
+    return new Promise(function(resolve, reject) {
+      for (let [race, raceLabel] of self.races.entries()) {
+        HeraldFile.loadJSONFile(cordova.file.applicationDirectory, 'data/templates', race).then(function(data) {
+          self.templates.set(race, new ArmyTemplate(race, data))
+        })
+      }
+      setTimeout(function() { resolve(true) })
+    })
+  }
+  
   // this is a horrific async mess that needs cleaning, but not sure how
   load(fn) {
     var self = this
@@ -133,37 +178,34 @@ class Armies {
         var lastArmy = false
         var raceIterator = self.races.entries()
         for (let [race, raceLabel] of raceIterator) {
-          HeraldFile.readJSON('data/templates', race, function(data) {
-            self.templates.set(race, new ArmyTemplate(race, data))
-            dirEntry.getDirectory(race, { create: true }, function (listDir) {
-              let dirReader = listDir.createReader()
-              dirReader.readEntries(function(entries) {
-                if (entries.length) {
-                  self.lists.set(race, new Map())
-                  if (race === LAST_RACE) {
-                    lastArmy = entries.length
-                  }
-                } else if (race === LAST_RACE) {
-                  fn()
+          dirEntry.getDirectory(race, { create: true }, function (listDir) {
+            let dirReader = listDir.createReader()
+            dirReader.readEntries(function(entries) {
+              if (entries.length) {
+                self.lists.set(race, new Map())
+                if (race === LAST_RACE) {
+                  lastArmy = entries.length
                 }
-                for (let j = 0; j < entries.length; j++) {
-                  let entry = entries[j]
-                  var ending = (lastArmy && lastArmy === j) 
-                  entry.file(function(file) {
-                    let reader = new FileReader()
-                    reader.onloadend = function (event) {
-                      let data = JSON.parse(this.result)
-                      let armyList = new ArmyList(data.label, race)
-                      armyList.load(data.entries)
-                      self.lists.get(race).set(data.label, armyList)
-                      if (ending) { fn() }
-                    }
-                    reader.readAsText(file)
-                  }, HeraldFile.logError) // entry.file
-                } // for j
-              }, HeraldFile.logError) // dirReader.readEntries
-            }, HeraldFile.logError) // dirEntry.getDirectory
-          }, function() { if (race === LAST_RACE) { fn() } }) // HeraldFile.readJSON
+              } else if (race === LAST_RACE) {
+                fn()
+              }
+              for (let j = 0; j < entries.length; j++) {
+                let entry = entries[j]
+                var ending = (lastArmy && lastArmy === j) 
+                entry.file(function(file) {
+                  let reader = new FileReader()
+                  reader.onloadend = function (event) {
+                    let data = JSON.parse(this.result)
+                    let armyList = new ArmyList(data.label, race)
+                    armyList.load(data.entries)
+                    self.lists.get(race).set(data.label, armyList)
+                    if (ending) { fn() }
+                  }
+                  reader.readAsText(file)
+                }, HeraldFile.logError) // entry.file
+              } // for j
+            }, HeraldFile.logError) // dirReader.readEntries
+          }, HeraldFile.logError) // dirEntry.getDirectory
         } // for self.races
       }, HeraldFile.logError) // root.getDirectory  
     }, HeraldFile.logError) // window.resolveLocalFileSystemURL

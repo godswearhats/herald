@@ -4,8 +4,6 @@ class ArmyList {
     this.race = race
     this.entries = []
     
-    this._unitStrength = 0
-    this._points = 0
     this._isValid = undefined
   }
   
@@ -61,14 +59,12 @@ class ArmyList {
   }
   
   // FIXME to include nimble, irregular, individual
-  unitStrength(refresh) {
-    if (!this._unitStrength || refresh) {
-      this._unitStrength = 0
-      for (let i = 0; i < this.entries.length; i++) {
-        this._unitStrength += this.entries[i].unitStrength()
-      }
+  unitStrength() {
+    let unitStrength = 0
+    for (let i = 0; i < this.entries.length; i++) {
+      unitStrength += this.entries[i].unitStrength()
     }
-    return this._unitStrength
+    return unitStrength
   }
   
   drops() {
@@ -82,20 +78,18 @@ class ArmyList {
   
   removeEntry(entry) {
     let index = this.entries.indexOf(entry)
-    console.log(`Found index ${index}`)
     if (index >= 0) {
       this.entries.splice(index, 1)
     }
     current.entry = current.unit = current.artifact = current.spells = current.options = null
   }
   
-  points(refresh) {
-    if (!this._points || refresh) {
-      for (let i = 0; i < this.entries.length; i++) {
-        this._points += this.entries[i].points()
-      }
+  points() {
+    let points = 0
+    for (let i = 0; i < this.entries.length; i++) {
+      points += this.entries[i].points()
     }
-    return this._points
+    return points
   }
   
   get filename() {
@@ -105,8 +99,9 @@ class ArmyList {
   // write to storage, and update armies data structure
   save(addToArmies) {
     var self = this
-    window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {
-      armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function (armyDir) {
+      let path = `armies/${self.race}/${self.filename}`
+      armyDir.getFile(path, { create: true, exclusive: false }, function (fileEntry) {
         fileEntry.createWriter(function (fileWriter) {
           fileWriter.onerror = HeraldFile.logError
           fileWriter.onwriteend = function(event) {
@@ -169,20 +164,20 @@ class ArmyList {
     return 'Tap the plus button to add a unit'
   }
   
-  _validitySymbol(refresh) {
-    return this.isValid(refresh) ? '&#9989;' : '&#9888;'
+  _validitySymbol() {
+    return this.isValid(true) ? '&#9989;' : '&#9888;'
   }
   
-  _validityClass(refresh) {
-    return this.isValid(refresh) ? 'count-valid' : 'count-invalid'
+  _validityClass() {
+    return this.isValid(true) ? 'count-valid' : 'count-invalid'
   }
   
   _createHeader() {
     let header = document.createElement('li')
     header.innerHTML = `Drops: <span class="count-ok">${this.drops()}</span>
-                       Unit Strength: <span class="count-ok">${this.unitStrength(true)}</span>
-                       Points: <span class="count-ok">${this.points(true)}</span>
-                       <span class="${this._validityClass(true)}">${this._validitySymbol()}</span>`
+                       Unit Strength: <span class="count-ok">${this.unitStrength()}</span>
+                       Points: <span class="count-ok">${this.points()}</span>
+                       <span class="${this._validityClass()}">${this._validitySymbol()}</span>`
     return header
   }
 }

@@ -9,11 +9,10 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-      HeraldFile.readJSON('data', 'artifacts', function(data) {
-        artifacts = new ArtifactList(data)
-        armies.load(function() { heraldLoaded = true })
-      })
-    }
+      HeraldFile.loadArtifacts()
+        .then(armies.loadTemplates(), function(err) { console.log(`failed: ${err}`)})
+        .then(armies.load(function() { heraldLoaded = true }), function(err) { console.log(`failed2: ${err}`)})
+    } 
 }
 
 app.initialize()

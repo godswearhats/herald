@@ -2,10 +2,10 @@
 <widget id="com.godswearhats.herald" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Herald</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        An army builder app for Kings of War.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="godswearhats@gmail.com" href="http://godswearhats.com">
+        Gods Wear Hats
     </author>
     <content src="index.html" />
     <access origin="*" />
