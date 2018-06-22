@@ -1,4 +1,4 @@
-{
+armies.templates.set("dust", new ArmyTemplate("dust", {
     "version": 1,
     "revised": "2018-03-19",
     "name": "Empire of Dust",
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

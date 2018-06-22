@@ -193,7 +193,6 @@ class MasterUnit {
 
 class ArmyTemplate {
   constructor(race, data) {
-    current.data = data
     this.race = race
     this.revised = data.revised
     this.version = data.version

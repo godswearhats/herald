@@ -1,7 +1,7 @@
-{
+armies.templates.set("abyss", new ArmyTemplate("abyss", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Undead",
+    "name": "Forces of the Abyss",
     "alignment": "Evil",
     "masterUnits": {
         "Kindred Tallspears": {
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

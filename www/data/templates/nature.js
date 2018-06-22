@@ -1,7 +1,7 @@
-{
+armies.templates.set("nature", new ArmyTemplate("nature", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Ogres",
+    "name": "Forces of Nature",
     "alignment": "Neutral",
     "masterUnits": {
         "Kindred Tallspears": {
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

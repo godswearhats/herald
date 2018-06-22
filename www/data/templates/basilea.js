@@ -1,8 +1,8 @@
-{
+armies.templates.set("basilea", new ArmyTemplate("basilea", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Forces of the Abyss",
-    "alignment": "Evil",
+    "name": "Basilea",
+    "alignment": "Good",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

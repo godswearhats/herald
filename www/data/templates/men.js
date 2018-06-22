@@ -1,8 +1,8 @@
-{
+armies.templates.set("men", new ArmyTemplate("men", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Basilea",
-    "alignment": "Good",
+    "name": "Kingdoms of Men",
+    "alignment": "Neutral",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

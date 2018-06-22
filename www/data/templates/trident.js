@@ -1,7 +1,7 @@
-{
+armies.templates.set("trident", new ArmyTemplate("trident", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Kingdoms of Men",
+    "name": "Trident Realms of Neritica",
     "alignment": "Neutral",
     "masterUnits": {
         "Kindred Tallspears": {
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}))

@@ -103,7 +103,7 @@ class ArmyList {
       let path = `armies/${self.race}/${self.filename}`
       armyDir.getFile(path, { create: true, exclusive: false }, function (fileEntry) {
         fileEntry.createWriter(function (fileWriter) {
-          fileWriter.onerror = HeraldFile.logError
+          fileWriter.onerror = logError
           fileWriter.onwriteend = function(event) {
             if (addToArmies) {
               if (!armies.lists.has(self.race)) {
@@ -125,8 +125,8 @@ class ArmyList {
           let contents = JSON.stringify(list)
           fileWriter.write(contents)
         })
-      }, HeraldFile.logError)
-    }, HeraldFile.logError)
+      }, logError)
+    }, logError)
   }
   
   delete() {
@@ -134,8 +134,8 @@ class ArmyList {
     window.resolveLocalFileSystemURL(cordova.file.dataDirectory + '/armies/' + self.race, function (armyDir) {
       armyDir.getFile(self.filename, { create: true, exclusive: false }, function (fileEntry) {
         fileEntry.remove()
-      }, HeraldFile.logError)
-    }, HeraldFile.logError)
+      }, logError)
+    }, logError)
   }
   
   load(data) {

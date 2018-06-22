@@ -1,58 +1,6 @@
-class HeraldFile {
-  static readJSON_deprecated(path, filename, fn, err) {
-    $.ajax({
-      url: path + '/' + filename + '.json',
-      beforeSend: function(xhr){
-        if (xhr.overrideMimeType)
-        {
-          xhr.overrideMimeType("application/json");
-        }
-      },
-      dataType: 'json',
-      success: fn,
-      error: err
-    })
-  }
-  
-  static logError(err) {
-    console.trace(err)
-  }
-  
-  static TEMPLATE_DIR() {
-    return 'data'
-  }
-  
-  static nameFromEntry(entry) {
-    return entry.name.slice(0, -5)
-  }
-  
-  static filename(label) {
-    return label + '.json'
-  }
-  
-  static loadArtifacts() {
-    return HeraldFile.loadJSONFile(cordova.file.applicationDirectory, 'data', 'artifacts')
-  }
-  
-  static loadJSONFile(dir, path, name) {
-    return new Promise(function(resolve, reject) {
-      let fullPath = dir + '/' + path + '/' + HeraldFile.filename(name)
-      window.resolveLocalFileSystemURL(fullPath, function (fileEntry) {
-        fileEntry.file(function(file) {
-          let reader = new FileReader()
-          reader.onerror = reject
-          reader.onloadend = function (event) {
-            let data = JSON.parse(this.result)
-            resolve(data)
-          }
-          reader.readAsText(file)
-        })
-      }, reject)
-    })
-  }
-  
+function logError(err) {
+  console.trace(err)
 }
-
 
 class Armies {
   constructor() {
@@ -157,18 +105,6 @@ class Armies {
     return listElement
   }
   
-  loadTemplates() {
-    let self = this
-    return new Promise(function(resolve, reject) {
-      for (let [race, raceLabel] of self.races.entries()) {
-        HeraldFile.loadJSONFile(cordova.file.applicationDirectory, 'data/templates', race).then(function(data) {
-          self.templates.set(race, new ArmyTemplate(race, data))
-        })
-      }
-      setTimeout(function() { resolve(true) })
-    })
-  }
-  
   // this is a horrific async mess that needs cleaning, but not sure how
   load(fn) {
     var self = this
@@ -197,18 +133,19 @@ class Armies {
                   reader.onloadend = function (event) {
                     let data = JSON.parse(this.result)
                     let armyList = new ArmyList(data.label, race)
+                    console.log(data)
                     armyList.load(data.entries)
                     self.lists.get(race).set(data.label, armyList)
                     if (ending) { fn() }
                   }
                   reader.readAsText(file)
-                }, HeraldFile.logError) // entry.file
+                }, logError) // entry.file
               } // for j
-            }, HeraldFile.logError) // dirReader.readEntries
-          }, HeraldFile.logError) // dirEntry.getDirectory
+            }, logError) // dirReader.readEntries
+          }, logError) // dirEntry.getDirectory
         } // for self.races
-      }, HeraldFile.logError) // root.getDirectory  
-    }, HeraldFile.logError) // window.resolveLocalFileSystemURL
+      }, logError) // root.getDirectory  
+    }, logError) // window.resolveLocalFileSystemURL
   }
 }
 

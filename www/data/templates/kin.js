@@ -1,8 +1,8 @@
-{
+armies.templates.set("kin", new ArmyTemplate("kin", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Salamanders",
-    "alignment": "Neutral",
+    "name": "Twilight Kin",
+    "alignment": "Evil",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

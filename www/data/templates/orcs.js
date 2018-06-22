@@ -1,8 +1,8 @@
-{
+armies.templates.set("orcs", new ArmyTemplate("orcs", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "The League of Rhordia",
-    "alignment": "Good",
+    "name": "Orcs",
+    "alignment": "Evil",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

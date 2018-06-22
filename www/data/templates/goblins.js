@@ -1,7 +1,7 @@
-{
+armies.templates.set("goblins", new ArmyTemplate("goblins", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Varangur",
+    "name": "Goblins",
     "alignment": "Evil",
     "masterUnits": {
         "Kindred Tallspears": {
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

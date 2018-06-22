@@ -1,4 +1,4 @@
-{
+var artifacts = new ArtifactList({
     "No artifact": {
         "id": 0,
         "points": 0,
@@ -279,4 +279,4 @@
         },
         "description": ""
     }
-}
+})

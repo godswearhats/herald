@@ -1,7 +1,7 @@
-{
-    "version": 2,
+armies.templates.set("dwarfs", new ArmyTemplate("dwarfs", {
+    "version": 1,
     "revised": "2018-03-19",
-    "name": "Elves",
+    "name": "Dwarfs",
     "alignment": "Good",
     "masterUnits": {
         "Kindred Tallspears": {
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

@@ -1,4 +1,4 @@
-{
+armies.templates.set("ratkin", new ArmyTemplate("ratkin", {
     "version": 2,
     "revised": "2018-03-19",
     "name": "Ratkin",
@@ -849,4 +849,4 @@
             }
         }
     }
-}
+}))

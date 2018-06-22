@@ -1,8 +1,8 @@
-{
+armies.templates.set("herd", new ArmyTemplate("herd", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Twilight Kin",
-    "alignment": "Evil",
+    "name": "The Herd",
+    "alignment": "Neutral",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

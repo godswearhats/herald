@@ -1,8 +1,8 @@
-{
+armies.templates.set("ogres", new ArmyTemplate("ogres", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "The Brotherhood",
-    "alignment": "Good",
+    "name": "Ogres",
+    "alignment": "Neutral",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

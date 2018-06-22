@@ -1,8 +1,8 @@
-{
+armies.templates.set("undead", new ArmyTemplate("undead", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Trident Realms of Neritica",
-    "alignment": "Good",
+    "name": "Undead",
+    "alignment": "Evil",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}))

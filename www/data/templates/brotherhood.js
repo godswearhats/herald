@@ -1,8 +1,8 @@
-{
+armies.templates.set("brotherhood", new ArmyTemplate("brotherhood", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Goblins",
-    "alignment": "Evil",
+    "name": "The Brotherhood",
+    "alignment": "Good",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}));

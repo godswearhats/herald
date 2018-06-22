@@ -1,4 +1,4 @@
-{
+armies.templates.set("nightstalkers", new ArmyTemplate("nightstalkers", {
     "version": 1,
     "revised": "2018-04-03",
     "name": "Night Stalkers",
@@ -711,4 +711,4 @@
             }
         }
     }
-}
+}))

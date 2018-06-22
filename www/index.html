@@ -9,13 +9,39 @@
   <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
   <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
   <script type="text/javascript" src="cordova.js"></script>
+  <script src="js/files.js"></script>
+  <script type="text/javascript">
+    var armies = new Armies() // each army is loaded in their template files below
+  </script>
   <script type="text/javascript" src="js/index.js"></script>
   <script src="lib/jquery-2.1.4.js"></script>
   <script src="lib/jquery.mobile-1.4.5.js"></script>
   <script src="js/template.js"></script>
   <script src="js/list.js"></script>
   <script src="js/artifact.js"></script>
-  <script src="js/files.js"></script>
+  
+  <script src="data/templates/abyss.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/abyssal-dwarfs.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/basilea.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/brotherhood.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/dust.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/dwarfs.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/elves.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/goblins.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/herd.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/kin.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/men.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/nature.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/nightstalkers.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/ogres.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/orcs.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/ratkin.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/rhordia.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/salamanders.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/trident.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/undead.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/templates/varangur.js" type="text/javascript" charset="utf-8"></script>
+  <script src="data/artifacts.js" type="text/javascript" charset="utf-8"></script>
   
   <script type="text/javascript">
     var heraldLoaded = false
@@ -29,8 +55,7 @@
       spells: null,
       options: null
     }
-    var armies = new Armies() // load is called in index.js
-    var artifacts
+
 
     $(function(){
       $( "[data-role='header']" ).toolbar( {'theme': 'a'})

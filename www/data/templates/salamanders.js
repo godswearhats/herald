@@ -1,7 +1,7 @@
-{
+armies.templates.set("salamanders", new ArmyTemplate("salamanders", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Forces of Nature",
+    "name": "Salamanders",
     "alignment": "Neutral",
     "masterUnits": {
         "Kindred Tallspears": {
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}))

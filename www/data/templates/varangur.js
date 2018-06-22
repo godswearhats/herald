@@ -1,8 +1,8 @@
-{
+armies.templates.set("varangur", new ArmyTemplate("varangur", {
     "version": 1,
     "revised": "2018-03-19",
-    "name": "Dwarfs",
-    "alignment": "Good",
+    "name": "Varangur",
+    "alignment": "Evil",
     "masterUnits": {
         "Kindred Tallspears": {
             "id": 0,
@@ -953,4 +953,4 @@
             }
         }
     }
-}
+}))
