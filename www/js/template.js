@@ -16,6 +16,12 @@ const TYPE_LARGE_CAVALRY = 3
 const TYPE_WAR_ENGINE = 4
 const TYPE_MONSTER = 5
 const TYPE_HERO = 10 // anything type 10 or more is a hero, subtract 10 to find actual type
+const TYPE_HERO_INF = 10
+const TYPE_HERO_LRG_INF = 11
+const TYPE_HERO_CAV = 12
+const TYPE_HERO_LRG_CAV = 13
+const TYPE_HERO_WAR_ENG = 14
+const TYPE_HERO_MON = 15
 
 class Unit {
   constructor(master, size, stats) {

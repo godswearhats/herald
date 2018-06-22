@@ -10,7 +10,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Elite",
                 "Phalanx"
             ],
-            "type": 0,
+            "type": TYPE_INFANTRY,
             "units": {
                 "Troop": {
                     "points": 100,
@@ -54,7 +54,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Elite",
                 "Phalanx"
             ],
-            "type": 0,
+            "type": TYPE_INFANTRY,
             "units": {
                 "Regiment": {
                     "points": 170,
@@ -88,7 +88,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 },
                 "Elite"
             ],
-            "type": 0,
+            "type": TYPE_INFANTRY,
             "units": {
                 "Troop": {
                     "points": 105,
@@ -120,7 +120,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Bows",
                 "Elite"
             ],
-            "type": 0,
+            "type": TYPE_INFANTRY,
             "units": {
                 "Troop": {
                     "points": 105,
@@ -165,7 +165,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Pathfinder",
                 "Vanguard"
             ],
-            "type": 0,
+            "type": TYPE_INFANTRY,
             "units": {
                 "Troop": {
                     "points": 130,
@@ -197,7 +197,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Pathfinder",
                 "Vanguard"
             ],
-            "type": 0,
+            "type": TYPE_INFANTRY,
             "units": {
                 "Troop": {
                     "points": 135,
@@ -251,7 +251,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Nimble",
                 "Vicious"
             ],
-            "type": 0,
+            "type": TYPE_CAVALRY,
             "units": {
                 "Troop": {
                     "points": 80,
@@ -276,7 +276,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Shambling",
                 "Vanguard"
             ],
-            "type": 1,
+            "type": TYPE_LARGE_INFANTRY,
             "units": {
                 "Regiment": {
                     "points": 125,
@@ -310,7 +310,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                     "Thunderous Charge": 2
                 }
             ],
-            "type": 2,
+            "type": TYPE_CAVALRY,
             "units": {
                 "Troop": {
                     "points": 140,
@@ -343,7 +343,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Elite",
                 "Nimble"
             ],
-            "type": 2,
+            "type": TYPE_CAVALRY,
             "units": {
                 "Troop": {
                     "points": 145,
@@ -365,7 +365,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Nimble",
                 "Windborne Arrows"
             ],
-            "type": 2,
+            "type": TYPE_CAVALRY,
             "legend": true,
             "units": {
                 "Troop": {
@@ -393,7 +393,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                     "Thunderous Charge": 1
                 }
             ],
-            "type": 3,
+            "type": TYPE_LARGE_CAVALRY,
             "units": {
                 "Regiment": {
                     "points": 175,
@@ -432,7 +432,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                     "Thunderous Charge": 2
                 }
             ],
-            "type": 3,
+            "type": TYPE_LARGE_CAVALRY,
             "units": {
                 "Regiment": {
                     "points": 140,
@@ -470,7 +470,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 },
                 "Reload!"
             ],
-            "type": 5,
+            "type": TYPE_WAR_ENGINE,
             "units": {
                 "Bolt Thrower": {
                     "points": 90,
@@ -493,7 +493,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 },
                 "Elite"
             ],
-            "type": 5,
+            "type": TYPE_WAR_ENGINE,
             "units": {
                 "Dragon Breath": {
                     "points": 90,
@@ -518,7 +518,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Individual",
                 "Inspiring"
             ],
-            "type": 10,
+            "type": TYPE_HERO_INF,
             "units": {
                 "on foot": {
                     "points": 120,
@@ -532,7 +532,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                     "rout": 15
                 },
                 "on horse": {
-                    "type": 12,
+                    "type": TYPE_HERO_CAV,
                     "points": 140,
                     "models": 1,
                     "speed": 9,
@@ -563,7 +563,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Fly",
                 "Inspiring"
             ],
-            "type": 14,
+            "type": TYPE_HERO_MON,
             "units": {
                 "Dragon Kindred Lord": {
                     "points": 310,
@@ -591,7 +591,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                     "Thunderous Charge": 1
                 }
             ],
-            "type": 13,
+            "type": TYPE_HERO_LRG_CAV,
             "units": {
                 "Drakon Rider Lord": {
                     "points": 160,
@@ -615,7 +615,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Elite",
                 "Individual"
             ],
-            "type": 10,
+            "type": TYPE_HERO_INF,
             "units": {
                 "on foot": {
                     "points": 60,
@@ -629,7 +629,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                     "rout": 13
                 },
                 "on horse": {
-                    "type": 12,
+                    "type": TYPE_HERO_CAV,
                     "points": 75,
                     "models": 1,
                     "speed": 9,
@@ -661,7 +661,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                     "Thunderous Charge": 2
                 }
             ],
-            "type": 13,
+            "type": TYPE_HERO_LRG_CAV,
             "units": {
                 "Noble War Chariot": {
                     "points": 140,
@@ -682,7 +682,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Elite",
                 "Individual"
             ],
-            "type": 10,
+            "type": TYPE_HERO_INF,
             "spells": {
                 "Heal": 3
             },
@@ -700,7 +700,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 },
                 "on horse": {
                     "points": 90,
-                    "type": 12,
+                    "type": TYPE_HERO_CAV,
                     "models": 1,
                     "speed": 9,
                     "melee": 5,
@@ -742,7 +742,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Individual",
                 "Inspiring"
             ],
-            "type": 10,
+            "type": TYPE_HERO_INF,
             "units": {
                 "on foot": {
                     "points": 50,
@@ -757,7 +757,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 },
                 "on horse": {
                     "points": 65,
-                    "type": 12,
+                    "type": TYPE_HERO_CAV,
                     "models": 1,
                     "speed": 9,
                     "melee": 5,
@@ -782,7 +782,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Stealthy",
                 "Vanguard"
             ],
-            "type": 10,
+            "type": TYPE_HERO_INF,
             "units": {
                 "Master Hunter": {
                     "points": 90,
@@ -812,7 +812,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Pathfinder",
                 "Vanguard"
             ],
-            "type": 11,
+            "type": TYPE_HERO_LRG_INF,
             "units": {
                 "Forest Warden": {
                     "points": 75,
@@ -840,7 +840,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
             "spells": {
                 "Surge": 8
             },
-            "type": 11,
+            "type": TYPE_HERO_MON,
             "units": {
                 "Tree Herder": {
                     "points": 260,
@@ -867,7 +867,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Individual"
             ],
             "legend": true,
-            "type": 10,
+            "type": TYPE_HERO_INF,
             "units": {
                 "Argus Rodinar": {
                     "points": 50,
@@ -895,7 +895,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 }
             ],
             "legend": true,
-            "type": 10,
+            "type": TYPE_HERO_INF,
             "units": {
                 "The Green Lady": {
                     "points": 200,
@@ -937,7 +937,7 @@ armies.templates.set("elves", new ArmyTemplate("elves", {
                 "Very Inspiring"
             ],
             "legend": true,
-            "type": 14,
+            "type": TYPE_HERO_MON,
             "units": {
                 "Tydarion Dragonlord": {
                     "points": 350,

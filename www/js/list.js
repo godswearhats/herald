@@ -38,10 +38,10 @@ class ArmyList {
                 case TYPE_WAR_ENGINE:
                   warEngines += 1
                   break
-                case MONSTER:
+                case TYPE_MONSTER:
                   monsters += 1
                   break
-                case HERO:
+                default:
                   heroes += 1
                   break
               }
