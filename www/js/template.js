@@ -16,6 +16,12 @@ const TYPE_LARGE_CAVALRY = 3
 const TYPE_WAR_ENGINE = 4
 const TYPE_MONSTER = 5
 const TYPE_HERO = 10 // anything type 10 or more is a hero, subtract 10 to find actual type
+const TYPE_HERO_INF = 10
+const TYPE_HERO_LRG_INF = 11
+const TYPE_HERO_CAV = 12
+const TYPE_HERO_LRG_CAV = 13
+const TYPE_HERO_WAR_ENG = 14
+const TYPE_HERO_MON = 15
 
 class Unit {
   constructor(master, size, stats) {
@@ -26,16 +32,17 @@ class Unit {
     this.points = stats.points
   }
   
-  // creates a list item that is linked to unit-details page
-  toHTML(displayName, item, fn) {  
+  // creates a list item that is linked to entry-details page
+  toHTML(displayName, item, entry) {
     let unitChoice = document.createElement('li')
     let anchor = document.createElement('a')
     let name = displayName ? this.master.name : ''
-    anchor.innerHTML = this._table(name, fn)
-    $(anchor).attr('href', '#unit-details')
+    anchor.innerHTML = this._table(name, entry)
+    $(anchor).attr('href', '#entry-details')
     var self = this
     $(anchor).on('click', function(event) {
       current.unit = self
+      current.entry = entry
       if (item) {
         $(item).collapsible('collapse')
       }
@@ -45,7 +52,7 @@ class Unit {
   }
   
   // creates the tabular layout for the unit entry, callsback with the table open, ready for extra rows
-  _table(name, addRows) {
+  _table(name, entry) {
     let header = ''
     if (name) {
       header += '<h2>' + name + '</h2>'
@@ -61,8 +68,19 @@ class Unit {
       + '<td>' + this.nerve + '</td>'
       + '<td>' + this.points + '</td></tr>'
     
-    if (addRows) {
-      table = addRows(table)
+    if (entry !== undefined) {
+      if (entry.artifact) {
+        table += entry._addRow(entry.artifact)
+      }
+      if (entry.spells) {
+        table += entry._addRow(entry.spells)
+      }
+      if (entry.options) {
+        table += entry._addRow(entry.options)
+      }
+      if (entry.artifact || entry.spells || entry.options) {
+        table += entry._addRow({ name: 'Total', points: entry.points(), style: 'border-top: 1px solid grey' })
+      }
     }
     table += '</table>'
     
@@ -181,7 +199,6 @@ class MasterUnit {
 
 class ArmyTemplate {
   constructor(race, data) {
-    current.data = data
     this.race = race
     this.revised = data.revised
     this.version = data.version
@@ -195,8 +212,8 @@ class ArmyTemplate {
   
   // TODO make this not take element as param
   toHTML(element) {
-    this.masterUnits.forEach(function(masterUnit) {
-      $(element).append(masterUnit.toHTML())
-    })
+    for (let i = 0; i < this.masterUnits.length; i++) {
+      $(element).append(this.masterUnits[i].toHTML())
+    }
   }
 }

@@ -1,0 +1,282 @@
+var artifacts = new ArtifactList({
+    "No artifact": {
+        "id": 0,
+        "points": 0,
+        "rules": {
+        },
+        "description": "This unit has no artifacts."
+    }, 
+    "Blade of Slashing": {
+        "id": 1,
+        "points": 5,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Fire-Oil": {
+        "id": 2,
+        "points": 5,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Healing Brew": {
+        "id": 3,
+        "points": 5,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Kevinar's Flying Hammer": {
+        "id": 4,
+        "points": 5,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Mace of Crushing": {
+        "id": 5,
+        "points": 5,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Staying Stone": {
+        "id": 6,
+        "points": 5,
+        "rules": {
+        },
+        "description": ""
+    },
+    "War-bow of Kaba": {
+        "id": 7,
+        "points": 5,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Dwarven Ale": {
+        "id": 8,
+        "points": 10,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Myrddin's Amulet of the Fire-heart": {
+        "id": 9,
+        "points": 10,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Piercing Arrow": {
+        "id": 10,
+        "points": 10,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Quicksilver Rapier": {
+        "id": 11,
+        "points": 10,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Brew of Courage": {
+        "id": 12,
+        "points": 15,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Brew of Haste": {
+        "id": 13,
+        "points": 15,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Chalice of Wrath": {
+        "id": 14,
+        "points": 15,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Pipes of Terror": {
+        "id": 15,
+        "points": 15,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Dragonshard Shield": {
+        "id": 16,
+        "points": 20,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Hammer of Measured Force": {
+        "id": 17,
+        "points": 20,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Helm of Confidence": {
+        "id": 18,
+        "points": 20,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Maccwar's Potion of the Caterpillar": {
+        "id": 19,
+        "points": 20,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Aegis of the Elohi": {
+        "id": 20,
+        "points": 25,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Banner of the Griffin": {
+        "id": 21,
+        "points": 25,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Black Iron Crown": {
+        "id": 22,
+        "points": 25,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Blessing of the Gods": {
+        "id": 23,
+        "points": 25,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Chant of Hate": {
+        "id": 24,
+        "points": 25,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Kaba's Holy Hand Grenades": {
+        "id": 25,
+        "points": 25,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Scarletmaw's Fenulian Amulet": {
+        "id": 26,
+        "points": 25,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Shroud of the Saint": {
+        "id": 27,
+        "points": 25,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Brew of Keen-eyeness": {
+        "id": 28,
+        "points": 30,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Brew of Strength": {
+        "id": 29,
+        "points": 30,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Crepognon's Scrying Gem of Zellak": {
+        "id": 30,
+        "points": 30,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Diadem of Dragon-kind": {
+        "id": 31,
+        "points": 30,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Heart-seeking Chant": {
+        "id": 32,
+        "points": 30,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Mreb's Grimoire of Unspeakable Darkness": {
+        "id": 33,
+        "points": 30,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Jar of the Four Winds": {
+        "id": 34,
+        "points": 35,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Orcsbain’s Amulet of Thorns": {
+        "id": 35,
+        "points": 35,
+        "rules": {
+        },
+        "description": ""
+    },
+    "The Fog": {
+        "id": 36,
+        "points": 35,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Wine of Elvenkind": {
+        "id": 37,
+        "points": 40,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Brew of Sharpness": {
+        "id": 38,
+        "points": 45,
+        "rules": {
+        },
+        "description": ""
+    },
+    "Crystal Pendant of Retribution": {
+        "id": 39,
+        "points": 50,
+        "rules": {
+        },
+        "description": ""
+    }
+})

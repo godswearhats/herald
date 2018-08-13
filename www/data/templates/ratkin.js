@@ -1,0 +1,852 @@
+armies.templates.set("ratkin", new ArmyTemplate("ratkin", {
+    "version": 2,
+    "revised": "2018-03-19",
+    "name": "Ratkin",
+    "alignment": "Evil",
+    "masterUnits": {
+        "Warriors": {
+            "id": 0,
+            "type": 0,
+            "units": {
+                "Regiment": {
+                    "points": 90,
+                    "models": 20,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 12,
+                    "waver": 12,
+                    "rout": 14
+                },
+                "Horde": {
+                    "points": 155,
+                    "models": 40,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 25,
+                    "waver": 19,
+                    "rout": 21,
+		    		"special": [
+						{
+							"Rallying!": 1
+						}
+		    		]
+                }
+            }
+        },
+        "Tunnel Slaves": {
+            "id": 1,
+			"irregular": true,
+            "special": [
+                "Yellow-Bellied"
+            ],
+            "type": 0,
+            "units": {
+                "Regiment": {
+                    "points": 60,
+                    "models": 20,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 2,
+                    "attacks": 12,
+                    "waver": 12,
+                    "rout": 14
+                },
+                "Horde": {
+                    "points": 100,
+                    "models": 40,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 2,
+                    "attacks": 25,
+                    "waver": 19,
+                    "rout": 21
+                },
+				"Legion": {
+					"points": 145,
+					"models": 60,
+					"speed": 6,
+					"melee": 5,
+					"ranged": false,
+					"defense": 2,
+					"attacks": 30,
+					"waver": 25,
+					"rout": 27 
+				}
+            }
+        },
+        "Spear Warriors": {
+            "id": 2,
+            "special": [
+                "Phalanx"
+            ],
+            "type": 0,
+            "units": {
+                "Regiment": {
+                    "points": 110,
+                    "models": 20,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 15,
+                    "waver": 12,
+                    "rout": 14
+                },
+                "Regiment": {
+                    "points": 185,
+                    "models": 40,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 30,
+                    "waver": 19,
+                    "rout": 21,
+					"special": [
+						{
+							"Rallying!": 1
+						}
+					]
+                }
+            }
+        },
+        "Blight": {
+            "id": 3,
+            "special": [
+                "Ensnare",
+                "Stealthy"
+            ],
+            "type": 0,
+            "units": {
+                "Regiment": {
+                    "points": 120,
+                    "models": 20,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 15,
+                    "waver": false,
+                    "rout": 14
+                },
+                "Horde": {
+                    "points": 205,
+                    "models": 40,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 30,
+                    "waver": false,
+                    "rout": 21,
+					"special": [
+						{
+							"Rallying!": 1
+						}
+					]
+                }
+            }
+        },
+        "Shock Troops": {
+            "id": 4,
+            "special": [
+                "Elite",
+                "Vicious",
+                {
+                	"Crushing Strength": 1
+                }
+            ],
+            "type": 0,
+            "units": {
+                "Troop": {
+                    "points": 95,
+                    "models": 10,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 10,
+                    "waver": 9,
+                    "rout": 11
+                },
+                "Regiment": {
+                    "points": 135,
+                    "models": 20,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 12,
+                    "waver": 13,
+                    "rout": 15
+                },
+				"Horde": {
+                    "points": 230,
+                    "models": 40,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 25,
+                    "waver": 20,
+                    "rout": 22,
+					"special": [
+						{
+							"Rallying!": 1
+						}
+					]
+                }
+            }
+        },
+        "Clawshots": {
+            "id": 5,
+			"Base": [
+				25,
+				50
+			],
+            "special": [
+				"Long Rifles",
+				{
+					"Peircing": 2
+				},
+				"Reload!"
+            ],
+            "type": 0,
+            "units": {
+                "Troop": {
+                    "points": 90,
+                    "models": 10,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": 4,
+                    "defence": 4,
+                    "attacks": 5,
+                    "waver": 0,
+                    "rout": 10
+                }
+            }
+        },
+        "Scurriers": {
+            "id": 6,
+            "special": [
+                "Nimble",
+				"Throwing Weapons",
+                "Vicious"
+            ],
+            "type": 0,
+            "units": {
+                "Troop": {
+                    "points": 110,
+                    "models": 10,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": 4,
+                    "defence": 3,
+                    "attacks": 8,
+                    "waver": 9,
+                    "rout": 11
+                }
+            },
+			"options": {
+				"Exchange Trhowing Weapons for Bows": {
+					"points": 10,
+					"special": [
+						"Bows"
+					]
+				}
+			}
+        },
+        "Hackpaws": {
+            "id": 7,
+            "special": [
+                {
+                    "Thunderous Charge": 1
+                },
+                "Nimble",
+                "Vicious"
+            ],
+            "type": 2,
+            "units": {
+                "Troop": {
+                    "points": 95,
+                    "models": 5,
+                    "speed": 9,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 8,
+                    "waver": 9,
+                    "rout": 11
+                },
+                "Regiment": {
+                    "points": 145,
+                    "models": 10,
+                    "speed": 9,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 16,
+                    "waver": 12,
+                    "rout": 14
+                }
+            }
+        },
+        "Vermintide": {
+            "id": 8,
+			"irregular": true,
+            "special": [
+                "Height 0",
+				"Nimble",
+				"Vicious"
+            ],
+            "type": 2,
+            "units": {
+                "Regiment": {
+                    "points": 60,
+                    "models": 3,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 9,
+                    "waver": 9,
+                    "rout": 11
+                },
+                "Horde": {
+                    "points": 90,
+                    "models": 6,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 3,
+                    "attacks": 18,
+                    "waver": 12,
+                    "rout": 14
+                }
+            }
+        },
+        "Brutes": {
+            "id": 9,
+            "special": [
+                "Brutal",
+				{
+					"Crushing Strength": 1
+				},
+                "Fury",
+                {
+                	"Regeneration": 5
+                }
+            ],
+            "type": 2,
+            "units": {
+                "Regiment": {
+                    "points": 115,
+                    "models": 3,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 9,
+                    "waver": 10,
+                    "rout": 13
+                },
+                "Horde": {
+                    "points": 185,
+                    "models": 6,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 18,
+                    "waver": 13,
+                    "rout": 16,
+					"special":[
+						{
+							"Rallying!": 1
+						}
+					]
+                }
+            }
+        },
+        "Artillery": {
+            "id": 10,
+            "special": [
+                {
+                    "Blast": "D3+1"
+                },
+                "Indirect",
+                {
+                    "Piercing": 1
+                },
+                "Reload!",
+				"Vicious"
+            ],
+            "type": 4,
+            "units": {
+                "Artillery": {
+                    "points": 90,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": false,
+                    "ranged": 5,
+                    "defence": 4,
+                    "attacks": 2,
+                    "waver": 8,
+                    "rout": 10
+                }
+            }
+        },
+        "Weapon Team": {
+            "id": 11,
+            "special": [
+                {
+                    "Breath Attack": "Att"
+                },
+                "Nimble"
+            ],
+            "type": 4,
+            "units": {
+                "Weapon Team": {
+                    "points": 60,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": false,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 10,
+                    "waver": 8,
+                    "rout": 10
+                },
+				"options":{
+    				"Storm of Lead": {
+    					"points": 20,
+    					"special": [
+    						{
+    							"Piercing": 1
+    						}
+    					]
+    				}
+                }
+            }
+        },
+        "Shredder": {
+            "id": 12,
+            "special": [
+                {
+                    "Blast": "D3"
+                },
+                "Reload!",
+                {
+                	"Piercing": 2
+                }
+            ],
+            "type": 4,
+            "units": {
+                "Shredder": {
+                    "points": 90,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": false,
+                    "ranged": 5,
+                    "defence": 4,
+                    "attacks": 3,
+                    "waver": 8,
+                    "rout": 10
+                }
+            }
+        },
+        "Death Engine": {
+            "id": 13,
+			"base": [
+				50,
+				100
+			],
+            "type": 4,
+            "units": {
+                "Base Model": {
+                    "points": 170,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": "D6+7",
+                    "waver": false,
+                    "rout": 16,
+					"special": [
+		                {
+		                    "Crushing Strength": 1
+		                },
+		                {
+		                    "Rallying!": 1
+		                },
+						{
+							"Thunderous Charge": 1
+						}
+					]
+                },
+				"with Vile Sorcery": {
+                    "points": 210,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": 4,
+                    "defence": 4,
+                    "attacks": "D6+7",
+                    "waver": false,
+                    "rout": 16,
+					"special": [
+		                {
+		                    "Crushing Strength": 1
+		                },
+		                {
+		                    "Rallying!": 1
+		                },
+						{
+							"Thunderous Charge": 1
+						},
+						"Firebolt",
+						{
+							"Piercing": 2
+						}
+					]
+				},
+				"with Bloody Carnage": {
+                    "points": 170,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": "D6+7",
+                    "waver": false,
+                    "rout": 16,
+					"special": [
+		                {
+		                    "Crushing Strength": 2
+		                },
+		                {
+		                    "Rallying!": 1
+		                },
+						{
+							"Thunderous Charge": 1
+						},
+						"Vicious"
+					]
+                }
+            }
+        },
+        "Mutant Rat-Fiend": {
+            "id": 14,
+            "special": [
+                {
+                    "Crushing Strength": 2
+                },
+				{
+					"Regeneration": 5
+				},
+                "Strider",
+                {
+                    "Thunderous Charge": 1
+                },
+				"Vicious"
+            ],
+            "type": 4,
+            "units": {
+                "Mutant Rat-Fiend": {
+                    "points": 200,
+                    "models": 1,
+                    "speed": 7,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 10,
+                    "waver": false,
+                    "rout": 17
+                }
+            }
+        },
+        "Blight Lord": {
+            "id": 14,
+            "special": [
+                {
+                    "Crushing Strength": 2
+                },
+                "Ensnare",
+                "Individual",
+				"Inspiring (Blight only)",
+				"Stealthy"
+            ],
+            "type": 10,
+            "units": {
+                "on foot": {
+                    "points": 95,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 4,
+                    "waver": false,
+                    "rout": 12
+                }
+            },
+            "options": {
+                "Spells": {
+					"Bane-Chant": {
+                        "points": 15,
+                        "value": 2
+					}
+                }
+            }
+        },
+        "War Chief": {
+            "id": 15,
+            "special": [
+                {
+                    "Crushing Strength": 1
+                },
+                "Individual",
+                "Inspiring"
+            ],
+            "type": 10,
+            "units": {
+                "on foot": {
+                    "points": 110,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 5,
+                    "waver": 11,
+                    "rout": 13
+                },
+				"on fleabag": {
+					"type": 12,
+                    "points": 130,
+                    "models": 1,
+                    "speed": 9,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 5,
+                    "waver": 11,
+                    "rout": 13
+				}
+            },
+			"options": {
+				"Exchange shield for two-handed weapon": {
+					"cost": 0,
+					"defence": 4,
+					"special": [
+						{
+							"Crushing Strength": 2
+						}
+					]
+				}
+			}
+        },
+        "Warlock": {
+            "id": 16,
+            "special": [
+                "Individual"
+            ],
+            "type": 10,
+            "spells": {
+                "Lightning Bolt": 5
+            },
+            "units": {
+                "on foot": {
+                    "points": 90,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": 9,
+                    "rout": 11
+                },
+                "on horse": {
+                    "points": 105,
+                    "type": 12,
+                    "models": 1,
+                    "speed": 9,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": 9,
+                    "rout": 11
+                }
+            },
+            "options": {
+                "spells": {
+                    "Wind Blast": {
+                        "points": 15,
+                        "value": 5
+                    },
+                    "Bane Chant": {
+                        "points": 20,
+                        "value": 3
+                    },
+                    "Heal": {
+                        "points": 15,
+                        "value": 3
+                    }
+                }
+            }
+        },
+        "Swarm-crier": {
+            "id": 17,
+            "special": [
+                "Individual",
+                "Inspiring"
+            ],
+            "type": 10,
+            "units": {
+                "on foot": {
+                    "points": 45,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": 8,
+                    "rout": 10
+                },
+                "on fleabag": {
+                    "points": 60,
+                    "type": 12,
+                    "models": 1,
+                    "speed": 9,
+                    "melee": 5,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 1,
+                    "waver": 8,
+                    "rout": 10
+                }
+            }
+        },
+        "Enforcer": {
+            "id": 18,
+            "special": [
+                {
+                	"Crushing Strength": 1
+                },
+				"Individual",
+                {
+                    "Rallying!": 1
+                }
+            ],
+            "type": 10,
+            "units": {
+                "on foot": {
+                    "points": 45,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 4,
+                    "ranged": false,
+                    "defence": 4,
+                    "attacks": 3,
+                    "waver": 9,
+                    "rout": 11
+                },
+				"on fleabag": {
+					"points": 60,
+					"models": 1,
+					"speed": 9,
+					"melee": 4,
+					"ranged": false,
+					"defence": 4,
+					"attacks": 3,
+					"waver": 9,
+					"rout": 11
+				}
+            }
+        },
+        "Assassin": {
+            "id": 19,
+            "special": [
+                {
+                    "Crushing Strength": 1
+                },
+                "Individual",
+				{
+					"Piercing": 1
+				},
+                "Stealthy",
+				"Throwing Weapons",
+                "Vanguard",
+				"Vicious"
+            ],
+            "type": 10,
+            "units": {
+                "Assassin": {
+                    "points": 100,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 3,
+                    "ranged": 3,
+                    "defence": 4,
+                    "attacks": 4,
+                    "waver": 10,
+                    "rout": 12
+                }
+            }
+        },
+        "Demonspawn": {
+            "id": 20,
+            "special": [
+                {
+                    "Crushing Strength": 3
+                },
+                "Inspiring",
+				{
+					"Rallying!": 2
+				}
+            ],
+			"legend": true,
+            "spells": {
+                "Lightning Bolt": 5
+            },
+            "type": 14,
+            "units": {
+                "Base": {
+                    "points": 290,
+                    "models": 1,
+                    "speed": 6,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 13,
+                    "waver": 16,
+                    "rout": 18
+                },
+				"with Wings": {
+                    "points": 340,
+                    "models": 1,
+                    "speed": 10,
+                    "melee": 3,
+                    "ranged": false,
+                    "defence": 5,
+                    "attacks": 13,
+                    "waver": 16,
+                    "rout": 18,
+					"special": [
+						"Fly"
+					]
+				}
+            }
+        }
+    }
+}))
