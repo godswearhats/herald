@@ -1,6 +1,6 @@
 # Herald
 
-Herald is a Kings of War app built using (Cordova)[https://cordova.apache.org/docs/en/latest/guide/overview/index.html], released under MIT license.
+Herald is a Kings of War app built using [Cordova](https://cordova.apache.org/docs/en/latest/guide/overview/index.html), released under MIT license.
 
 The cordova docs will help you get that framework installed, and from there you can run: 
 
