@@ -7,12 +7,12 @@ var mouseStartAngle = false;
 var artifactStartAngle = false;
 var reportStarted = false;
 var LOOSE_FORMATION_GAP = Math.round( inchesToPx(0.5) );
-var BASE_URL = window.BASE_URL || "http://godswearhats.com/herald/";
+var BASE_URL = window.BASE_URL || "";
 
-if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.8.2') {
+if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.9.1') {
 	var scriptTag = document.createElement('script');
     scriptTag.setAttribute("type","text/javascript");
-    scriptTag.setAttribute("src", "http://code.jquery.com/jquery-1.8.2.min.js");
+    scriptTag.setAttribute("src", "http://code.jquery.com/jquery-1.9.1.min.js");
     (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(scriptTag);
     scriptTag.onload = jQueryLoadHandler;
 } 
