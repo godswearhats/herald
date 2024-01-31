@@ -12,7 +12,7 @@ var BASE_URL = window.BASE_URL || "";
 if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.9.1') {
 	var scriptTag = document.createElement('script');
     scriptTag.setAttribute("type","text/javascript");
-    scriptTag.setAttribute("src", "http://code.jquery.com/jquery-1.9.1.min.js");
+    scriptTag.setAttribute("src", "https://code.jquery.com/jquery-1.12.4.min.js");
     (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(scriptTag);
     scriptTag.onload = jQueryLoadHandler;
 } 
@@ -26,10 +26,10 @@ function jQueryLoadHandler() {
 }
 
 function main() {
-	jQuery.getScript("http://code.jquery.com/ui/1.9.1/jquery-ui.min.js", function() {
+	jQuery.getScript("https://code.jquery.com/ui/1.13.2/jquery-ui.min.js", function() {
 	    jQuery.noConflict(true);
 		/* ---- LOAD EXTERNAL RESOURCES ---- */
-		getStylesheet("http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css");
+		getStylesheet("https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css");
 		getStylesheet(BASE_URL + "herald.css");
 		getControlPanel(); // calls init so that everything can be applied once the control panel arrives
 	});
